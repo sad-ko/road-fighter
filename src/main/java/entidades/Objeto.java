@@ -11,7 +11,7 @@ public abstract class Objeto {
 	/**
 	 * Nombre de la clase no-abstracta que hereda de {@code Cuerpo}.
 	 */
-	final private String clase;
+	private final String clase;
 
 	/**
 	 * Posicion del objeto en el plano (x,y).
@@ -23,7 +23,7 @@ public abstract class Objeto {
 	 *                 de {@code Cuerpo}.
 	 * @param posicion :{@code Vector2D} - Posicion del objeto en el plano {x,y}.
 	 */
-	public Objeto(final String clase, final Vector2D posicion) {
+	protected Objeto(final String clase, final Vector2D posicion) {
 		this.clase = clase;
 		this.posicion = posicion;
 	}
@@ -34,6 +34,10 @@ public abstract class Objeto {
 
 	public Vector2D getPosicion() {
 		return posicion;
+	}
+	
+	public void setPosicion(Vector2D posicion) {
+		this.posicion = posicion;
 	}
 
 	/**

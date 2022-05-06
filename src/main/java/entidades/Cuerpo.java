@@ -10,7 +10,7 @@ import fisica.Vector2D;
  */
 public abstract class Cuerpo extends Objeto {
 
-	private Colision hitbox;
+	protected Colision hitbox;
 
 	/**
 	 * @param clase        :{@code String} - Nombre de la clase no-abstracta que
@@ -19,7 +19,7 @@ public abstract class Cuerpo extends Objeto {
 	 *                     {x,y}.
 	 * @param hitboxTamaño :{@code Vector2D} - Tamaño de la {@code Colision}
 	 */
-	public Cuerpo(final String clase, Vector2D posicion, final Vector2D hitboxTamaño) {
+	protected Cuerpo(final String clase, Vector2D posicion, final Vector2D hitboxTamaño) {
 		super(clase, posicion);
 		this.hitbox = new Colision(hitboxTamaño, this);
 	}

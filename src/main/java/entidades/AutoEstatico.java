@@ -7,10 +7,10 @@ import fisica.Vector2D;
  * prueba para experimentar con otros {@code Cuerpo}s que pudieran interactuar
  * con {@code Jugador}
  */
-public class AutoEstatico extends Cuerpo {
+public class AutoEstatico extends Auto {
 
 	public AutoEstatico(Vector2D posicion, Vector2D hitboxTamaño) {
 		super("AutoEstatico", posicion, hitboxTamaño);
-		// TODO Auto-generated constructor stub
+		this.velocidad = 100.0f;
 	}
 }

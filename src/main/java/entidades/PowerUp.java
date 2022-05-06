@@ -12,7 +12,7 @@ import fisica.Vector2D;
 public class PowerUp extends Cuerpo {
 
 	private float power = 1.5f;
-	private long tiempo = 1L;
+	private long tiempo = 1000L;
 
 	public PowerUp(Vector2D posicion, Vector2D hitboxTamaño) {
 		super("PowerUp", posicion, hitboxTamaño);
@@ -32,11 +32,11 @@ public class PowerUp extends Cuerpo {
 			public void run() {
 				float vel = jugador.getVelocidad() / power;
 				jugador.setVelocidad(Math.round(vel));
-				
+
 				System.err.println("POWER OUT...");
 			}
 		};
-		
+
 		Timer timer = new Timer();
 		timer.schedule(task, this.tiempo);
 	}

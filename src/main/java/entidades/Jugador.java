@@ -6,17 +6,12 @@ import fisica.Vector2D;
  * La clase {@code Jugador} hija de {@code Cuerpo}, es la clase principal con la
  * cual el usuario va a poder interactuar con el entorno.
  */
-final public class Jugador extends Cuerpo {
-
-	/**
-	 * Velocidad inicial del {@code Jugador}, comienza en 0.0f
-	 */
-	private float velocidad = 0.0f;
+public final class Jugador extends Auto {
 
 	/**
 	 * Velocidad maxima del {@code Jugador}, actualmente es 200.0f
 	 */
-	final private float velocidad_max = 200.0f;
+	private final float velocidadMax = 200.0f;
 
 	/**
 	 * @param posicion     :{@code Vector2D} - Posicion del {@code Jugador} en el
@@ -34,18 +29,19 @@ final public class Jugador extends Cuerpo {
 	 * @param derecha :boolean - Indica si el {@code Jugador} debe girar a la
 	 *                derecha o a la izquierda
 	 */
-	public void girar(boolean derecha) {
+	public void girar(boolean derecha, float delta) {
 		this.posicion.x += derecha ? this.velocidad : (this.velocidad * -1);
+		this.posicion.x *= delta;
 	}
 
 	/**
 	 * Permite acelerar y mantener la aceleracion del {@code Jugador}, el movimiento
 	 * es una sumatoria de velocidad y siempre va hacia arriba en el eje Y.
 	 */
-	public void acelerar() {
-		this.posicion.y += this.velocidad;
+	public void acelerar(float delta) {
+		this.posicion.y += this.velocidad * delta;
 
-		if (this.velocidad < this.velocidad_max) {
+		if (this.velocidad < this.velocidadMax) {
 			this.velocidad++;
 		}
 	}
@@ -54,8 +50,8 @@ final public class Jugador extends Cuerpo {
 	 * Permite desacelerar al {@code Jugador}, el movimiento es una resta de
 	 * velocidad hasta llegar a 0.0f y siempre va a ser hacia arriba en el eje Y.
 	 */
-	public void desacelerar() {
-		this.posicion.y += this.velocidad;
+	public void desacelerar(float delta) {
+		this.posicion.y += this.velocidad * delta;
 
 		if (this.velocidad > 0.0f) {
 			this.velocidad--;
