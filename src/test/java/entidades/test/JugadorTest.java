@@ -14,7 +14,7 @@ public class JugadorTest {
 		Vector2D hitbox_size = new Vector2D(1f, 1f);
 		
 		Vector2D init_pos = new Vector2D(0f, 0f);
-		Jugador jugador = new Jugador(init_pos, hitbox_size);
+		Jugador jugador = new Jugador(init_pos, hitbox_size,"player");
 		
 		Vector2D pow_init_pos = new Vector2D(101f, 29299f);
 		PowerUp power = new PowerUp(pow_init_pos, hitbox_size);
@@ -30,18 +30,19 @@ public class JugadorTest {
 			revisarColisiones(objetosInstanciados);
 			
 			System.out.println(jugador);
-			jugador.girar(i % 2 == 0); //Zig Zag
+			jugador.girar(i % 2 == 0,1); //Zig Zag
 			
 			//Desacelera durante 50 iteraciones
 			if (i < 100 || i > 150) {
-				jugador.acelerar();
+				jugador.acelerar(1);
 			} else {
-				jugador.desacelerar();
+				jugador.desacelerar(1);
 			}
 		}
 		
 		System.err.println("[END]");
 	}
+	
 	
 	public static void revisarColisiones(ArrayList<Cuerpo> objetosInstanciados) {
 		int size = objetosInstanciados.size();

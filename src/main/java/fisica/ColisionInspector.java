@@ -36,6 +36,7 @@ public interface ColisionInspector {
 		}
 
 		Jugador jugador = null;
+		Jugador jugador2 = null;
 		PowerUp powerUp = null;
 		AutoEstatico autoEst = null;
 
@@ -60,6 +61,14 @@ public interface ColisionInspector {
 		
 		case "Jugador::Obstaculo":
 			break;
+			
+		case "Jugador::Jugador":
+			jugador = (Jugador) c1;
+			jugador2 = (Jugador) c2;
+
+			jugador2.impacto(jugador);
+			break;
+		
 		}
 	}
 }

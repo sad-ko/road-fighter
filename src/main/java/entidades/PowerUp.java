@@ -14,8 +14,8 @@ public class PowerUp extends Cuerpo {
 	private float power = 1.5f;
 	private long tiempo = 1000L;
 
-	public PowerUp(Vector2D posicion, Vector2D hitboxTamaño) {
-		super("PowerUp", posicion, hitboxTamaño);
+	public PowerUp(Vector2D posicion, Vector2D hitboxTamanio) {
+		super("PowerUp", posicion, hitboxTamanio);
 	}
 
 	public float getPowerUp() {

@@ -28,7 +28,7 @@ public final class Vector2D {
 
 	@Override
 	public String toString() {
-		return String.format("(%9.1f, %9.1f)", x, y);
+		return String.format("(x=%9.1f; y=%9.1f)", x, y);
 	}
 
 	@Override

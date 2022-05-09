@@ -9,8 +9,8 @@ import fisica.Vector2D;
  */
 public class AutoEstatico extends Auto {
 
-	public AutoEstatico(Vector2D posicion, Vector2D hitboxTamaño) {
-		super("AutoEstatico", posicion, hitboxTamaño);
+	public AutoEstatico(Vector2D posicion, Vector2D hitboxTamanio) {
+		super("AutoEstatico", posicion, hitboxTamanio);
 		this.velocidad = 100.0f;
 	}
 }

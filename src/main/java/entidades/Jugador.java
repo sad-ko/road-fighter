@@ -12,14 +12,18 @@ public final class Jugador extends Auto {
 	 * Velocidad maxima del {@code Jugador}, actualmente es 200.0f
 	 */
 	private final float velocidadMax = 200.0f;
+	private String nombre;
+
 
 	/**
 	 * @param posicion     :{@code Vector2D} - Posicion del {@code Jugador} en el
 	 *                     plano {x,y}.
-	 * @param hitboxTamaño :{@code Vector2D} - Tamaño de la {@code Colision}
+	 * @param hitboxTamanio :{@code Vector2D} - Tamaño de la {@code Colision}
 	 */
-	public Jugador(Vector2D posicion, Vector2D hitboxTamaño) {
-		super("Jugador", posicion, hitboxTamaño);
+	public Jugador(Vector2D posicion, Vector2D hitboxTamanio, String nombreJugador) {
+		super("Jugador", posicion, hitboxTamanio);
+		super.setVelocidad(1);
+		this.nombre=nombreJugador;
 	}
 
 	/**
@@ -61,7 +65,7 @@ public final class Jugador extends Auto {
 	@Override
 	public String toString() {
 		int pad = this.posicion.toString().length();
-		return String.format("Jugador: %" + (-pad) + "s | %.2f", this.posicion, this.velocidad);
+		return String.format("Jugador "+this.nombre+": %" + (-pad) + "s | velocidad: %.2f", this.posicion, this.velocidad);
 	}
 
 	public float getVelocidad() {
@@ -71,4 +75,10 @@ public final class Jugador extends Auto {
 	public void setVelocidad(float velocidad) {
 		this.velocidad = velocidad;
 	}
+	
+	@Override
+	public String getNombre() {
+		return nombre;
+	}
+
 }

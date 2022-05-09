@@ -17,11 +17,11 @@ public abstract class Cuerpo extends Objeto {
 	 *                     hereda de {@code Objeto}.
 	 * @param posicion     :{@code Vector2D} - Posicion del {@code Cuerpo} en el plano
 	 *                     {x,y}.
-	 * @param hitboxTamaño :{@code Vector2D} - Tamaño de la {@code Colision}
+	 * @param hitboxTamanio :{@code Vector2D} - Tamaño de la {@code Colision}
 	 */
-	protected Cuerpo(final String clase, Vector2D posicion, final Vector2D hitboxTamaño) {
+	protected Cuerpo(final String clase, Vector2D posicion, final Vector2D hitboxTamanio) {
 		super(clase, posicion);
-		this.hitbox = new Colision(hitboxTamaño, this);
+		this.hitbox = new Colision(hitboxTamanio, this);
 	}
 
 	public Colision getHitbox() {
