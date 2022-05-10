@@ -1,8 +1,8 @@
 package fisica;
 
 public final class Vector2D {
-	private float x;
-	private float y;
+	public float x;
+	public float y;
 
 	public Vector2D(final float x, final float y) {
 		this.x = x;
