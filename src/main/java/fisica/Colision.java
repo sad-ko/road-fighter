@@ -48,16 +48,16 @@ public final class Colision {
 		Vector2D p1 = this.cuerpoVinculado.getPosicion();
 		// Copia solo los valores de los tamanios para no alterar sus valores
 		// originales.
-		float s1_x = this.tamanio.x;
-		float s1_y = this.tamanio.y;
-		float s2_x = s2.x;
-		float s2_y = s2.y;
+		float s1_x = this.tamanio.getX();
+		float s1_y = this.tamanio.getY();
+		float s2_x = s2.getX();
+		float s2_y = s2.getY();
 		// Ajusta el tamanio de las colisiones a las posiciones actuales de los cuerpos.
-		s1_x += p1.x;
-		s1_y += p1.y;
-		s2_x += p2.x;
-		s2_y += p2.y;
-		return (p1.x < s2_x && p1.y < s2_y && p2.x < s1_x && p2.y < s1_y);
+		s1_x += p1.getX();
+		s1_y += p1.getY();
+		s2_x += p2.getX();
+		s2_y += p2.getY();
+		return (p1.getX() < s2_x && p1.getY() < s2_y && p2.getX() < s1_x && p2.getY() < s1_y);
 	}
 
 	/**

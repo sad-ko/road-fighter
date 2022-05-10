@@ -1,8 +1,8 @@
 package fisica;
 
 public final class Vector2D {
-	public float x;
-	public float y;
+	private float x;
+	private float y;
 
 	public Vector2D(final float x, final float y) {
 		this.x = x;
@@ -29,6 +29,22 @@ public final class Vector2D {
 	@Override
 	public String toString() {
 		return String.format("(x=%9.1f; y=%9.1f)", x, y);
+	}
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
 	}
 
 	@Override
