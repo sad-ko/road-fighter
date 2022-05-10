@@ -6,13 +6,16 @@ import fisica.Vector2D;
 
 /**
  * La clase {@code PowerUp} hija de {@code Cuerpo}, aplica un boost de velocidad
- * al {@code Jugador}
+ * al {@code Jugador}.
  */
 public class PowerUp extends Cuerpo {
 
 	private float power = 1.5f;
 	private long tiempo = 3000L;
 
+	/**
+	 * @param posicion :{@code Vector2D} - Posicion del objeto en el plano (x,y).
+	 */
 	public PowerUp(Vector2D posicion) {
 		super("PowerUp", posicion, new Vector2D(1f, 1f));
 	}
@@ -27,7 +30,7 @@ public class PowerUp extends Cuerpo {
 			public void run() {
 				float vel = jugador.getVelocidad() / power;
 				jugador.setVelocidad(vel);
-				System.err.println("POWER OUT...");
+				System.out.println("POWER OUT...");
 			}
 		};
 

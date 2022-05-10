@@ -71,8 +71,7 @@ public interface ColisionInspector {
 			jugador = (Jugador) c1;
 			Meta meta = (Meta) c2;
 
-			System.out.println("[GANADOR!: " + jugador + " ]");
-			meta.partidaActual.ganador = jugador;
+			meta.partidaActual.setGanador(jugador);
 			meta.partidaActual.iniciarEspera();
 
 			break;
@@ -92,6 +91,8 @@ public interface ColisionInspector {
 			break;
 
 		case "AutoEstatico::Borde":
+			autoEst = (AutoEstatico) c1;
+			autoEst.explotar();
 			break;
 
 		case "AutoEstatico::Obstaculo":

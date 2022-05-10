@@ -22,6 +22,6 @@ public class Posicion {
 
 	@Override
 	public String toString() {
-		return jugador + " - Pos: " + posicionActual;
+		return jugador.getNombre() + " - Pos: " + posicionActual;
 	}
 }

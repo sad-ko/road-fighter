@@ -1,6 +1,10 @@
 package entidades.test;
 
 import static org.junit.Assert.*;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import entidades.Jugador;
@@ -14,6 +18,9 @@ public class TestPartida {
 	private static Partida partida;
 
 	@BeforeClass
+	/**
+	 * Funcion que se ejecuta previo a realizar todos los tests.
+	 */
 	public static void setup() {
 		Mapa mapa = new Mapa(1500f, 5f, 150f);
 		mapa.agregarObstaculos("AutoEstatico", 5);
@@ -27,8 +34,10 @@ public class TestPartida {
 		int jugadoresAgregados = 3;
 		int autosCreados = 5;
 		int powerUps = 3;
-		int bordes = 3;
-		assertEquals(autosCreados + bordes + jugadoresAgregados + powerUps, partida.getMapa().size());
+		int bordes = 2;
+		int meta = 1;
+		int resultado = autosCreados + bordes + jugadoresAgregados + powerUps + meta;
+		assertEquals(resultado, partida.getMapa().size());
 	}
 
 	@Test
@@ -38,9 +47,14 @@ public class TestPartida {
 	}
 
 	@Test
+	/**
+	 * Desplazamos al primer jugador por el eje X mientras acelera para verificar si
+	 * choca contra el borde izquierdo previamente definido en el constructor del
+	 * mapa.
+	 */
 	public void testExplotarBorde() {
 		Mapa mapa = partida.getMapa();
-		Jugador jugador = partida.getPosiciones().get(0).getJugador();
+		Jugador jugador = partida.getJugador(0);
 
 		for (int i = 0; i < 70; i++) {
 			mapa.calcularColisiones();
@@ -52,9 +66,14 @@ public class TestPartida {
 	}
 
 	@Test
+	/**
+	 * Aceleramos al segundo jugador hasta la meta del mapa para verificar que una
+	 * partida puede terminar propiamente al agotarse el tiempo de espera por los
+	 * otros jugadores.
+	 */
 	public void testLlegarMeta() {
 		Mapa mapa = partida.getMapa();
-		Jugador jugador = partida.getPosiciones().get(1).getJugador();
+		Jugador jugador = partida.getJugador(1);
 
 		for (int i = 0; i < 700; i++) {
 			mapa.calcularColisiones();
@@ -62,12 +81,13 @@ public class TestPartida {
 		}
 
 		try {
-			Thread.sleep(1000L);
+			// Esperamos 3 segundos a que el tiempo de espera se agote.
+			new CountDownLatch(1).await(3L, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		assertEquals(jugador, partida.ganador);
+		assertEquals(jugador, partida.getGanador());
 	}
 
 }

@@ -1,8 +1,8 @@
 package fisica;
 
 public final class Vector2D {
-	public float x;
-	public float y;
+	private float x;
+	private float y;
 
 	public Vector2D(final float x, final float y) {
 		this.x = x;
@@ -26,11 +26,6 @@ public final class Vector2D {
 		return Math.sqrt(_x * _x + _y * _y);
 	}
 
-	@Override
-	public String toString() {
-		return String.format("(x=%9.1f; y=%9.1f)", x, y);
-	}
-
 	public float getX() {
 		return x;
 	}
@@ -45,6 +40,11 @@ public final class Vector2D {
 
 	public void setY(float y) {
 		this.y = y;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("(x=%9.1f; y=%9.1f)", x, y);
 	}
 
 	@Override
@@ -65,11 +65,8 @@ public final class Vector2D {
 		if (getClass() != obj.getClass())
 			return false;
 		Vector2D other = (Vector2D) obj;
-		if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x))
-			return false;
-		if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))
-			return false;
-		return true;
+		return !((Float.floatToIntBits(x) != Float.floatToIntBits(other.x))
+				|| (Float.floatToIntBits(y) != Float.floatToIntBits(other.y)));
 	}
 
 }
