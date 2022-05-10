@@ -10,7 +10,7 @@ import entidades.Cuerpo;
 public final class Colision {
 
 	/**
-	 * tamanio de la colision del {@code Cuerpo}, <strong>se interpreta al punto
+	 * Tamanio de la colision del {@code Cuerpo}, <strong>se interpreta este punto
 	 * (x,y) como la esquina derecha superior de la colision, siendo la posicion del
 	 * {@code Cuerpo} la esquina izquierda inferiror.</strong>
 	 */
@@ -27,9 +27,9 @@ public final class Colision {
 	private boolean desactivado = false;
 
 	/**
-	 * @param tamanio :{@code Vector2D} - <strong>Indica el punto (x,y) de la esquina
-	 *               derecha superior.</strong>
-	 * @param padre  :{@code Cuerpo} - {@code Cuerpo} con el que esta vinculado.
+	 * @param tamanio :{@code Vector2D} - <strong>Indica el punto (x,y) de la
+	 *                esquina derecha superior.</strong>
+	 * @param padre   :{@code Cuerpo} - {@code Cuerpo} con el que esta vinculado.
 	 */
 	public Colision(final Vector2D tamanio, final Cuerpo padre) {
 		this.tamanio = tamanio;
@@ -41,12 +41,13 @@ public final class Colision {
 	 * intersectaron.
 	 * 
 	 * @param p2 :{@code Vector2D} - Posicion del objeto a calcular.
-	 * @param s2 :{@code Vector2D} - tamanio del objeto a calcular.
-	 * @return Si interesecto con el objeto o no.
+	 * @param s2 :{@code Vector2D} - Tamanio del objeto a calcular.
+	 * @return Si interesectaron o no.
 	 */
 	private boolean calcularInterseccion(Vector2D p2, Vector2D s2) {
 		Vector2D p1 = this.cuerpoVinculado.getPosicion();
-		// Copia solo los valores de los tamanios para no alterar sus valores originales.
+		// Copia solo los valores de los tamanios para no alterar sus valores
+		// originales.
 		float s1_x = this.tamanio.x;
 		float s1_y = this.tamanio.y;
 		float s2_x = s2.x;
@@ -60,7 +61,8 @@ public final class Colision {
 	}
 
 	/**
-	 * Verifica si las colisiones de ambos {@code Cuerpo}s intersectan o no.
+	 * Verifica si las colisiones de ambos {@code Cuerpo}s intersectan o no. En caso
+	 * de interseccion, llama a la funcion enChoque del mediador ColisionInspector.
 	 * 
 	 * @param otro :{@code Cuerpo} - {@code Cuerpo} con el cual deseamos verificar
 	 *             su interseccion.
@@ -74,11 +76,9 @@ public final class Colision {
 		}
 
 		boolean intersecto = calcularInterseccion(otro.getPosicion(), otroHitbox.tamanio);
-		if (intersecto) {
-			if (this.cuerpoVinculado != null) {
-				// Mediador que administra las interacciones al colisionar.
-				ColisionInspector.enChoque(this.cuerpoVinculado, otro);
-			}
+		if (intersecto && this.cuerpoVinculado != null) {
+			// Mediador que administra las interacciones al colisionar.
+			ColisionInspector.enChoque(this.cuerpoVinculado, otro);
 		}
 
 		return intersecto;
@@ -90,5 +90,10 @@ public final class Colision {
 
 	public void desactivar(boolean desactivado) {
 		this.desactivado = desactivado;
+	}
+
+	@Override
+	public String toString() {
+		return "Tamanio: " + tamanio + ", desactivado: " + desactivado;
 	}
 }

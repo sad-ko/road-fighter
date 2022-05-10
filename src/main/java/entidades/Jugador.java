@@ -11,19 +11,19 @@ public final class Jugador extends Auto {
 	/**
 	 * Velocidad maxima del {@code Jugador}, actualmente es 200.0f
 	 */
-	private final float velocidadMax = 200.0f;
+	private float velocidadMax = 200.0f;
+	private float aceleracion = 1f;
 	private String nombre;
 
-
 	/**
-	 * @param posicion     :{@code Vector2D} - Posicion del {@code Jugador} en el
-	 *                     plano {x,y}.
-	 * @param hitboxTamanio :{@code Vector2D} - Tamaño de la {@code Colision}
+	 * @param posicion :{@code Vector2D} - Posicion del {@code Jugador} en el plano
+	 *                 {x,y}.
+	 * @param nombre   :{@code String} - Nombre del jugador.
 	 */
-	public Jugador(Vector2D posicion, Vector2D hitboxTamanio, String nombreJugador) {
-		super("Jugador", posicion, hitboxTamanio);
-		super.setVelocidad(1);
-		this.nombre=nombreJugador;
+	public Jugador(Vector2D posicion, String nombre) {
+		super("Jugador", posicion);
+		this.nombre = nombre;
+		this.velocidad = 1f;
 	}
 
 	/**
@@ -32,53 +32,53 @@ public final class Jugador extends Auto {
 	 * 
 	 * @param derecha :boolean - Indica si el {@code Jugador} debe girar a la
 	 *                derecha o a la izquierda
+	 * @param delta   :float - Lapso de tiempo en segundos, desde el anterior frame
+	 *                a este
 	 */
-	public void girar(boolean derecha, float delta) {
-		this.posicion.x += derecha ? this.velocidad : (this.velocidad * -1);
-		this.posicion.x *= delta;
+	public void desplazar(boolean derecha, float delta) {
+		float sentido = derecha ? this.velocidad : (this.velocidad * -1);
+		this.posicion.x += sentido * delta;
 	}
 
 	/**
 	 * Permite acelerar y mantener la aceleracion del {@code Jugador}, el movimiento
 	 * es una sumatoria de velocidad y siempre va hacia arriba en el eje Y.
+	 * 
+	 * @param delta :float - Lapso de tiempo en segundos, desde el anterior frame a
+	 *              este
 	 */
 	public void acelerar(float delta) {
-		this.posicion.y += this.velocidad * delta;
-
 		if (this.velocidad < this.velocidadMax) {
-			this.velocidad++;
+			this.velocidad += this.aceleracion;
 		}
+
+		this.posicion.y += this.velocidad * delta;
 	}
 
 	/**
 	 * Permite desacelerar al {@code Jugador}, el movimiento es una resta de
 	 * velocidad hasta llegar a 0.0f y siempre va a ser hacia arriba en el eje Y.
+	 * 
+	 * @param delta :float - Lapso de tiempo en segundos, desde el anterior frame a
+	 *              este
 	 */
 	public void desacelerar(float delta) {
-		this.posicion.y += this.velocidad * delta;
-
 		if (this.velocidad > 0.0f) {
-			this.velocidad--;
+			this.velocidad -= this.aceleracion;
 		}
+
+		this.posicion.y += this.velocidad * delta;
+	}
+
+	@Override
+	public String getNombre() {
+		return nombre;
 	}
 
 	@Override
 	public String toString() {
 		int pad = this.posicion.toString().length();
-		return String.format("Jugador "+this.nombre+": %" + (-pad) + "s | velocidad: %.2f", this.posicion, this.velocidad);
-	}
-
-	public float getVelocidad() {
-		return velocidad;
-	}
-
-	public void setVelocidad(float velocidad) {
-		this.velocidad = velocidad;
-	}
-	
-	@Override
-	public String getNombre() {
-		return nombre;
+		return String.format("%s : %" + (-pad) + "s | velocidad: %.2f", this.nombre, this.posicion, this.velocidad);
 	}
 
 }

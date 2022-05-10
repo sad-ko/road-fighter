@@ -3,12 +3,13 @@ package fisica;
 import entidades.AutoEstatico;
 import entidades.Cuerpo;
 import entidades.Jugador;
+import entidades.Meta;
 import entidades.PowerUp;
 
 /**
  * La interfaz {@code ColisionInspector} actua como mediador en la interaccion
- * de las distintas clases de {@code Cuerpo}. Cada interaccion entre dos
- * {@code Cuerpo}s debe ser propiamente definida en esta interfaz
+ * de las distintas clases de {@code Cuerpo} al chocar. Cada interaccion entre
+ * dos {@code Cuerpo}s debe ser propiamente definida en esta interfaz
  */
 public interface ColisionInspector {
 
@@ -36,7 +37,6 @@ public interface ColisionInspector {
 		}
 
 		Jugador jugador = null;
-		Jugador jugador2 = null;
 		PowerUp powerUp = null;
 		AutoEstatico autoEst = null;
 
@@ -52,23 +52,50 @@ public interface ColisionInspector {
 			System.err.println("POWER UP!!!");
 			break;
 
+		case "Jugador::Obstaculo":
+			break;
+
+		case "Borde::Jugador":
+			jugador = (Jugador) c2;
+			jugador.explotar();
+			break;
+
+		case "Jugador::Jugador":
+			jugador = (Jugador) c1;
+			Jugador jugador_2 = (Jugador) c2;
+
+			jugador.impacto(jugador_2);
+			break;
+
+		case "Jugador::Meta":
+			jugador = (Jugador) c1;
+			Meta meta = (Meta) c2;
+
+			System.out.println("[GANADOR!: " + jugador + " ]");
+			meta.partidaActual.ganador = jugador;
+			meta.partidaActual.iniciarEspera();
+
+			break;
+
 		case "AutoEstatico::Jugador":
 			autoEst = (AutoEstatico) c1;
 			jugador = (Jugador) c2;
 
 			jugador.impacto(autoEst);
 			break;
-		
-		case "Jugador::Obstaculo":
-			break;
-			
-		case "Jugador::Jugador":
-			jugador = (Jugador) c1;
-			jugador2 = (Jugador) c2;
 
-			jugador2.impacto(jugador);
+		case "AutoEstatico::AutoEstatico":
+			autoEst = (AutoEstatico) c1;
+			AutoEstatico autoEst_2 = (AutoEstatico) c2;
+
+			autoEst.impacto(autoEst_2);
 			break;
-		
+
+		case "AutoEstatico::Borde":
+			break;
+
+		case "AutoEstatico::Obstaculo":
+			break;
 		}
 	}
 }

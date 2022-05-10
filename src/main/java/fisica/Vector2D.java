@@ -3,28 +3,28 @@ package fisica;
 public final class Vector2D {
 	public float x;
 	public float y;
-	
+
 	public Vector2D(final float x, final float y) {
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	public void cambiarCoordenadas(final float x, final float y) {
 		this.x = x;
 		this.y = y;
 	}
-	
-    public double distancia(float x, float y) {
-        float _x = x - this.x;
-        float _y = y - this.y;
-        return Math.sqrt(_x * _x + _y * _y);
-    }
 
-    public double distancia(Vector2D vec) {
-        float _x = vec.x - this.x;
-        float _y = vec.y - this.y;
-        return Math.sqrt(_x * _x + _y * _y);
-    }
+	public double distancia(float x, float y) {
+		float _x = x - this.x;
+		float _y = y - this.y;
+		return Math.sqrt(_x * _x + _y * _y);
+	}
+
+	public double distancia(Vector2D vec) {
+		float _x = vec.x - this.x;
+		float _y = vec.y - this.y;
+		return Math.sqrt(_x * _x + _y * _y);
+	}
 
 	@Override
 	public String toString() {
@@ -55,5 +55,5 @@ public final class Vector2D {
 			return false;
 		return true;
 	}
-	
+
 }
