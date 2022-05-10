@@ -37,7 +37,7 @@ public final class Jugador extends Auto {
 	 */
 	public void desplazar(boolean derecha, float delta) {
 		float sentido = derecha ? this.velocidad : (this.velocidad * -1);
-		this.posicion.x += sentido * delta;
+		this.posicion.setX(this.posicion.getX() + sentido * delta);
 	}
 
 	/**
@@ -51,8 +51,7 @@ public final class Jugador extends Auto {
 		if (this.velocidad < this.velocidadMax) {
 			this.velocidad += this.aceleracion;
 		}
-
-		this.posicion.y += this.velocidad * delta;
+		this.posicion.setY(this.posicion.getY() + this.velocidad * delta);
 	}
 
 	/**
@@ -63,11 +62,10 @@ public final class Jugador extends Auto {
 	 *              este
 	 */
 	public void desacelerar(float delta) {
-		if (this.velocidad > 0.0f) {
+		if (this.velocidad > 0) {
 			this.velocidad -= this.aceleracion;
 		}
-
-		this.posicion.y += this.velocidad * delta;
+		this.posicion.setY(this.posicion.getY() + this.velocidad * delta);
 	}
 
 	@Override
