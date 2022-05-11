@@ -37,7 +37,7 @@ public class TestPartida {
 		int bordes = 2;
 		int meta = 1;
 		int resultado = autosCreados + bordes + jugadoresAgregados + powerUps + meta;
-		assertEquals(resultado, partida.getMapa().size());
+		assertEquals(resultado, partida.getMapa().getInvocador().size());
 	}
 
 	@Test
@@ -57,7 +57,7 @@ public class TestPartida {
 		Jugador jugador = partida.getJugador(0);
 
 		for (int i = 0; i < 70; i++) {
-			mapa.calcularColisiones();
+			mapa.getInvocador().calcularColisiones();
 			jugador.acelerar(delta);
 			jugador.desplazar(false, delta);
 		}
@@ -76,13 +76,13 @@ public class TestPartida {
 		Jugador jugador = partida.getJugador(1);
 
 		for (int i = 0; i < 700; i++) {
-			mapa.calcularColisiones();
+			mapa.getInvocador().calcularColisiones();
 			jugador.acelerar(delta);
 		}
 
 		try {
 			// Esperamos 3 segundos a que el tiempo de espera se agote.
-			new CountDownLatch(1).await(3L, TimeUnit.SECONDS);
+			new CountDownLatch(1).await(2L, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

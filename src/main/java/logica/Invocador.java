@@ -8,11 +8,11 @@ import entidades.Cuerpo;
  * La clase abstracta {@code Invocador} es el encargado de administrar todos los
  * {@code Cuerpo}s instanciados en el {@code Mapa} y revisar sus colisiones.
  */
-public abstract class Invocador {
+public class Invocador {
 
 	protected List<Cuerpo> instancias;
 
-	protected Invocador() {
+	public Invocador() {
 		this.instancias = new ArrayList<>();
 	}
 

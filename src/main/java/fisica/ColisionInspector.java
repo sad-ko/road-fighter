@@ -7,11 +7,16 @@ import entidades.Meta;
 import entidades.PowerUp;
 
 /**
- * La interfaz {@code ColisionInspector} actua como mediador en la interaccion
+ * La clase {@code ColisionInspector} actua como mediador en la interaccion
  * de las distintas clases de {@code Cuerpo} al chocar. Cada interaccion entre
- * dos {@code Cuerpo}s debe ser propiamente definida en esta interfaz
+ * dos {@code Cuerpo}s debe ser propiamente definida en esta clase.
  */
-public interface ColisionInspector {
+public final class ColisionInspector {
+
+	/**
+	 * Esta clase no puede ser instanciada.
+	 */
+	private ColisionInspector() {}
 
 	/**
 	 * Funcion estatica que gestiona como deben interactuar los dos cuerpos
@@ -26,7 +31,6 @@ public interface ColisionInspector {
 		String caso = null;
 
 		// Ordenamos los cuerpos por el nombre de su clase alfabeticamente.
-
 		if (claseC1.compareTo(claseC2) < 0) {
 			caso = claseC1 + "::" + claseC2;
 		} else {
@@ -41,18 +45,26 @@ public interface ColisionInspector {
 		AutoEstatico autoEst = null;
 
 		switch (caso) {
-		case "Jugador::PowerUp":
-			jugador = (Jugador) c1;
-			powerUp = (PowerUp) c2;
+		case "AutoEstatico::AutoEstatico":
+			autoEst = (AutoEstatico) c1;
+			AutoEstatico autoEst_2 = (AutoEstatico) c2;
 
-			jugador.setVelocidad(jugador.getVelocidad() * powerUp.getPowerUp());
-			powerUp.timeout(jugador);
-			powerUp.removerObjeto();
-
-			System.err.println("POWER UP!!!");
+			autoEst.impacto(autoEst_2);
 			break;
 
-		case "Jugador::Obstaculo":
+		case "AutoEstatico::Borde":
+			autoEst = (AutoEstatico) c1;
+			autoEst.explotar();
+			break;
+
+		case "AutoEstatico::Jugador":
+			autoEst = (AutoEstatico) c1;
+			jugador = (Jugador) c2;
+
+			jugador.impacto(autoEst);
+			break;
+
+		case "AutoEstatico::Obstaculo":
 			break;
 
 		case "Borde::Jugador":
@@ -76,27 +88,20 @@ public interface ColisionInspector {
 
 			break;
 
-		case "AutoEstatico::Jugador":
-			autoEst = (AutoEstatico) c1;
-			jugador = (Jugador) c2;
+		case "Jugador::PowerUp":
+			jugador = (Jugador) c1;
+			powerUp = (PowerUp) c2;
 
-			jugador.impacto(autoEst);
+			jugador.setVelocidad(jugador.getVelocidad() * powerUp.getPowerUp());
+			powerUp.timeout(jugador);
+			powerUp.removerObjeto();
+
+			System.err.println("POWER UP!!!");
 			break;
 
-		case "AutoEstatico::AutoEstatico":
-			autoEst = (AutoEstatico) c1;
-			AutoEstatico autoEst_2 = (AutoEstatico) c2;
-
-			autoEst.impacto(autoEst_2);
-			break;
-
-		case "AutoEstatico::Borde":
-			autoEst = (AutoEstatico) c1;
-			autoEst.explotar();
-			break;
-
-		case "AutoEstatico::Obstaculo":
+		case "Jugador::Obstaculo":
 			break;
 		}
 	}
+	
 }

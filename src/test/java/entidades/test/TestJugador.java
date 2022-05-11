@@ -16,8 +16,7 @@ import entidades.PowerUp;
 import fisica.Vector2D;
 
 public class TestJugador {
-	@Test
-	public void test() {
+	/*public void test() {
 		ArrayList<Cuerpo> objetosInstanciados = new ArrayList<>();
 
 		Vector2D posInicialJugador = new Vector2D(0f, 0f);
@@ -49,10 +48,10 @@ public class TestJugador {
 
 		System.err.println("[END]");
 
-	}
+	}*/
 
 	// esto lo agregue en clase Partida
-	public static void revisarColisiones(ArrayList<Cuerpo> objetosInstanciados) {
+	/*public static void revisarColisiones(ArrayList<Cuerpo> objetosInstanciados) {
 		int size = objetosInstanciados.size();
 
 		for (int i = 0; i < size; i++) {
@@ -62,7 +61,7 @@ public class TestJugador {
 				a.getHitbox().intersecta(b);
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * 

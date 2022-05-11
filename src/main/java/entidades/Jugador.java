@@ -17,7 +17,7 @@ public final class Jugador extends Auto {
 
 	/**
 	 * @param posicion :{@code Vector2D} - Posicion del {@code Jugador} en el plano
-	 *                 {x,y}.
+	 *                 (x,y).
 	 * @param nombre   :{@code String} - Nombre del jugador.
 	 */
 	public Jugador(Vector2D posicion, String nombre) {

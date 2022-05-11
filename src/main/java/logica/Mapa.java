@@ -3,6 +3,7 @@ package logica;
 import java.util.Random;
 import entidades.AutoEstatico;
 import entidades.Borde;
+import entidades.Cuerpo;
 import entidades.Meta;
 import entidades.Obstaculo;
 import entidades.PowerUp;
@@ -12,11 +13,12 @@ import fisica.Vector2D;
  * La clase {@code Mapa} es el encargado de definir los limites, meta, generar
  * obstaculos, jugadores y asignarles una propia ubicacion en el mapa.
  */
-public class Mapa extends Invocador {
+public class Mapa {
 
 	private float longitud;
 	private float limiteDerecho;
 	private float limiteIzquierdo;
+	private Invocador invocador;
 	private Random rand;
 
 	/**
@@ -38,8 +40,9 @@ public class Mapa extends Invocador {
 		Borde ld = new Borde(limiteDerecho, longitud);
 		Borde li = new Borde(limiteIzquierdo - 1f, longitud);
 
-		this.instanciar(ld);
-		this.instanciar(li);
+		this.invocador = new Invocador();
+		this.invocador.instanciar(ld);
+		this.invocador.instanciar(li);
 
 		this.rand = new Random();
 	}
@@ -78,7 +81,7 @@ public class Mapa extends Invocador {
 			for (int i = 0; i < cantidad; i++) {
 				Vector2D pos = generarCoordenadas();
 				AutoEstatico auto = new AutoEstatico(pos);
-				this.instanciar(auto);
+				this.invocador.instanciar(auto);
 			}
 			break;
 
@@ -86,7 +89,7 @@ public class Mapa extends Invocador {
 			for (int i = 0; i < cantidad; i++) {
 				Vector2D pos = generarCoordenadas();
 				PowerUp power = new PowerUp(pos);
-				this.instanciar(power);
+				this.invocador.instanciar(power);
 			}
 			break;
 
@@ -94,7 +97,7 @@ public class Mapa extends Invocador {
 			for (int i = 0; i < cantidad; i++) {
 				Vector2D pos = generarCoordenadas();
 				Obstaculo obstaculo = new Obstaculo(pos, pos);
-				this.instanciar(obstaculo);
+				this.invocador.instanciar(obstaculo);
 			}
 			break;
 		}
@@ -102,7 +105,7 @@ public class Mapa extends Invocador {
 
 	public void crearMeta(Partida partidaActual) {
 		Meta meta = new Meta(this.longitud, this.limiteDerecho, partidaActual);
-		this.instanciar(meta);
+		this.invocador.instanciar(meta);
 	}
 
 	/**
@@ -127,6 +130,14 @@ public class Mapa extends Invocador {
 			partidaActual.agregarJugador(posicionEjeXAuto, "Jugador N°" + (i + 1));
 			// TODO: Usar un nombre especificado por cada jugador.
 		}
+	}
+	
+	public void instanciar(Cuerpo cuerpo) {
+		this.invocador.instanciar(cuerpo);
+	}
+
+	public Invocador getInvocador() {
+		return invocador;
 	}
 
 	public float getLimiteDerecho() {
