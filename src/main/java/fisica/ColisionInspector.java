@@ -4,6 +4,7 @@ import entidades.AutoEstatico;
 import entidades.Cuerpo;
 import entidades.Jugador;
 import entidades.Meta;
+import entidades.Obstaculo;
 import entidades.PowerUp;
 
 /**
@@ -43,6 +44,7 @@ public final class ColisionInspector {
 		Jugador jugador = null;
 		PowerUp powerUp = null;
 		AutoEstatico autoEst = null;
+		
 
 		switch (caso) {
 		case "AutoEstatico::AutoEstatico":
@@ -100,6 +102,10 @@ public final class ColisionInspector {
 			break;
 
 		case "Jugador::Obstaculo":
+			jugador = (Jugador) c1;
+			Obstaculo obstaculo = (Obstaculo) c2;
+			jugador.explotar();
+			obstaculo.removerObjeto();
 			break;
 		}
 	}

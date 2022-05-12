@@ -96,7 +96,7 @@ public class Mapa {
 		case "Obstaculo":
 			for (int i = 0; i < cantidad; i++) {
 				Vector2D pos = generarCoordenadas();
-				Obstaculo obstaculo = new Obstaculo(pos, pos);
+				Obstaculo obstaculo = new Obstaculo(pos);
 				this.invocador.instanciar(obstaculo);
 			}
 			break;
@@ -127,7 +127,7 @@ public class Mapa {
 
 		for (int i = 0; i < cantJugadores; i++) {
 			posicionEjeXAuto += incrementoPosicion;
-			partidaActual.agregarJugador(posicionEjeXAuto, "Jugador N°" + (i + 1));
+			partidaActual.agregarJugador(posicionEjeXAuto, "Jugador Nro: " + (i + 1));
 			// TODO: Usar un nombre especificado por cada jugador.
 		}
 	}

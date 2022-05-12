@@ -1,12 +1,13 @@
 package entidades.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import entidades.Jugador;
 import logica.Mapa;
 import logica.Partida;
@@ -84,7 +85,7 @@ public class TestPartida {
 			// Esperamos 3 segundos a que el tiempo de espera se agote.
 			new CountDownLatch(1).await(2L, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 
 		assertEquals(jugador, partida.getGanador());
@@ -98,7 +99,6 @@ public class TestPartida {
 	 */
 	public void testDeterminarPodioJugadores() {
 		
-		Mapa mapa = partida.getMapa();
 		Jugador jugador = partida.getJugador(0);
 		Jugador jugador2 = partida.getJugador(1);
 		Jugador jugador3 = partida.getJugador(2);

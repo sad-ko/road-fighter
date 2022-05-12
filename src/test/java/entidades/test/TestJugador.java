@@ -12,6 +12,7 @@ import entidades.Auto;
 import entidades.AutoEstatico;
 import entidades.Cuerpo;
 import entidades.Jugador;
+import entidades.Obstaculo;
 import entidades.PowerUp;
 import fisica.Vector2D;
 
@@ -64,7 +65,8 @@ public class TestJugador {
 	}*/
 
 	/**
-	 * 
+	 * Test donde se verifica que el jugado cuando acelere, se haya desplazado una
+	 * distancia Y, y su velocidad actual haya sido modificada.
 	 */
 	@Test
 	public void acelerarJugadorTest() {
@@ -72,11 +74,11 @@ public class TestJugador {
 		jugador.acelerar(1);
 
 		assertTrue(jugador.getVelocidad() == 2);
-		assertTrue(jugador.getPosicion().getY() == 2); // Revisar funcionamiento, deberia ser 1 o 2?
+		assertTrue(jugador.getPosicion().getY() == 2);
 	}
 
 	/**
-	 * 
+	 * Test donde se verifica que Un jugador al desacelerar varias veces, se frene.
 	 */
 	@Test
 	public void desacelerarHastaFrenarTest() {
@@ -91,7 +93,7 @@ public class TestJugador {
 	}
 
 	/**
-	 * 
+	 * Test donde se verifica que un jugador acelere hasta una velocidad maxima indicada.
 	 */
 	@Test
 	public void acelerarHastaVelocidadMaximaTest() {
@@ -137,7 +139,7 @@ public class TestJugador {
 	}
 
 	/**
-	 * 
+	 * Test donde se verifica que el Jugador haya obtenido un Power Up del mapa.
 	 */
 	@Test
 	public void jugadorChocaPowerUpTest() {
@@ -155,7 +157,8 @@ public class TestJugador {
 	}
 
 	/**
-	 * 
+	 * Test donde se verifica la interseccion de un Jugador contra un enemigo estático
+	 * del mapa.
 	 */
 	@Test
 	public void jugadorChocaAutoEstaticoTest() {
@@ -171,5 +174,25 @@ public class TestJugador {
 		}
 		assertTrue(jugador.getHitbox().intersecta(enemigo));
 	}
+	
+	/**
+	 * Test donde se verifica la interseccion de un Jugador contra un obstaculo
+	 * del mapa, y verifica que el auto haya explotado.
+	 */
+	@Test
+	public void jugadorChocaObstaculoTest() {
+		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Player1");
+		Obstaculo obstaculo = new Obstaculo(new Vector2D(5f, 0f));
 
+		List<Cuerpo> objetosInstanciados = new ArrayList<>();
+		objetosInstanciados.add(jugador);
+		objetosInstanciados.add(obstaculo);
+
+		for (int i = 0; i < obstaculo.getPosicion().getX(); i++) {
+			jugador.desplazar(true, 1);
+		}
+		assertTrue(jugador.getHitbox().intersecta(obstaculo));
+		assertTrue(jugador.getExploto());
+	}
+	
 }
