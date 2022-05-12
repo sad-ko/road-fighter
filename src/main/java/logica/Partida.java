@@ -1,6 +1,8 @@
 package logica;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -71,12 +73,29 @@ public class Partida {
 
 	/**
 	 * Determina las posiciones de todos los {@code Jugador}es durante el lapso de
-	 * la partida.
+	 * la partida. Es decir, el podio
 	 */
 	public void determinarPosiciones() {
-		// TODO: Comparar posiciones en el eje y de cada jugador y acomodar sus
-		// posiciones acorde.
+		
+		Collections.sort(this.posiciones, new Comparator<Posicion>() {
+			@Override
+			public int compare(Posicion o1, Posicion o2) {
+				float coordenadaYjug1 = o1.getJugador().getPosicion().getY();
+				float coordenadaYjug2 = o2.getJugador().getPosicion().getY();
+				
+				if (coordenadaYjug1 > coordenadaYjug2) return -1;
+				if (coordenadaYjug1 < coordenadaYjug2) return 1;
+				else return 0;
+			}
+		});
+		
+		for (int i = 0; i < this.posiciones.size(); i++) {
+			this.posiciones.get(i).setPosicionActual(i+1);
+			System.out.println("POSICION " + (i+1) + ": "+ this.posiciones.get(i).getJugador().getNombre());
+		}
 	}
+	
+	
 
 	public Jugador getJugador(int index) {
 		return this.posiciones.get(index).getJugador();

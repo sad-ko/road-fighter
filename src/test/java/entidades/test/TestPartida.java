@@ -89,5 +89,39 @@ public class TestPartida {
 
 		assertEquals(jugador, partida.getGanador());
 	}
+	
+	
+	@Test
+	/**
+	 * Busca verificar que las posiciones durante la partida para 3 jugadores 
+	 * que aceleran y/o desaceleran sean correctas 
+	 */
+	public void testDeterminarPodioJugadores() {
+		
+		Mapa mapa = partida.getMapa();
+		Jugador jugador = partida.getJugador(0);
+		Jugador jugador2 = partida.getJugador(1);
+		Jugador jugador3 = partida.getJugador(2);
+		
+		for (int i = 0; i < 70; i++) {
+			
+			jugador.acelerar(delta);
+			jugador2.acelerar(delta);
+			jugador3.acelerar(delta);
+			
+			if (i > 10 && i < 20)
+				jugador2.desacelerar(delta);
+			
+			if(i> 20 && i < 23)
+				jugador3.desacelerar(delta);
+			
+			partida.determinarPosiciones();
+		}
+		
+		assertEquals(jugador, partida.getPosiciones().get(0).getJugador()); //posicion 1 : jugador
+		assertEquals(jugador3, partida.getPosiciones().get(1).getJugador()); //posicion 2 : jugador3
+		assertEquals(jugador2, partida.getPosiciones().get(2).getJugador()); //posicion 3 : jugador2
+	}
+	
 
 }

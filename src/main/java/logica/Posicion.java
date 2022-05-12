@@ -19,6 +19,10 @@ public class Posicion {
 	public int getPosicionActual() {
 		return posicionActual;
 	}
+	
+	public void setPosicionActual(int posicionActual) {
+		this.posicionActual = posicionActual;
+	}
 
 	@Override
 	public String toString() {
