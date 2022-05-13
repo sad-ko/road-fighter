@@ -11,7 +11,7 @@ import fisica.Vector2D;
 public class PowerUp extends Cuerpo {
 
 	private float power = 1.5f;
-	private long tiempo = 3000L;
+	private long tiempo = 5000L;
 
 	/**
 	 * @param posicion :{@code Vector2D} - Posicion del objeto en el plano (x,y).
