@@ -35,7 +35,7 @@ public class Partida {
 
 	private void terminarPartida() {
 		// TODO: Ganador deberia ser asignado aqui en base a las posiciones finales.
-		System.err.println("[PARTIDA TERMINADA]");
+		System.out.println("[PARTIDA TERMINADA]");
 		this.posiciones.forEach(System.out::println);
 	}
 
@@ -76,33 +76,28 @@ public class Partida {
 	 * la partida. Es decir, el podio
 	 */
 	public void determinarPosiciones() {
-		
+
 		Collections.sort(this.posiciones, new Comparator<Posicion>() {
 			@Override
 			public int compare(Posicion o1, Posicion o2) {
 				float coordenadaYjug1 = o1.getJugador().getPosicion().getY();
 				float coordenadaYjug2 = o2.getJugador().getPosicion().getY();
-				
-				if (coordenadaYjug1 > coordenadaYjug2) return -1;
-				if (coordenadaYjug1 < coordenadaYjug2) return 1;
-				else return 0;
+
+				return (int) (coordenadaYjug2 - coordenadaYjug1);
 			}
 		});
-		
+
 		for (int i = 0; i < this.posiciones.size(); i++) {
-			this.posiciones.get(i).setPosicionActual(i+1);
-			System.out.println("POSICION " + (i+1) + ": "+ this.posiciones.get(i).getJugador().getNombre());
+			this.posiciones.get(i).setPosicionActual(i + 1);
 		}
 	}
-	
-	
 
 	public Jugador getJugador(int index) {
 		return this.posiciones.get(index).getJugador();
 	}
 
-	public List<Posicion> getPosiciones() {
-		return posiciones;
+	public int getCantidadJugadores() {
+		return posiciones.size();
 	}
 
 	public Mapa getMapa() {

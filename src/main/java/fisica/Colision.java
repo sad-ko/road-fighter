@@ -91,9 +91,4 @@ public final class Colision {
 	public void desactivar(boolean desactivado) {
 		this.desactivado = desactivado;
 	}
-
-	@Override
-	public String toString() {
-		return "Tamanio: " + tamanio + ", desactivado: " + desactivado;
-	}
 }

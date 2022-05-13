@@ -16,10 +16,6 @@ public class Posicion {
 		return jugador;
 	}
 
-	public int getPosicionActual() {
-		return posicionActual;
-	}
-	
 	public void setPosicionActual(int posicionActual) {
 		this.posicionActual = posicionActual;
 	}

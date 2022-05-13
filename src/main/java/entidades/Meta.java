@@ -9,7 +9,7 @@ import logica.Partida;
  */
 public class Meta extends Cuerpo {
 
-	public final Partida partidaActual;
+	private final Partida partidaActual;
 
 	/**
 	 * @param meta          :{@code float} - Posicion de la meta en el eje Y.
@@ -20,5 +20,9 @@ public class Meta extends Cuerpo {
 	public Meta(float meta, float ancho, Partida partidaActual) {
 		super("Meta", new Vector2D(0f, meta), new Vector2D(ancho, 2f));
 		this.partidaActual = partidaActual;
+	}
+
+	public Partida getPartidaActual() {
+		return this.partidaActual;
 	}
 }

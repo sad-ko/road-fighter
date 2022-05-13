@@ -3,74 +3,27 @@ package entidades.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
-
 import entidades.Auto;
 import entidades.AutoEstatico;
-import entidades.Cuerpo;
 import entidades.Jugador;
 import entidades.Obstaculo;
 import entidades.PowerUp;
 import fisica.Vector2D;
+import logica.Invocador;
 
 public class TestJugador {
-	/*public void test() {
-		ArrayList<Cuerpo> objetosInstanciados = new ArrayList<>();
-
-		Vector2D posInicialJugador = new Vector2D(0f, 0f);
-		Jugador jugador = new Jugador(posInicialJugador, "player");
-
-		Vector2D posInicialPowerUP = new Vector2D(101f, 29299f);
-		PowerUp power = new PowerUp(posInicialPowerUP);
-
-		Vector2D posInicialAutoEstatico = new Vector2D(-99f, 27499f);
-		AutoEstatico auto = new AutoEstatico(posInicialAutoEstatico);
-
-		objetosInstanciados.add(jugador);
-		objetosInstanciados.add(power);
-		objetosInstanciados.add(auto);
-
-		for (int i = 0; i <= 350; i++) {
-			revisarColisiones(objetosInstanciados);
-
-			System.out.println(jugador);
-			jugador.desplazar(i % 2 == 0, 1); // Zig Zag
-
-			// Desacelera durante 50 iteraciones
-			if (i < 100 || i > 150) {
-				jugador.acelerar(1);
-			} else {
-				jugador.desacelerar(1);
-			}
-		}
-
-		System.err.println("[END]");
-
-	}*/
-
-	// esto lo agregue en clase Partida
-	/*public static void revisarColisiones(ArrayList<Cuerpo> objetosInstanciados) {
-		int size = objetosInstanciados.size();
-
-		for (int i = 0; i < size; i++) {
-			Cuerpo a = objetosInstanciados.get(i);
-			for (int j = i + 1; j < size; j++) {
-				Cuerpo b = objetosInstanciados.get(j);
-				a.getHitbox().intersecta(b);
-			}
-		}
-	}*/
 
 	/**
 	 * Test donde se verifica que el jugado cuando acelere, se haya desplazado una
 	 * distancia Y, y su velocidad actual haya sido modificada.
 	 */
 	@Test
-	public void acelerarJugadorTest() {
-		Jugador jugador = new Jugador(new Vector2D(0, 0), "Player1");
+	public void testAcelerarJugador() {
+		Jugador jugador = new Jugador(new Vector2D(0, 0), "Arnold");
 		jugador.acelerar(1);
 
 		assertTrue(jugador.getVelocidad() == 2);
@@ -78,11 +31,11 @@ public class TestJugador {
 	}
 
 	/**
-	 * Test donde se verifica que Un jugador al desacelerar varias veces, se frene.
+	 * Test donde se verifica que un jugador al desacelerar varias veces, se frene.
 	 */
 	@Test
-	public void desacelerarHastaFrenarTest() {
-		Jugador jugador = new Jugador(new Vector2D(0, 0), "Player1");
+	public void testDesacelerarHastaFrenar() {
+		Jugador jugador = new Jugador(new Vector2D(0, 0), "Alexander");
 
 		jugador.acelerar(1);
 		jugador.desacelerar(1);
@@ -93,49 +46,54 @@ public class TestJugador {
 	}
 
 	/**
-	 * Test donde se verifica que un jugador acelere hasta una velocidad maxima indicada.
+	 * Test donde se verifica que un jugador acelere hasta una velocidad maxima
+	 * indicada.
 	 */
 	@Test
-	public void acelerarHastaVelocidadMaximaTest() {
-		Jugador jugador = new Jugador(new Vector2D(0, 0), "Player1");
+	public void testAcelerarHastaVelocidadMaxima() {
+		Jugador jugador = new Jugador(new Vector2D(0, 0), "Ned");
 
 		for (int i = 0; i < 250; i++) {
 			jugador.acelerar(i);
 		}
 
-		assertTrue(jugador.getVelocidad() == 200);
+		assertTrue(jugador.getVelocidad() == jugador.getVelocidadMax());
 	}
 
 	@Test
-	public void caso01_MoverseIzq_y_Derecha() {
-		Jugador jugador1 = new Jugador(new Vector2D(0f, 0f), "player1");
+	/**
+	 * Test que verifica el poder desplazarse horizontalmente.
+	 */
+	public void testDesplazoHorizontal() {
+		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Bob");
 
 		// true para girar a la derecha, false para girar a la izquierda
-		jugador1.desplazar(true, 1);
-		jugador1.desplazar(true, 1);
-		jugador1.desplazar(true, 1);
-		jugador1.desplazar(false, 1);
+		jugador.desplazar(true, 1);
+		jugador.desplazar(true, 1);
+		jugador.desplazar(true, 1);
+		jugador.desplazar(false, 1);
 
-		assertEquals(2, jugador1.getPosicion().getX(), 0.00);
-
+		assertEquals(2f, jugador.getPosicion().getX(), 0f);
 	}
 
 	@Test
-	public void caso02_ChocaOtroJugador() {
-		Jugador jugador1 = new Jugador(new Vector2D(0f, 0f), "player1");
-		Jugador jugador2 = new Jugador(new Vector2D(5f, 0f), "player2");
+	/**
+	 * Test que verifica si un jugador colisiona con otro.
+	 */
+	public void testChocarOtroJugador() {
+		Jugador jugador1 = new Jugador(new Vector2D(0f, 0f), "Elton");
+		Jugador jugador2 = new Jugador(new Vector2D(5f, 0f), "Tito");
 
-		ArrayList<Cuerpo> objetosInstanciados = new ArrayList<>();
-		objetosInstanciados.add(jugador1);
-		objetosInstanciados.add(jugador2);
+		Invocador invocador = new Invocador();
+		invocador.instanciar(jugador1);
+		invocador.instanciar(jugador2);
 
 		for (int i = 0; i < 5; i++) {
-			jugador1.desplazar(true, 1); // true para girar a la derecha, false para girar a la izquierda
-			System.out.println(jugador1);
-			System.out.println(jugador2);
-			// revisarColisiones(objetosInstanciados);
+			jugador1.desplazar(true, 1);
+			invocador.calcularColisiones();
 		}
-		assertTrue(jugador1.getHitbox().intersecta(jugador2));
+
+		assertEquals(jugador1.getImpacto(), jugador2.getImpacto());
 	}
 
 	/**
@@ -143,56 +101,88 @@ public class TestJugador {
 	 */
 	@Test
 	public void jugadorChocaPowerUpTest() {
-		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Player1");
+		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Elsa Capunta");
 		PowerUp nitro = new PowerUp(new Vector2D(5f, 0f));
 
-		List<Cuerpo> objetosInstanciados = new ArrayList<>();
-		objetosInstanciados.add(jugador);
-		objetosInstanciados.add(nitro);
+		Invocador invocador = new Invocador();
+		invocador.instanciar(jugador);
+		invocador.instanciar(nitro);
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 250; i++) {
 			jugador.desplazar(true, 1);
+			invocador.calcularColisiones();
 		}
-		assertTrue(jugador.getHitbox().intersecta(nitro));
+
+		assertEquals(1 * nitro.getPowerUp(), jugador.getVelocidad(), 0f);
 	}
 
 	/**
-	 * Test donde se verifica la interseccion de un Jugador contra un enemigo estático
-	 * del mapa.
+	 * Test donde se verifica que el Jugador haya perdido el PowerUp obtenido
+	 * despues del tiempo definido por el PowerUp.
 	 */
 	@Test
-	public void jugadorChocaAutoEstaticoTest() {
-		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Player1");
+	public void jugadorPierdePowerUpTest() {
+		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Elsa Capunta");
+		PowerUp nitro = new PowerUp(new Vector2D(5f, 0f));
+
+		Invocador invocador = new Invocador();
+		invocador.instanciar(jugador);
+		invocador.instanciar(nitro);
+
+		for (int i = 0; i < 250; i++) {
+			jugador.desplazar(true, 1);
+			invocador.calcularColisiones();
+		}
+
+		try {
+			// Esperamos 3 segundos a que el tiempo de espera se agote.
+			new CountDownLatch(1).await(nitro.getTiempo(), TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			System.err.println(e.getMessage());
+		}
+
+		assertEquals(1, jugador.getVelocidad(), 0f);
+	}
+
+	/**
+	 * Test donde se verifica la interseccion de un Jugador contra un enemigo
+	 * estatico del mapa.
+	 */
+	@Test
+	public void testChocaAutoEstatico() {
+		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Carlos");
 		Auto enemigo = new AutoEstatico(new Vector2D(5f, 0f));
 
-		List<Cuerpo> objetosInstanciados = new ArrayList<>();
-		objetosInstanciados.add(jugador);
-		objetosInstanciados.add(enemigo);
+		Invocador invocador = new Invocador();
+		invocador.instanciar(jugador);
+		invocador.instanciar(enemigo);
 
 		for (int i = 0; i < enemigo.getPosicion().getX(); i++) {
 			jugador.desplazar(true, 1);
 		}
+
 		assertTrue(jugador.getHitbox().intersecta(enemigo));
 	}
-	
+
 	/**
-	 * Test donde se verifica la interseccion de un Jugador contra un obstaculo
-	 * del mapa, y verifica que el auto haya explotado.
+	 * Test donde se verifica la interseccion de un Jugador contra un obstaculo del
+	 * mapa, y verifica que el auto haya explotado.
 	 */
 	@Test
 	public void jugadorChocaObstaculoTest() {
-		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Player1");
+		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Elvis Nieto");
 		Obstaculo obstaculo = new Obstaculo(new Vector2D(5f, 0f));
 
-		List<Cuerpo> objetosInstanciados = new ArrayList<>();
-		objetosInstanciados.add(jugador);
-		objetosInstanciados.add(obstaculo);
+		Invocador invocador = new Invocador();
+		invocador.instanciar(jugador);
+		invocador.instanciar(obstaculo);
 
 		for (int i = 0; i < obstaculo.getPosicion().getX(); i++) {
 			jugador.desplazar(true, 1);
 		}
+
 		assertTrue(jugador.getHitbox().intersecta(obstaculo));
 		assertTrue(jugador.getExploto());
 	}
-	
+
 }

@@ -6,18 +6,20 @@ import entidades.Jugador;
 import entidades.Meta;
 import entidades.Obstaculo;
 import entidades.PowerUp;
+import logica.Partida;
 
 /**
- * La clase {@code ColisionInspector} actua como mediador en la interaccion
- * de las distintas clases de {@code Cuerpo} al chocar. Cada interaccion entre
- * dos {@code Cuerpo}s debe ser propiamente definida en esta clase.
+ * La clase {@code ColisionInspector} actua como mediador en la interaccion de
+ * las distintas clases de {@code Cuerpo} al chocar. Cada interaccion entre dos
+ * {@code Cuerpo}s debe ser propiamente definida en esta clase.
  */
 public final class ColisionInspector {
 
 	/**
 	 * Esta clase no puede ser instanciada.
 	 */
-	private ColisionInspector() {}
+	private ColisionInspector() {
+	}
 
 	/**
 	 * Funcion estatica que gestiona como deben interactuar los dos cuerpos
@@ -44,7 +46,7 @@ public final class ColisionInspector {
 		Jugador jugador = null;
 		PowerUp powerUp = null;
 		AutoEstatico autoEst = null;
-		
+		Obstaculo obstaculo = null;
 
 		switch (caso) {
 		case "AutoEstatico::AutoEstatico":
@@ -67,6 +69,11 @@ public final class ColisionInspector {
 			break;
 
 		case "AutoEstatico::Obstaculo":
+			autoEst = (AutoEstatico) c1;
+			obstaculo = (Obstaculo) c2;
+
+			autoEst.explotar();
+			obstaculo.removerObjeto();
 			break;
 
 		case "Borde::Jugador":
@@ -84,9 +91,12 @@ public final class ColisionInspector {
 		case "Jugador::Meta":
 			jugador = (Jugador) c1;
 			Meta meta = (Meta) c2;
+			Partida partidaActual = meta.getPartidaActual();
 
-			meta.partidaActual.setGanador(jugador);
-			meta.partidaActual.iniciarEspera();
+			if (partidaActual.getGanador() == null) {
+				partidaActual.setGanador(jugador);
+				partidaActual.iniciarEspera();
+			}
 
 			break;
 
@@ -97,17 +107,16 @@ public final class ColisionInspector {
 			jugador.setVelocidad(jugador.getVelocidad() * powerUp.getPowerUp());
 			powerUp.timeout(jugador);
 			powerUp.removerObjeto();
-
-			System.err.println("POWER UP!!!");
 			break;
 
 		case "Jugador::Obstaculo":
 			jugador = (Jugador) c1;
-			Obstaculo obstaculo = (Obstaculo) c2;
+			obstaculo = (Obstaculo) c2;
+
 			jugador.explotar();
 			obstaculo.removerObjeto();
 			break;
 		}
 	}
-	
+
 }

@@ -30,7 +30,6 @@ public class PowerUp extends Cuerpo {
 			public void run() {
 				float vel = jugador.getVelocidad() / power;
 				jugador.setVelocidad(vel);
-				System.out.println("POWER OUT...");
 			}
 		};
 
@@ -41,4 +40,9 @@ public class PowerUp extends Cuerpo {
 	public float getPowerUp() {
 		return power;
 	}
+
+	public long getTiempo() {
+		return tiempo;
+	}
+
 }

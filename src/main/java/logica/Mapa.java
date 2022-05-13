@@ -131,25 +131,13 @@ public class Mapa {
 			// TODO: Usar un nombre especificado por cada jugador.
 		}
 	}
-	
+
 	public void instanciar(Cuerpo cuerpo) {
 		this.invocador.instanciar(cuerpo);
 	}
 
 	public Invocador getInvocador() {
 		return invocador;
-	}
-
-	public float getLimiteDerecho() {
-		return limiteDerecho;
-	}
-
-	public float getLimiteIzquierdo() {
-		return limiteIzquierdo;
-	}
-
-	public float getLongitud() {
-		return longitud;
 	}
 
 }

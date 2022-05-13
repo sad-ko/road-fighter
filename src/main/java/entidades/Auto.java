@@ -12,7 +12,8 @@ public abstract class Auto extends Cuerpo {
 	 * Velocidad inicial del {@code Auto}, comienza en 0.0f
 	 */
 	protected float velocidad = 0.0f;
-	protected boolean exploto = false; // Temporal, solo para probar los Unit Test
+	private boolean exploto = false; // Temporal, solo para probar los Unit Test
+	private boolean impacto = false; // Temporal, solo para probar los Unit Test
 
 	/**
 	 * @param clase    :{@code String} - Nombre de la clase no-abstracta que hereda
@@ -29,8 +30,9 @@ public abstract class Auto extends Cuerpo {
 	 * @param otroAuto :{@code Auto} - Auto con el que se impacto
 	 */
 	public void impacto(Auto otroAuto) {
-		System.err.println(this.getNombre() + " choco con " + otroAuto.getNombre());
 		// TODO: Calculos del impacto
+		this.impacto = true; // Temporal, solo para probar los Unit Test
+		otroAuto.impacto = true;
 	}
 
 	public void explotar() {
@@ -38,12 +40,12 @@ public abstract class Auto extends Cuerpo {
 		this.exploto = true; // Temporal, solo para probar los Unit Test
 	}
 
-	public String getNombre() {
-		return this.getClase();
-	}
-
 	public boolean getExploto() {
 		return this.exploto; // Temporal, solo para probar los Unit Test
+	}
+
+	public boolean getImpacto() {
+		return this.impacto; // Temporal, solo para probar los Unit Test
 	}
 
 	public float getVelocidad() {

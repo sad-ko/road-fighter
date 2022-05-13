@@ -68,15 +68,12 @@ public final class Jugador extends Auto {
 		this.posicion.setY(this.posicion.getY() + this.velocidad * delta);
 	}
 
-	@Override
 	public String getNombre() {
-		return nombre;
+		return this.nombre;
 	}
 
-	@Override
-	public String toString() {
-		int pad = this.posicion.toString().length();
-		return String.format("%s : %" + (-pad) + "s | velocidad: %.2f", this.nombre, this.posicion, this.velocidad);
+	public float getVelocidadMax() {
+		return velocidadMax;
 	}
 
 }

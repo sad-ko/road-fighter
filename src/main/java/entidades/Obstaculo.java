@@ -9,5 +9,5 @@ public class Obstaculo extends Cuerpo {
 	}
 
 	// TODO: Implementar funcionamiento a los obstaculos.
-	
+
 }

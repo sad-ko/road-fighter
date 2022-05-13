@@ -27,9 +27,4 @@ public abstract class Cuerpo extends Objeto {
 	public Colision getHitbox() {
 		return hitbox;
 	}
-
-	@Override
-	public String toString() {
-		return "Posicion: " + posicion + " | Hitbox: " + hitbox;
-	}
 }

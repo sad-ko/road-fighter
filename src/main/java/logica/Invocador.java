@@ -10,7 +10,7 @@ import entidades.Cuerpo;
  */
 public class Invocador {
 
-	protected List<Cuerpo> instancias;
+	private List<Cuerpo> instancias;
 
 	public Invocador() {
 		this.instancias = new ArrayList<>();
@@ -38,9 +38,5 @@ public class Invocador {
 
 	public int size() {
 		return this.instancias.size();
-	}
-
-	public List<Cuerpo> getCuerposInstanciados() {
-		return instancias;
 	}
 }

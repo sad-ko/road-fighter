@@ -36,10 +36,6 @@ public abstract class Objeto {
 		return posicion;
 	}
 
-	public void setPosicion(Vector2D posicion) {
-		this.posicion = posicion;
-	}
-
 	/**
 	 * Remueve el objeto del mapa <strong>[FALTA IMPLEMENTAR]</strong>
 	 */

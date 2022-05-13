@@ -15,4 +15,9 @@ public class AutoEstatico extends Auto {
 		super("AutoEstatico", posicion);
 		this.velocidad = 25.0f;
 	}
+
+	public void mover(float delta) {
+		float y = this.posicion.getY() + this.velocidad * delta;
+		this.posicion.cambiarCoordenadas(this.posicion.getX(), y);
+	}
 }
