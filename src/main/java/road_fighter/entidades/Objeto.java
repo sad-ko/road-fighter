@@ -1,6 +1,7 @@
-package entidades;
+package road_fighter.entidades;
 
-import fisica.Vector2D;
+import javafx.scene.Node;
+import road_fighter.fisica.Vector2D;
 
 /**
  * La clase {@code Objeto} es una clase abstracta de la cual heredan todas las
@@ -11,7 +12,7 @@ public abstract class Objeto {
 	/**
 	 * Nombre de la clase no-abstracta que hereda de {@code Objeto}.
 	 */
-	private final String clase;
+	private final Entidad clase;
 
 	/**
 	 * Posicion del objeto en el plano (x,y).
@@ -19,16 +20,25 @@ public abstract class Objeto {
 	protected Vector2D posicion;
 
 	/**
+	 * 
+	 */
+	protected Node render;
+
+	/**
 	 * @param clase    :{@code String} - Nombre de la clase no-abstracta que hereda
 	 *                 de {@code Objeto}.
 	 * @param posicion :{@code Vector2D} - Posicion del objeto en el plano (x,y).
 	 */
-	protected Objeto(final String clase, final Vector2D posicion) {
+	protected Objeto(final Entidad clase, final Vector2D posicion) {
 		this.clase = clase;
 		this.posicion = posicion;
 	}
 
-	public String getClase() {
+	public abstract void update(double deltaTime);
+
+	public abstract void remover();
+
+	public Entidad getClase() {
 		return this.clase;
 	}
 
@@ -36,10 +46,7 @@ public abstract class Objeto {
 		return posicion;
 	}
 
-	/**
-	 * Remueve el objeto del mapa <strong>[FALTA IMPLEMENTAR]</strong>
-	 */
-	public void removerObjeto() {
-		// TODO: Esconder el sprite
+	public Node getRender() {
+		return render;
 	}
 }

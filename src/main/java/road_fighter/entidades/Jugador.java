@@ -1,6 +1,7 @@
-package entidades;
+package road_fighter.entidades;
 
-import fisica.Vector2D;
+import road_fighter.fisica.Vector2D;
+import road_fighter.logica.Partida;
 
 /**
  * La clase {@code Jugador} hija de {@code Cuerpo}, es la clase principal con la
@@ -11,8 +12,8 @@ public final class Jugador extends Auto {
 	/**
 	 * Velocidad maxima del {@code Jugador}, actualmente es 200.0f
 	 */
-	private float velocidadMax = 200.0f;
-	private float aceleracion = 1f;
+	private double velocidadMax = 200.0;
+	private double aceleracion = 0.01;
 	private String nombre;
 
 	/**
@@ -21,9 +22,9 @@ public final class Jugador extends Auto {
 	 * @param nombre   :{@code String} - Nombre del jugador.
 	 */
 	public Jugador(Vector2D posicion, String nombre) {
-		super("Jugador", posicion);
+		super(Entidad.JUGADOR, posicion, "img/auto.png", new Vector2D(11, 16));
 		this.nombre = nombre;
-		this.velocidad = 1f;
+		this.velocidad = 1;
 	}
 
 	/**
@@ -35,8 +36,8 @@ public final class Jugador extends Auto {
 	 * @param delta   :float - Lapso de tiempo en segundos, desde el anterior frame
 	 *                a este
 	 */
-	public void desplazar(boolean derecha, float delta) {
-		float sentido = derecha ? this.velocidad : (this.velocidad * -1);
+	public void desplazar(boolean derecha, double delta) {
+		double sentido = derecha ? 2 : (2 * -1);
 		this.posicion.setX(this.posicion.getX() + sentido * delta);
 	}
 
@@ -47,11 +48,11 @@ public final class Jugador extends Auto {
 	 * @param delta :float - Lapso de tiempo en segundos, desde el anterior frame a
 	 *              este
 	 */
-	public void acelerar(float delta) {
+	public void acelerar(double delta) {
 		if (this.velocidad < this.velocidadMax) {
 			this.velocidad += this.aceleracion;
 		}
-		this.posicion.setY(this.posicion.getY() + this.velocidad * delta);
+		this.posicion.setY(this.posicion.getY() - this.velocidad * delta);
 	}
 
 	/**
@@ -61,19 +62,61 @@ public final class Jugador extends Auto {
 	 * @param delta :float - Lapso de tiempo en segundos, desde el anterior frame a
 	 *              este
 	 */
-	public void desacelerar(float delta) {
-		if (this.velocidad > 0) {
+	public void desacelerar(double delta) {
+		if (this.velocidad > 0.0) {
 			this.velocidad -= this.aceleracion;
 		}
-		this.posicion.setY(this.posicion.getY() + this.velocidad * delta);
+		this.posicion.setY(this.posicion.getY() - this.velocidad * delta);
+	}
+
+	@Override
+	public void enChoque(Cuerpo cuerpo) {
+		switch (cuerpo.getClase()) {
+		case AUTO_ESTATICO:
+			this.impacto((Auto) cuerpo);
+			break;
+
+		case BORDE:
+			this.explotar();
+			break;
+
+		case JUGADOR:
+			this.impacto((Auto) cuerpo);
+			break;
+
+		case META:
+			Meta meta = (Meta) cuerpo;
+			Partida partidaActual = meta.getPartidaActual();
+
+			if (partidaActual.getGanador() == null) {
+				partidaActual.setGanador(this);
+				partidaActual.iniciarEspera();
+			}
+			break;
+
+		case OBSTACULO:
+			this.explotar();
+			cuerpo.remover();
+			break;
+
+		case POWERUP:
+			PowerUp powerUp = (PowerUp) cuerpo;
+
+			this.setVelocidad(this.getVelocidad() * powerUp.getPowerUp());
+			powerUp.timeout(this);
+			powerUp.remover();
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	public String getNombre() {
 		return this.nombre;
 	}
 
-	public float getVelocidadMax() {
+	public double getVelocidadMax() {
 		return velocidadMax;
 	}
-
 }

@@ -1,13 +1,15 @@
-package logica;
+package road_fighter.logica;
 
 import java.util.Random;
-import entidades.AutoEstatico;
-import entidades.Borde;
-import entidades.Cuerpo;
-import entidades.Meta;
-import entidades.Obstaculo;
-import entidades.PowerUp;
-import fisica.Vector2D;
+
+import road_fighter.entidades.AutoEstatico;
+import road_fighter.entidades.Borde;
+import road_fighter.entidades.Entidad;
+import road_fighter.entidades.Jugador;
+import road_fighter.entidades.Meta;
+import road_fighter.entidades.Obstaculo;
+import road_fighter.entidades.PowerUp;
+import road_fighter.fisica.Vector2D;
 
 /**
  * La clase {@code Mapa} es el encargado de definir los limites, meta, generar
@@ -15,9 +17,9 @@ import fisica.Vector2D;
  */
 public class Mapa {
 
-	private float longitud;
-	private float limiteDerecho;
-	private float limiteIzquierdo;
+	private double longitud;
+	private double limiteDerecho;
+	private double limiteIzquierdo;
 	private Invocador invocador;
 	private Random rand;
 
@@ -29,7 +31,7 @@ public class Mapa {
 	 * @param limiteDerecho   :{@code float} - Posicion del limite derecho del mapa
 	 *                        en el eje X.
 	 */
-	public Mapa(float longitud, float limiteIzquierdo, float limiteDerecho) {
+	public Mapa(double longitud, double limiteIzquierdo, double limiteDerecho) {
 		super();
 		this.longitud = longitud;
 		this.limiteDerecho = limiteDerecho;
@@ -38,11 +40,11 @@ public class Mapa {
 		// -1 porque Borde crea una colision 1f de ancho, de esta forma desplazamos el
 		// limite izquierdo propiamente
 		Borde ld = new Borde(limiteDerecho, longitud);
-		Borde li = new Borde(limiteIzquierdo - 1f, longitud);
+		Borde li = new Borde(limiteIzquierdo - 1, longitud);
 
-		this.invocador = new Invocador();
-		this.invocador.instanciar(ld);
-		this.invocador.instanciar(li);
+		this.invocador = Invocador.getInstancia();
+		this.invocador.add(ld);
+		this.invocador.add(li);
 
 		this.rand = new Random();
 	}
@@ -56,13 +58,13 @@ public class Mapa {
 	 */
 	private Vector2D generarCoordenadas() {
 		// Para que el Cuerpo no sea instanciado exactamente en los bordes ni en la meta
-		float espaciado = 5f;
-		float ld = limiteDerecho + espaciado;
-		float li = limiteIzquierdo - espaciado;
-		float l = longitud - espaciado;
+		double espaciado = 5;
+		double ld = limiteDerecho + espaciado;
+		double li = limiteIzquierdo - espaciado;
+		double l = longitud - espaciado;
 
-		float x = ld + rand.nextFloat() * (li - ld);
-		float y = espaciado + rand.nextFloat() * (l - espaciado);
+		double x = ld + rand.nextFloat() * (li - ld);
+		double y = espaciado + rand.nextFloat() * (l - espaciado);
 
 		return new Vector2D(x, y);
 	}
@@ -75,37 +77,40 @@ public class Mapa {
 	 * @param cantidad       :{@code int} - Cantidad de {@code Cuerpo}s a agregar en
 	 *                       el mapa.
 	 */
-	public void agregarObstaculos(String obstaculoClase, int cantidad) {
+	public void agregarObstaculos(Entidad obstaculoClase, int cantidad) {
 		switch (obstaculoClase) {
-		case "AutoEstatico":
+		case AUTO_ESTATICO:
 			for (int i = 0; i < cantidad; i++) {
 				Vector2D pos = generarCoordenadas();
 				AutoEstatico auto = new AutoEstatico(pos);
-				this.invocador.instanciar(auto);
+				this.invocador.add(auto);
 			}
 			break;
 
-		case "PowerUp":
+		case POWERUP:
 			for (int i = 0; i < cantidad; i++) {
 				Vector2D pos = generarCoordenadas();
 				PowerUp power = new PowerUp(pos);
-				this.invocador.instanciar(power);
+				this.invocador.add(power);
 			}
 			break;
 
-		case "Obstaculo":
+		case OBSTACULO:
 			for (int i = 0; i < cantidad; i++) {
 				Vector2D pos = generarCoordenadas();
 				Obstaculo obstaculo = new Obstaculo(pos);
-				this.invocador.instanciar(obstaculo);
+				this.invocador.add(obstaculo);
 			}
+			break;
+
+		default:
 			break;
 		}
 	}
 
 	public void crearMeta(Partida partidaActual) {
 		Meta meta = new Meta(this.longitud, this.limiteDerecho, partidaActual);
-		this.invocador.instanciar(meta);
+		this.invocador.add(meta);
 	}
 
 	/**
@@ -122,22 +127,15 @@ public class Mapa {
 	public void agregarJugadores(Partida partidaActual, int cantJugadores) {
 		// Me aseguro que las distancias entre los autos y tambien con el borde del
 		// mapa, sean siempre equidistantes entre si.
-		float incrementoPosicion = (this.limiteDerecho - this.limiteIzquierdo) / (cantJugadores + 1);
-		float posicionEjeXAuto = 0;
+		double incrementoPosicion = this.limiteIzquierdo
+				+ ((this.limiteDerecho - this.limiteIzquierdo) / (cantJugadores + 1));
+		double posicionEjeXAuto = 0;
 
 		for (int i = 0; i < cantJugadores; i++) {
 			posicionEjeXAuto += incrementoPosicion;
-			partidaActual.agregarJugador(posicionEjeXAuto, "Jugador Nro: " + (i + 1));
+			Jugador jugador = new Jugador(new Vector2D(posicionEjeXAuto, this.longitud), "Jugador Nro: " + (i + 1));
+			partidaActual.agregarJugador(jugador);
 			// TODO: Usar un nombre especificado por cada jugador.
 		}
 	}
-
-	public void instanciar(Cuerpo cuerpo) {
-		this.invocador.instanciar(cuerpo);
-	}
-
-	public Invocador getInvocador() {
-		return invocador;
-	}
-
 }

@@ -1,23 +1,24 @@
-package entidades;
+package road_fighter.entidades;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import fisica.Vector2D;
+
+import road_fighter.fisica.Vector2D;
 
 /**
  * La clase {@code PowerUp} hija de {@code Cuerpo}, aplica un boost de velocidad
  * al {@code Jugador}.
  */
-public class PowerUp extends Cuerpo {
+public class PowerUp extends Colisionables {
 
-	private float power = 1.5f;
+	private double power = 1.5;
 	private long tiempo = 5000L;
 
 	/**
 	 * @param posicion :{@code Vector2D} - Posicion del objeto en el plano (x,y).
 	 */
 	public PowerUp(Vector2D posicion) {
-		super("PowerUp", posicion, new Vector2D(1f, 1f));
+		super(Entidad.POWERUP, posicion, new Vector2D(1, 1));
 	}
 
 	/**
@@ -28,7 +29,7 @@ public class PowerUp extends Cuerpo {
 	public void timeout(Jugador jugador) {
 		TimerTask task = new TimerTask() {
 			public void run() {
-				float vel = jugador.getVelocidad() / power;
+				double vel = jugador.getVelocidad() / power;
 				jugador.setVelocidad(vel);
 			}
 		};
@@ -37,12 +38,24 @@ public class PowerUp extends Cuerpo {
 		timer.schedule(task, this.tiempo);
 	}
 
-	public float getPowerUp() {
+	public double getPowerUp() {
 		return power;
 	}
 
 	public long getTiempo() {
 		return tiempo;
+	}
+
+	@Override
+	public void update(double deltaTime) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void remover() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

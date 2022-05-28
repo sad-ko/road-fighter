@@ -1,7 +1,7 @@
-package entidades;
+package road_fighter.entidades;
 
-import fisica.Colision;
-import fisica.Vector2D;
+import road_fighter.fisica.Colision;
+import road_fighter.fisica.Vector2D;
 
 /**
  * La clase {@code Cuerpo} es una clase abstracta, hija de {@code Objeto}, a la
@@ -19,10 +19,12 @@ public abstract class Cuerpo extends Objeto {
 	 *                      plano (x,y).
 	 * @param hitboxTamanio :{@code Vector2D} - Tamaño de la {@code Colision}
 	 */
-	protected Cuerpo(final String clase, Vector2D posicion, final Vector2D hitboxTamanio) {
+	protected Cuerpo(final Entidad clase, Vector2D posicion, final Vector2D hitboxTamanio) {
 		super(clase, posicion);
 		this.hitbox = new Colision(hitboxTamanio, this);
 	}
+
+	public abstract void enChoque(Cuerpo cuerpo);
 
 	public Colision getHitbox() {
 		return hitbox;

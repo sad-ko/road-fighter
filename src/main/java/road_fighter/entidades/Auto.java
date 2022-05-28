@@ -1,6 +1,8 @@
-package entidades;
+package road_fighter.entidades;
 
-import fisica.Vector2D;
+import javafx.scene.image.ImageView;
+import road_fighter.fisica.Vector2D;
+import road_fighter.graficos.Sprite;
 
 /**
  * La clase {@code Auto} es una clase abstracta que hereda de {@code Cuerpo} y
@@ -11,17 +13,23 @@ public abstract class Auto extends Cuerpo {
 	/**
 	 * Velocidad inicial del {@code Auto}, comienza en 0.0f
 	 */
-	protected float velocidad = 0.0f;
+	protected double velocidad = 0.0;
 	private boolean exploto = false; // Temporal, solo para probar los Unit Test
 	private boolean impacto = false; // Temporal, solo para probar los Unit Test
+	private Sprite sprite;
 
 	/**
 	 * @param clase    :{@code String} - Nombre de la clase no-abstracta que hereda
 	 *                 de {@code Auto}.
 	 * @param posicion :{@code Vector2D} - Posicion del auto en el plano (x,y).
 	 */
-	protected Auto(String clase, Vector2D posicion) {
-		super(clase, posicion, new Vector2D(1f, 1f));
+	protected Auto(Entidad clase, Vector2D posicion, String imgDir, Vector2D imgSize) {
+		super(clase, posicion, new Vector2D(33, -48));
+		
+		this.sprite = new Sprite(imgDir, imgSize, 3);
+		this.sprite.realocate(new Vector2D(0, -imgSize.getY()));
+
+		this.render = sprite.getRender();
 	}
 
 	/**
@@ -39,6 +47,17 @@ public abstract class Auto extends Cuerpo {
 		// TODO: Animar choque contra borde del mapa
 		this.exploto = true; // Temporal, solo para probar los Unit Test
 	}
+	
+	@Override
+	public void update(double deltaTime) {
+		Sprite.setRenderPosition((ImageView)this.render, this.posicion);
+	}
+
+	@Override
+	public void remover() {
+		// TODO Auto-generated method stub
+
+	}
 
 	public boolean getExploto() {
 		return this.exploto; // Temporal, solo para probar los Unit Test
@@ -48,11 +67,11 @@ public abstract class Auto extends Cuerpo {
 		return this.impacto; // Temporal, solo para probar los Unit Test
 	}
 
-	public float getVelocidad() {
+	public double getVelocidad() {
 		return velocidad;
 	}
 
-	public void setVelocidad(float velocidad) {
+	public void setVelocidad(double velocidad) {
 		this.velocidad = velocidad;
 	}
 

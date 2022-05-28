@@ -1,6 +1,6 @@
-package fisica;
+package road_fighter.fisica;
 
-import entidades.Cuerpo;
+import road_fighter.entidades.Cuerpo;
 
 /**
  * La clase {@code Colision} juzga si a intersectado con otra colision o no.
@@ -48,16 +48,16 @@ public final class Colision {
 		Vector2D p1 = this.cuerpoVinculado.getPosicion();
 		// Copia solo los valores de los tamanios para no alterar sus valores
 		// originales.
-		float s1_x = this.tamanio.getX();
-		float s1_y = this.tamanio.getY();
-		float s2_x = s2.getX();
-		float s2_y = s2.getY();
+		double s1_x = this.tamanio.getX();
+		double s1_y = this.tamanio.getY();
+		double s2_x = s2.getX();
+		double s2_y = s2.getY();
 		// Ajusta el tamanio de las colisiones a las posiciones actuales de los cuerpos.
 		s1_x += p1.getX();
 		s1_y += p1.getY();
 		s2_x += p2.getX();
 		s2_y += p2.getY();
-		return (p1.getX() < s2_x && p1.getY() < s2_y && p2.getX() < s1_x && p2.getY() < s1_y);
+		return (p1.getX() < s2_x && p1.getY() > s2_y && p2.getX() < s1_x && p2.getY() > s1_y);
 	}
 
 	/**
@@ -77,8 +77,8 @@ public final class Colision {
 
 		boolean intersecto = calcularInterseccion(otro.getPosicion(), otroHitbox.tamanio);
 		if (intersecto && this.cuerpoVinculado != null) {
-			// Mediador que administra las interacciones al colisionar.
-			ColisionInspector.enChoque(this.cuerpoVinculado, otro);
+			this.cuerpoVinculado.enChoque(otro);
+			otro.enChoque(this.cuerpoVinculado);
 		}
 
 		return intersecto;
@@ -90,5 +90,9 @@ public final class Colision {
 
 	public void desactivar(boolean desactivado) {
 		this.desactivado = desactivado;
+	}
+
+	public Vector2D getTamanio() {
+		return tamanio;
 	}
 }

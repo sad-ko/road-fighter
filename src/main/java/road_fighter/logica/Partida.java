@@ -1,4 +1,4 @@
-package logica;
+package road_fighter.logica;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,8 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import entidades.Jugador;
-import fisica.Vector2D;
+
+import road_fighter.entidades.Jugador;
 
 /**
  * La clase {@code Partida} es la clase principal del juego, la que comienza,
@@ -50,9 +50,8 @@ public class Partida {
 		this.mapa.crearMeta(this);
 	}
 
-	public void agregarJugador(float pos, String nombre) {
-		Jugador jugador = new Jugador(new Vector2D(pos, 0f), nombre);
-		this.mapa.instanciar(jugador);
+	public void agregarJugador(Jugador jugador) {
+		Invocador.getInstancia().add(jugador);
 		this.posiciones.add(new Posicion(jugador));
 	}
 
@@ -80,10 +79,10 @@ public class Partida {
 		Collections.sort(this.posiciones, new Comparator<Posicion>() {
 			@Override
 			public int compare(Posicion o1, Posicion o2) {
-				float coordenadaYjug1 = o1.getJugador().getPosicion().getY();
-				float coordenadaYjug2 = o2.getJugador().getPosicion().getY();
+				double coordenadaYjug1 = o1.getJugador().getPosicion().getY();
+				double coordenadaYjug2 = o2.getJugador().getPosicion().getY();
 
-				return (int) (coordenadaYjug2 - coordenadaYjug1);
+				return (int) (coordenadaYjug1 - coordenadaYjug2);
 			}
 		});
 

@@ -1,6 +1,6 @@
-package logica;
+package road_fighter.logica;
 
-import entidades.Jugador;
+import road_fighter.entidades.Jugador;
 
 public class Posicion {
 

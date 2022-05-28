@@ -1,11 +1,12 @@
-package entidades.test;
+package parte_uno.test;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import entidades.AutoEstatico;
-import entidades.Obstaculo;
-import fisica.Vector2D;
-import logica.Invocador;
+
+import road_fighter.entidades.AutoEstatico;
+import road_fighter.entidades.Obstaculo;
+import road_fighter.fisica.Vector2D;
+import road_fighter.logica.Invocador;
 
 public class TestAutoEstatico {
 
@@ -14,9 +15,9 @@ public class TestAutoEstatico {
 		AutoEstatico auto_1 = new AutoEstatico(new Vector2D(0f, 0f));
 		AutoEstatico auto_2 = new AutoEstatico(new Vector2D(0f, 25f));
 
-		Invocador invocador = new Invocador();
-		invocador.instanciar(auto_1);
-		invocador.instanciar(auto_2);
+		Invocador invocador = Invocador.getInstancia();
+		invocador.add(auto_1);
+		invocador.add(auto_2);
 
 		while (auto_1.getPosicion().getY() < auto_2.getPosicion().getY()) {
 			auto_1.mover(1);
@@ -31,9 +32,9 @@ public class TestAutoEstatico {
 		AutoEstatico auto = new AutoEstatico(new Vector2D(0f, 0f));
 		Obstaculo obstaculo = new Obstaculo(new Vector2D(0f, 25f));
 
-		Invocador invocador = new Invocador();
-		invocador.instanciar(auto);
-		invocador.instanciar(obstaculo);
+		Invocador invocador = Invocador.getInstancia();
+		invocador.add(auto);
+		invocador.add(obstaculo);
 
 		while (auto.getPosicion().getY() < obstaculo.getPosicion().getY()) {
 			auto.mover(1);

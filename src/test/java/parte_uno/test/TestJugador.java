@@ -1,4 +1,4 @@
-package entidades.test;
+package parte_uno.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -7,16 +7,18 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
-import entidades.Auto;
-import entidades.AutoEstatico;
-import entidades.Jugador;
-import entidades.Obstaculo;
-import entidades.PowerUp;
-import fisica.Vector2D;
-import logica.Invocador;
+
+import road_fighter.entidades.Auto;
+import road_fighter.entidades.AutoEstatico;
+import road_fighter.entidades.Jugador;
+import road_fighter.entidades.Obstaculo;
+import road_fighter.entidades.PowerUp;
+import road_fighter.fisica.Vector2D;
+import road_fighter.logica.Invocador;
 
 public class TestJugador {
-
+	
+	
 	/**
 	 * Test donde se verifica que el jugado cuando acelere, se haya desplazado una
 	 * distancia Y, y su velocidad actual haya sido modificada.
@@ -25,9 +27,9 @@ public class TestJugador {
 	public void testAcelerarJugador() {
 		Jugador jugador = new Jugador(new Vector2D(0, 0), "Arnold");
 		jugador.acelerar(1);
-
-		assertTrue(jugador.getVelocidad() == 2);
-		assertTrue(jugador.getPosicion().getY() == 2);
+		
+		assertEquals(1f, jugador.getVelocidad(), 0.01f);
+		assertEquals(-1f, jugador.getPosicion().getY(), 0.01f);
 	}
 
 	/**
@@ -42,7 +44,7 @@ public class TestJugador {
 		jugador.desacelerar(1);
 		jugador.desacelerar(1);
 
-		assertTrue(jugador.getVelocidad() == 0);
+		assertEquals(true, jugador.getVelocidad() == 0);
 	}
 
 	/**
@@ -56,8 +58,8 @@ public class TestJugador {
 		for (int i = 0; i < 250; i++) {
 			jugador.acelerar(i);
 		}
-
-		assertTrue(jugador.getVelocidad() == jugador.getVelocidadMax());
+		
+		assertEquals(true, jugador.getVelocidad() == jugador.getVelocidadMax());
 	}
 
 	@Test
@@ -84,9 +86,9 @@ public class TestJugador {
 		Jugador jugador1 = new Jugador(new Vector2D(0f, 0f), "Elton");
 		Jugador jugador2 = new Jugador(new Vector2D(5f, 0f), "Tito");
 
-		Invocador invocador = new Invocador();
-		invocador.instanciar(jugador1);
-		invocador.instanciar(jugador2);
+		Invocador invocador = Invocador.getInstancia();
+		invocador.add(jugador1);
+		invocador.add(jugador2);
 
 		for (int i = 0; i < 5; i++) {
 			jugador1.desplazar(true, 1);
@@ -104,9 +106,9 @@ public class TestJugador {
 		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Elsa Capunta");
 		PowerUp nitro = new PowerUp(new Vector2D(5f, 0f));
 
-		Invocador invocador = new Invocador();
-		invocador.instanciar(jugador);
-		invocador.instanciar(nitro);
+		Invocador invocador = Invocador.getInstancia();
+		invocador.add(jugador);
+		invocador.add(nitro);
 
 		for (int i = 0; i < 250; i++) {
 			jugador.desplazar(true, 1);
@@ -125,9 +127,9 @@ public class TestJugador {
 		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Elsa Capunta");
 		PowerUp nitro = new PowerUp(new Vector2D(5f, 0f));
 
-		Invocador invocador = new Invocador();
-		invocador.instanciar(jugador);
-		invocador.instanciar(nitro);
+		Invocador invocador = Invocador.getInstancia();
+		invocador.add(jugador);
+		invocador.add(nitro);
 
 		for (int i = 0; i < 250; i++) {
 			jugador.desplazar(true, 1);
@@ -153,9 +155,9 @@ public class TestJugador {
 		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Carlos");
 		Auto enemigo = new AutoEstatico(new Vector2D(5f, 0f));
 
-		Invocador invocador = new Invocador();
-		invocador.instanciar(jugador);
-		invocador.instanciar(enemigo);
+		Invocador invocador = Invocador.getInstancia();
+		invocador.add(jugador);
+		invocador.add(enemigo);
 
 		for (int i = 0; i < enemigo.getPosicion().getX(); i++) {
 			jugador.desplazar(true, 1);
@@ -173,9 +175,9 @@ public class TestJugador {
 		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Elvis Nieto");
 		Obstaculo obstaculo = new Obstaculo(new Vector2D(5f, 0f));
 
-		Invocador invocador = new Invocador();
-		invocador.instanciar(jugador);
-		invocador.instanciar(obstaculo);
+		Invocador invocador = Invocador.getInstancia();
+		invocador.add(jugador);
+		invocador.add(obstaculo);
 
 		for (int i = 0; i < obstaculo.getPosicion().getX(); i++) {
 			jugador.desplazar(true, 1);

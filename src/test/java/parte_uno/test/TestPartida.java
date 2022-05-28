@@ -1,14 +1,16 @@
-package entidades.test;
+package parte_uno.test;
 
 import static org.junit.Assert.assertEquals;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
-import entidades.Jugador;
-import logica.Invocador;
-import logica.Mapa;
-import logica.Partida;
+
+import road_fighter.entidades.Entidad;
+import road_fighter.entidades.Jugador;
+import road_fighter.logica.Invocador;
+import road_fighter.logica.Mapa;
+import road_fighter.logica.Partida;
 
 public class TestPartida {
 
@@ -23,11 +25,11 @@ public class TestPartida {
 	 */
 	public void setup() {
 		Mapa mapa = new Mapa(1500f, 5f, 150f);
-		mapa.agregarObstaculos("AutoEstatico", 5);
-		mapa.agregarObstaculos("PowerUp", 3);
-		mapa.agregarObstaculos("Obstaculo", 15);
+		mapa.agregarObstaculos(Entidad.AUTO_ESTATICO, 5);
+		mapa.agregarObstaculos(Entidad.POWERUP, 3);
+		mapa.agregarObstaculos(Entidad.OBSTACULO, 15);
 
-		invocador = mapa.getInvocador();
+		invocador = Invocador.getInstancia();
 
 		partida = new Partida(mapa, 2L);
 		partida.comenzar(3);
@@ -42,7 +44,7 @@ public class TestPartida {
 		int bordes = 2;
 		int meta = 1;
 		int resultado = autosCreados + obstaculos + bordes + jugadoresAgregados + powerUps + meta;
-		assertEquals(resultado, partida.getMapa().getInvocador().size());
+		assertEquals(resultado, invocador.size());
 	}
 
 	@Test
