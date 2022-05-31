@@ -34,7 +34,7 @@ public abstract class Objeto {
 		this.posicion = posicion;
 	}
 
-	public abstract void update(double deltaTime);
+	public abstract void update(double delta);
 
 	public abstract void remover();
 

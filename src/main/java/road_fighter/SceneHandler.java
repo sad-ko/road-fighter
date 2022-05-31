@@ -23,6 +23,7 @@ public abstract class SceneHandler {
 	protected Scene scene;
 
 	protected EventHandler<KeyEvent> keyEventHandler;
+	protected EventHandler<KeyEvent> keyReleasedEventHandler;
 	protected EventHandler<MouseEvent> mouseEventHandler;
 
 	protected SceneHandler() {
@@ -67,19 +68,37 @@ public abstract class SceneHandler {
 	}
 
 	protected void addInputEvents() {
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, keyEventHandler);
-		scene.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEventHandler);
+		if (keyEventHandler != null) {
+			scene.addEventHandler(KeyEvent.KEY_PRESSED, keyEventHandler);
+		}
+
+		if (keyReleasedEventHandler != null) {
+			scene.addEventHandler(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
+		}
+
+		if (mouseEventHandler != null) {
+			scene.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEventHandler);
+		}
 	}
 
 	protected void removeInputEvents() {
-		scene.removeEventHandler(KeyEvent.KEY_PRESSED, keyEventHandler);
-		scene.removeEventHandler(MouseEvent.MOUSE_PRESSED, mouseEventHandler);
+		if (keyEventHandler != null) {
+			scene.removeEventHandler(KeyEvent.KEY_PRESSED, keyEventHandler);
+		}
+
+		if (keyReleasedEventHandler != null) {
+			scene.removeEventHandler(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
+		}
+
+		if (mouseEventHandler != null) {
+			scene.removeEventHandler(MouseEvent.MOUSE_PRESSED, mouseEventHandler);
+		}
 	}
 
 	protected abstract void prepareScene();
 
 	protected abstract void defineEventHandlers();
-	
+
 	protected abstract void load();
 
 	protected void unload() {

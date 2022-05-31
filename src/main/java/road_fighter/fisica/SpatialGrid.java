@@ -7,20 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import road_fighter.entidades.Cuerpo;
+import road_fighter.entidades.cuerpos.Cuerpo;
 
 public class SpatialGrid {
 
 	private double sceneWidth;
 	private double sceneHeight;
-	private int rows;
 	private int cols;
+	private int rows;
 	private int cellSize;
 	private Map<Integer, List<Cuerpo>> grid;
 
 	public SpatialGrid(final double sceneWidth, final double sceneHeight, final int cellSize) {
-		this.rows = (int) Math.ceil(sceneHeight / cellSize);
 		this.cols = (int) Math.ceil(sceneWidth / cellSize);
+		this.rows = (int) Math.ceil(sceneHeight / cellSize);
 		this.cellSize = cellSize;
 		this.sceneWidth = sceneWidth;
 		this.sceneHeight = sceneHeight;
@@ -81,6 +81,9 @@ public class SpatialGrid {
 		int bottomLeft = id_ax + id_ay * width;
 		int topRight = id_bx + id_by * width;
 
+		bottomLeft = (bottomLeft >= cols * rows) ? bottomLeft - width : bottomLeft;
+		topRight = (topRight >= cols * rows) ? topRight - width : topRight;
+
 		cells.add(bottomLeft);
 
 		// El cuerpo ocupa una sola celda
@@ -91,11 +94,14 @@ public class SpatialGrid {
 		int topLeft = id_ax + id_by * width;
 		int bottomRight = id_bx + id_ay * width;
 
+		topLeft = (topLeft >= cols * rows) ? topLeft - width : topLeft;
+		bottomRight = (bottomRight >= cols * rows) ? bottomRight - width : bottomRight;
+
 		cells.add(topRight);
 		cells.add(topLeft);
 		cells.add(bottomRight);
 
-		if (topRight - topLeft == 1 && bottomLeft - topLeft == width) {
+		if (topRight - topLeft > 1) {
 			for (int i = topRight - 1; i > topLeft; i--) {
 				cells.add(i);
 			}
@@ -103,10 +109,15 @@ public class SpatialGrid {
 			for (int i = bottomLeft + 1; i < bottomRight; i++) {
 				cells.add(i);
 			}
+		}
 
-			if (!cells.contains(bottomLeft - width)) {
-				cells.add(Math.abs(bottomLeft - width));
-				cells.add(Math.abs(bottomRight - width));
+		if (bottomLeft % width == topLeft) {
+			for (int i = bottomLeft - width; i > topLeft; i -= width) {
+				cells.add(i);
+			}
+
+			for (int i = bottomRight - width; i > topRight; i -= width) {
+				cells.add(i);
 			}
 		}
 

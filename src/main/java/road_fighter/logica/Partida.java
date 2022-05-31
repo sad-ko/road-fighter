@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import road_fighter.entidades.Jugador;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import road_fighter.Config;
+import road_fighter.entidades.Etiqueta;
+import road_fighter.entidades.cuerpos.Jugador;
+import road_fighter.fisica.Vector2D;
+import road_fighter.graficos.AudioSFX;
 
 /**
  * La clase {@code Partida} es la clase principal del juego, la que comienza,
@@ -19,6 +25,7 @@ public class Partida {
 	private long tiempoEspera;
 	private Mapa mapa;
 	private Jugador ganador;
+	private Etiqueta victoryLabel;
 
 	/**
 	 * @param mapa         :{@code Mapa} - Mapa donde se jugara la partida.
@@ -31,6 +38,12 @@ public class Partida {
 		this.mapa = mapa;
 		this.tiempoEspera = tiempoEspera;
 		this.posiciones = new ArrayList<>();
+
+		victoryLabel = new Etiqueta("VICTORY", new Vector2D(Config.width / 6, Config.height / 4));
+		victoryLabel.setFont(Font.font("MONOSPACED", 128));
+		victoryLabel.setColor(Color.GOLD);
+		victoryLabel.setVisible(false);
+		Invocador.getInstancia().add(victoryLabel);
 	}
 
 	private void terminarPartida() {
@@ -48,10 +61,11 @@ public class Partida {
 	public void comenzar(int cantJugadores) {
 		this.mapa.agregarJugadores(this, cantJugadores);
 		this.mapa.crearMeta(this);
+		
+		AudioSFX.getInstancia().play("largada_start");
 	}
 
 	public void agregarJugador(Jugador jugador) {
-		Invocador.getInstancia().add(jugador);
 		this.posiciones.add(new Posicion(jugador));
 	}
 
@@ -79,8 +93,8 @@ public class Partida {
 		Collections.sort(this.posiciones, new Comparator<Posicion>() {
 			@Override
 			public int compare(Posicion o1, Posicion o2) {
-				double coordenadaYjug1 = o1.getJugador().getPosicion().getY();
-				double coordenadaYjug2 = o2.getJugador().getPosicion().getY();
+				double coordenadaYjug1 = o1.getJugador().getCurrentPos();
+				double coordenadaYjug2 = o2.getJugador().getCurrentPos();
 
 				return (int) (coordenadaYjug1 - coordenadaYjug2);
 			}
@@ -109,6 +123,7 @@ public class Partida {
 
 	public void setGanador(Jugador ganador) {
 		this.ganador = ganador;
+		this.victoryLabel.setVisible(true);
 	}
 
 }

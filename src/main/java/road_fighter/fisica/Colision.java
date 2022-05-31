@@ -1,6 +1,6 @@
 package road_fighter.fisica;
 
-import road_fighter.entidades.Cuerpo;
+import road_fighter.entidades.cuerpos.Cuerpo;
 
 /**
  * La clase {@code Colision} juzga si a intersectado con otra colision o no.

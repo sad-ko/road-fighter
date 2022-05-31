@@ -8,11 +8,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import road_fighter.entidades.Auto;
-import road_fighter.entidades.AutoEstatico;
-import road_fighter.entidades.Jugador;
-import road_fighter.entidades.Obstaculo;
-import road_fighter.entidades.PowerUp;
+import road_fighter.entidades.cuerpos.Auto;
+import road_fighter.entidades.cuerpos.AutoEstatico;
+import road_fighter.entidades.cuerpos.Jugador;
+import road_fighter.entidades.cuerpos.Obstaculo;
+import road_fighter.entidades.cuerpos.PowerUp;
 import road_fighter.fisica.Vector2D;
 import road_fighter.logica.Invocador;
 
@@ -26,7 +26,7 @@ public class TestJugador {
 	@Test
 	public void testAcelerarJugador() {
 		Jugador jugador = new Jugador(new Vector2D(0, 0), "Arnold");
-		jugador.acelerar(1);
+		jugador.acelerar();
 		
 		assertEquals(1f, jugador.getVelocidad(), 0.01f);
 		assertEquals(-1f, jugador.getPosicion().getY(), 0.01f);
@@ -39,10 +39,10 @@ public class TestJugador {
 	public void testDesacelerarHastaFrenar() {
 		Jugador jugador = new Jugador(new Vector2D(0, 0), "Alexander");
 
-		jugador.acelerar(1);
-		jugador.desacelerar(1);
-		jugador.desacelerar(1);
-		jugador.desacelerar(1);
+		jugador.acelerar();
+		jugador.desacelerar();
+		jugador.desacelerar();
+		jugador.desacelerar();
 
 		assertEquals(true, jugador.getVelocidad() == 0);
 	}
@@ -56,7 +56,7 @@ public class TestJugador {
 		Jugador jugador = new Jugador(new Vector2D(0, 0), "Ned");
 
 		for (int i = 0; i < 250; i++) {
-			jugador.acelerar(i);
+			jugador.acelerar();
 		}
 		
 		assertEquals(true, jugador.getVelocidad() == jugador.getVelocidadMax());
@@ -70,10 +70,10 @@ public class TestJugador {
 		Jugador jugador = new Jugador(new Vector2D(0f, 0f), "Bob");
 
 		// true para girar a la derecha, false para girar a la izquierda
-		jugador.desplazar(true, 1);
-		jugador.desplazar(true, 1);
-		jugador.desplazar(true, 1);
-		jugador.desplazar(false, 1);
+		jugador.desplazar();
+		jugador.desplazar();
+		jugador.desplazar();
+		jugador.desplazar();
 
 		assertEquals(2f, jugador.getPosicion().getX(), 0f);
 	}
@@ -91,7 +91,7 @@ public class TestJugador {
 		invocador.add(jugador2);
 
 		for (int i = 0; i < 5; i++) {
-			jugador1.desplazar(true, 1);
+			jugador1.desplazar();
 			invocador.calcularColisiones();
 		}
 
@@ -111,7 +111,7 @@ public class TestJugador {
 		invocador.add(nitro);
 
 		for (int i = 0; i < 250; i++) {
-			jugador.desplazar(true, 1);
+			jugador.desplazar();
 			invocador.calcularColisiones();
 		}
 
@@ -132,7 +132,7 @@ public class TestJugador {
 		invocador.add(nitro);
 
 		for (int i = 0; i < 250; i++) {
-			jugador.desplazar(true, 1);
+			jugador.desplazar();
 			invocador.calcularColisiones();
 		}
 
@@ -160,7 +160,7 @@ public class TestJugador {
 		invocador.add(enemigo);
 
 		for (int i = 0; i < enemigo.getPosicion().getX(); i++) {
-			jugador.desplazar(true, 1);
+			jugador.desplazar();
 		}
 
 		assertTrue(jugador.getHitbox().intersecta(enemigo));
@@ -180,7 +180,7 @@ public class TestJugador {
 		invocador.add(obstaculo);
 
 		for (int i = 0; i < obstaculo.getPosicion().getX(); i++) {
-			jugador.desplazar(true, 1);
+			jugador.desplazar();
 		}
 
 		assertTrue(jugador.getHitbox().intersecta(obstaculo));

@@ -7,15 +7,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import road_fighter.entidades.Entidad;
-import road_fighter.entidades.Jugador;
+import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.logica.Invocador;
 import road_fighter.logica.Mapa;
 import road_fighter.logica.Partida;
 
 public class TestPartida {
 
-	private final int FPS = 60;
-	private final float delta = (float) 1 / FPS;
 	private Partida partida;
 	private Invocador invocador;
 
@@ -64,8 +62,8 @@ public class TestPartida {
 
 		for (int i = 0; i < 70; i++) {
 			invocador.calcularColisiones();
-			jugador.acelerar(delta);
-			jugador.desplazar(false, delta);
+			jugador.acelerar();
+			jugador.desplazar();
 		}
 
 		assertEquals(true, jugador.getExploto());
@@ -97,16 +95,16 @@ public class TestPartida {
 
 		for (int i = 0; i < 700; i++) {
 
-			jugador.acelerar(delta);
-			jugador2.acelerar(delta);
-			jugador3.acelerar(delta);
+			jugador.acelerar();
+			jugador2.acelerar();
+			jugador3.acelerar();
 
 			if (i > 10 && i < 50) {
-				jugador2.desacelerar(delta);
+				jugador2.desacelerar();
 			}
 
 			if (i > 20 && i < 30) {
-				jugador3.desacelerar(delta);
+				jugador3.desacelerar();
 			}
 
 			invocador.calcularColisiones();

@@ -5,7 +5,8 @@ import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import road_fighter.Config;
-import road_fighter.entidades.Cuerpo;
+import road_fighter.entidades.Objeto;
+import road_fighter.entidades.cuerpos.Cuerpo;
 import road_fighter.fisica.SpatialGrid;
 
 /**
@@ -16,11 +17,13 @@ public class Invocador {
 
 	private static Invocador instancia = null;
 
-	private List<Cuerpo> instancias;
 	private SpatialGrid grid;
+	private List<Objeto> objInstancias;
+	private List<Cuerpo> instancias;
 
 	private Invocador() {
 		this.instancias = new ArrayList<>();
+		this.objInstancias = new ArrayList<>();
 		this.grid = new SpatialGrid(Config.width, Config.height, Config.cellSize);
 	}
 
@@ -35,11 +38,20 @@ public class Invocador {
 		this.instancias.add(cuerpo);
 	}
 
+	public void add(Objeto obj) {
+		this.objInstancias.add(obj);
+	}
+
 	public void clear() {
 		for (Cuerpo cuerpo : instancias) {
 			cuerpo.remover();
 		}
 		instancias.clear();
+
+		for (Objeto obj : objInstancias) {
+			obj.remover();
+		}
+		objInstancias.clear();
 	}
 
 	/**
@@ -74,11 +86,21 @@ public class Invocador {
 				groupList.add(cuerpo.getRender());
 			}
 		}
+
+		for (Objeto obj : objInstancias) {
+			if (obj.getRender() != null) {
+				groupList.add(obj.getRender());
+			}
+		}
 	}
 
 	public void update(double delta) {
 		for (Cuerpo cuerpo : instancias) {
 			cuerpo.update(delta);
+		}
+
+		for (Objeto obj : objInstancias) {
+			obj.update(delta);
 		}
 	}
 

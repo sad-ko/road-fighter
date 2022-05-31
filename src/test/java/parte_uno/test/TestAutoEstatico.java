@@ -3,8 +3,8 @@ package parte_uno.test;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import road_fighter.entidades.AutoEstatico;
-import road_fighter.entidades.Obstaculo;
+import road_fighter.entidades.cuerpos.AutoEstatico;
+import road_fighter.entidades.cuerpos.Obstaculo;
 import road_fighter.fisica.Vector2D;
 import road_fighter.logica.Invocador;
 
@@ -20,7 +20,7 @@ public class TestAutoEstatico {
 		invocador.add(auto_2);
 
 		while (auto_1.getPosicion().getY() < auto_2.getPosicion().getY()) {
-			auto_1.mover(1);
+			auto_1.update(1);
 		}
 
 		invocador.calcularColisiones();
@@ -37,7 +37,7 @@ public class TestAutoEstatico {
 		invocador.add(obstaculo);
 
 		while (auto.getPosicion().getY() < obstaculo.getPosicion().getY()) {
-			auto.mover(1);
+			auto.update(1);
 		}
 
 		invocador.calcularColisiones();
