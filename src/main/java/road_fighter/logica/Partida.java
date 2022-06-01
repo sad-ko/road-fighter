@@ -6,11 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import road_fighter.Config;
 import road_fighter.entidades.Etiqueta;
+import road_fighter.entidades.cuerpos.Competidor;
 import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.fisica.Vector2D;
 import road_fighter.graficos.AudioSFX;
@@ -24,7 +24,7 @@ public class Partida {
 	private List<Posicion> posiciones;
 	private long tiempoEspera;
 	private Mapa mapa;
-	private Jugador ganador;
+	private Competidor ganador;
 	private Etiqueta victoryLabel;
 
 	/**
@@ -58,14 +58,15 @@ public class Partida {
 	 * 
 	 * @param cantJugadores :{@code int} - Cantidad de jugadores en la partida.
 	 */
-	public void comenzar(int cantJugadores) {
-		this.mapa.agregarJugadores(this, cantJugadores);
+	public Jugador comenzar(int cantJugadores) {
+		Jugador jugador = this.mapa.posicionarCompetidores(this, cantJugadores);
 		this.mapa.crearMeta(this);
-		
+
 		AudioSFX.getInstancia().play("largada_start");
+		return jugador;
 	}
 
-	public void agregarJugador(Jugador jugador) {
+	public void agregarCompetidor(Competidor jugador) {
 		this.posiciones.add(new Posicion(jugador));
 	}
 
@@ -93,10 +94,10 @@ public class Partida {
 		Collections.sort(this.posiciones, new Comparator<Posicion>() {
 			@Override
 			public int compare(Posicion o1, Posicion o2) {
-				double coordenadaYjug1 = o1.getJugador().getCurrentPos();
-				double coordenadaYjug2 = o2.getJugador().getCurrentPos();
+				double coordenadaYjug1 = o1.getCompetidor().getCurrentPos();
+				double coordenadaYjug2 = o2.getCompetidor().getCurrentPos();
 
-				return (int) (coordenadaYjug1 - coordenadaYjug2);
+				return (int) (coordenadaYjug2 - coordenadaYjug1);
 			}
 		});
 
@@ -105,23 +106,23 @@ public class Partida {
 		}
 	}
 
-	public Jugador getJugador(int index) {
-		return this.posiciones.get(index).getJugador();
-	}
-
 	public int getCantidadJugadores() {
 		return posiciones.size();
+	}
+
+	public Competidor getCompetidor(int index) {
+		return posiciones.get(index).getCompetidor();
 	}
 
 	public Mapa getMapa() {
 		return mapa;
 	}
 
-	public Jugador getGanador() {
+	public Competidor getGanador() {
 		return ganador;
 	}
 
-	public void setGanador(Jugador ganador) {
+	public void setGanador(Competidor ganador) {
 		this.ganador = ganador;
 		this.victoryLabel.setVisible(true);
 	}

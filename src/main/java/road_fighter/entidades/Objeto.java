@@ -31,7 +31,7 @@ public abstract class Objeto {
 	 */
 	protected Objeto(final Entidad clase, final Vector2D posicion) {
 		this.clase = clase;
-		this.posicion = posicion;
+		this.posicion = new Vector2D(posicion);
 	}
 
 	public abstract void update(double delta);

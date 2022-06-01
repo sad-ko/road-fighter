@@ -1,12 +1,18 @@
 package road_fighter.fisica;
 
 public final class Vector2D {
+
 	private double x;
 	private double y;
 
 	public Vector2D(final double x, final double y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public Vector2D(final Vector2D vector) {
+		this.x = vector.x;
+		this.y = vector.y;
 	}
 
 	public double distancia(double x, double y) {

@@ -1,15 +1,13 @@
 package road_fighter.entidades.cuerpos;
 
-import road_fighter.entidades.Entidad;
 import road_fighter.fisica.Vector2D;
 import road_fighter.graficos.AudioSFX;
-import road_fighter.logica.Partida;
 
 /**
  * La clase {@code Jugador} hija de {@code Cuerpo}, es la clase principal con la
  * cual el usuario va a poder interactuar con el entorno.
  */
-public final class Jugador extends Auto {
+public final class Jugador extends Competidor {
 
 	/**
 	 * Velocidad maxima del {@code Jugador}, actualmente es 200.0f
@@ -17,8 +15,6 @@ public final class Jugador extends Auto {
 	private double velocidadMax = 200.0;
 	private double aceleracion = 5;
 	private double desplazamiento = 5;
-	private double currentPos = 0.0;
-	private String nombre;
 
 	private boolean z = false;
 	private boolean right = false;
@@ -30,7 +26,7 @@ public final class Jugador extends Auto {
 	 * @param nombre   :{@code String} - Nombre del jugador.
 	 */
 	public Jugador(Vector2D posicion, String nombre) {
-		super(Entidad.JUGADOR, posicion, "img/auto.png", new Vector2D(11, 16));
+		super(posicion, nombre);
 		this.nombre = nombre;
 	}
 
@@ -67,8 +63,6 @@ public final class Jugador extends Auto {
 		if (this.velocidad < this.velocidadMax) {
 			this.velocidad += this.aceleracion;
 		}
-
-		this.currentPos += this.velocidad;
 	}
 
 	/**
@@ -88,8 +82,6 @@ public final class Jugador extends Auto {
 		} else {
 			this.velocidad = 0.00;
 		}
-
-		this.currentPos += this.velocidad;
 	}
 
 	@Override
@@ -107,51 +99,6 @@ public final class Jugador extends Auto {
 		}
 	}
 
-	@Override
-	public void enChoque(Cuerpo cuerpo) {
-		switch (cuerpo.getClase()) {
-		case AUTO_ESTATICO:
-			this.impacto((Auto) cuerpo);
-			break;
-
-		case BORDE:
-			this.explotar();
-			break;
-
-		case JUGADOR:
-			this.impacto((Auto) cuerpo);
-			break;
-
-		case META:
-			Meta meta = (Meta) cuerpo;
-			Partida partidaActual = meta.getPartidaActual();
-
-			if (partidaActual.getGanador() == null) {
-				partidaActual.setGanador(this);
-				partidaActual.iniciarEspera();
-				AudioSFX.getInstancia().play("powerUp");
-			}
-
-			break;
-
-		case OBSTACULO:
-			this.explotar();
-			cuerpo.remover();
-			break;
-
-		case POWERUP:
-			PowerUp powerUp = (PowerUp) cuerpo;
-
-			this.setVelocidad(this.getVelocidad() * powerUp.getPowerUp());
-			powerUp.timeout(this);
-			powerUp.remover();
-			break;
-
-		default:
-			break;
-		}
-	}
-
 	public void setZ(boolean z) {
 		this.z = z;
 	}
@@ -164,15 +111,8 @@ public final class Jugador extends Auto {
 		this.left = left;
 	}
 
-	public String getNombre() {
-		return this.nombre;
-	}
-
 	public double getVelocidadMax() {
 		return velocidadMax;
 	}
 
-	public double getCurrentPos() {
-		return currentPos;
-	}
 }

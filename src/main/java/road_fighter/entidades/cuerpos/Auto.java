@@ -19,6 +19,8 @@ public abstract class Auto extends Cuerpo {
 	private boolean impacto = false; // Temporal, solo para probar los Unit Test
 	private Sprite sprite;
 
+	private int orientation;
+
 	/**
 	 * @param clase    :{@code String} - Nombre de la clase no-abstracta que hereda
 	 *                 de {@code Auto}.
@@ -39,9 +41,15 @@ public abstract class Auto extends Cuerpo {
 	 * @param otroAuto :{@code Auto} - Auto con el que se impacto
 	 */
 	public void impacto(Auto otroAuto) {
-		// TODO: Calculos del impacto
 		this.impacto = true; // Temporal, solo para probar los Unit Test
 		otroAuto.impacto = true;
+		/*
+		 * orientation = (otroAuto.getPosicion().getX() - posicion.getX() > 0) ? -1 : 1;
+		 * 
+		 * TimerTask task = new TimerTask() { public void run() { impacto = false; } };
+		 * 
+		 * Timer timer = new Timer(); timer.schedule(task, 1000L);
+		 */
 	}
 
 	public void explotar() {
@@ -55,6 +63,10 @@ public abstract class Auto extends Cuerpo {
 	public void update(double delta) {
 		Sprite.setRenderPosition((ImageView) this.render, this.posicion);
 		mover(delta);
+
+		if (impacto) {
+			this.posicion.setX(posicion.getX() + (5 * this.orientation));
+		}
 	}
 
 	@Override

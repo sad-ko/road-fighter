@@ -1,5 +1,8 @@
 package road_fighter;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -102,12 +105,11 @@ public class Game extends SceneHandler {
 		FPS fpsInfo = new FPS(fps, new Vector2D(800, Config.height - 50));
 		VelocidadInfo velocidadInfo = new VelocidadInfo(new Vector2D(800, Config.height - 100));
 
-		Mapa mapa = new Mapa(Config.height * 12, 224, 616);
+		Mapa mapa = new Mapa(Config.height * 6, 224, 616);
 		mapa.agregarObstaculos(Entidad.AUTO_ESTATICO, 100);
 
 		this.partida = new Partida(mapa, 2000L);
-		this.partida.comenzar(1);
-		this.jugador = partida.getJugador(0);
+		this.jugador = this.partida.comenzar(7);
 
 		Invocador.getInstancia().add(fpsInfo);
 		Invocador.getInstancia().add(velocidadInfo);
@@ -116,6 +118,15 @@ public class Game extends SceneHandler {
 		AudioSound.getInstancia().playGameSound();
 		AudioSFX.getInstancia().subirVolumenSound();
 		AudioSound.getInstancia().bajarVolumenSound();
+
+		TimerTask task = new TimerTask() {
+			public void run() {
+				partida.getCompetidor(6).setVelocidad(200);
+			}
+		};
+
+		Timer timer = new Timer();
+		timer.schedule(task, 1000L);
 	}
 
 }

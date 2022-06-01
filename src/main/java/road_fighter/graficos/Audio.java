@@ -3,7 +3,7 @@ package road_fighter.graficos;
 public abstract class Audio {
 
 	protected double volumen;
-	
+
 	protected Audio() {
 		this.volumen = 0.5;
 	}
@@ -27,4 +27,9 @@ public abstract class Audio {
 			this.volumen = 0;
 		}
 	}
+
+	public double getVolumen() {
+		return volumen;
+	}
+
 }

@@ -25,13 +25,13 @@ public class PowerUp extends Colisionables {
 	/**
 	 * Remueve el bonus aplicado al jugador una vez su tiempo se ha agotado
 	 * 
-	 * @param jugador :{@code Jugador} con el bonus previamente aplicado
+	 * @param competidor :{@code Jugador} con el bonus previamente aplicado
 	 */
-	public void timeout(Jugador jugador) {
+	public void timeout(Competidor competidor) {
 		TimerTask task = new TimerTask() {
 			public void run() {
-				double vel = jugador.getVelocidad() / power;
-				jugador.setVelocidad(vel);
+				double vel = competidor.getVelocidad() / power;
+				competidor.setVelocidad(vel);
 			}
 		};
 

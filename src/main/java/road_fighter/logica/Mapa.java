@@ -8,6 +8,7 @@ import road_fighter.entidades.EscenarioFin;
 import road_fighter.entidades.EscenarioInicio;
 import road_fighter.entidades.cuerpos.AutoEstatico;
 import road_fighter.entidades.cuerpos.Borde;
+import road_fighter.entidades.cuerpos.Competidor;
 import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.entidades.cuerpos.Meta;
 import road_fighter.entidades.cuerpos.Obstaculo;
@@ -127,20 +128,28 @@ public class Mapa {
 	 *                      jugadores.
 	 * @param cantJugadores :{@code int} - Cantidad de jugadores a generar.
 	 */
-	public void agregarJugadores(Partida partidaActual, int cantJugadores) {
+	public Jugador posicionarCompetidores(Partida partidaActual, int cantJugadores) {
 		// Distancias equidistantes entre los autos y los bordes.
-		double incrementoPosicion = (this.limiteDerecho - this.limiteIzquierdo) / (cantJugadores + 1);
-		double posicionEjeXAuto = 0;
+		double pad = (this.limiteDerecho - this.limiteIzquierdo) / (cantJugadores + 1);
+		double x = pad;
 
-		for (int i = 0; i < cantJugadores; i++) {
-			posicionEjeXAuto += incrementoPosicion;
-			Jugador jugador = new Jugador(
-					new Vector2D(posicionEjeXAuto + this.limiteIzquierdo, Config.height - Config.height / 4),
-					"Jugador Nro: " + (i + 1));
+		Vector2D pos = new Vector2D(x + this.limiteIzquierdo, Config.height - Config.height / 4);
 
-			this.invocador.add(jugador);
-			partidaActual.agregarJugador(jugador);
+		Jugador jugador = new Jugador(pos, "Jugador Nro: 1");
+		this.invocador.add(jugador);
+		partidaActual.agregarCompetidor(jugador);
+
+		for (int i = 1; i < cantJugadores; i++) {
+			x = x + pad;
+			pos.setX(x + this.limiteIzquierdo);
+
+			Competidor comp = new Competidor(pos, "Competidor Nro: " + (i + 1));
+			this.invocador.add(comp);
+			partidaActual.agregarCompetidor(comp);
+
 			// TODO: Usar un nombre especificado por cada jugador.
 		}
+
+		return jugador;
 	}
 }

@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import road_fighter.entidades.Entidad;
+import road_fighter.entidades.cuerpos.Competidor;
 import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.logica.Invocador;
 import road_fighter.logica.Mapa;
@@ -15,6 +16,7 @@ import road_fighter.logica.Partida;
 public class TestPartida {
 
 	private Partida partida;
+	private Jugador jugador;
 	private Invocador invocador;
 
 	@Before
@@ -30,7 +32,7 @@ public class TestPartida {
 		invocador = Invocador.getInstancia();
 
 		partida = new Partida(mapa, 2L);
-		partida.comenzar(3);
+		jugador = partida.comenzar(3);
 	}
 
 	@Test
@@ -58,8 +60,6 @@ public class TestPartida {
 	 * mapa.
 	 */
 	public void testExplotarBorde() {
-		Jugador jugador = partida.getJugador(0);
-
 		for (int i = 0; i < 70; i++) {
 			invocador.calcularColisiones();
 			jugador.acelerar();
@@ -89,24 +89,13 @@ public class TestPartida {
 	 * aceleran y/o desaceleran sean correctas.
 	 */
 	public void testDeterminarPodioJugadores() {
-		Jugador jugador = partida.getJugador(0);
-		Jugador jugador2 = partida.getJugador(1);
-		Jugador jugador3 = partida.getJugador(2);
+		Competidor jugador2 = partida.getCompetidor(1);
+		Competidor jugador3 = partida.getCompetidor(2);
 
 		for (int i = 0; i < 700; i++) {
 
 			jugador.acelerar();
-			jugador2.acelerar();
-			jugador3.acelerar();
-
-			if (i > 10 && i < 50) {
-				jugador2.desacelerar();
-			}
-
-			if (i > 20 && i < 30) {
-				jugador3.desacelerar();
-			}
-
+			jugador3.setVelocidad(5);
 			invocador.calcularColisiones();
 			partida.determinarPosiciones();
 		}
@@ -118,9 +107,9 @@ public class TestPartida {
 			System.err.println(e.getMessage());
 		}
 
-		assertEquals(jugador, partida.getJugador(0)); // posicion 1 : jugador
-		assertEquals(jugador3, partida.getJugador(1)); // posicion 2 : jugador3
-		assertEquals(jugador2, partida.getJugador(2)); // posicion 3 : jugador2
+		assertEquals(jugador, partida.getCompetidor(0)); // posicion 1 : jugador
+		assertEquals(jugador3, partida.getCompetidor(1)); // posicion 2 : jugador3
+		assertEquals(jugador2, partida.getCompetidor(2)); // posicion 3 : jugador2
 	}
 
 }

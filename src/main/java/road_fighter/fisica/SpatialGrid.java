@@ -59,6 +59,10 @@ public class SpatialGrid {
 		}
 	}
 
+	private int capCellId(int id) {
+		return (id >= cols * rows) ? id - cols : id;
+	}
+
 	private Set<Integer> findInCells(Cuerpo cuerpo) {
 		Set<Integer> cells = new HashSet<>();
 		int width = (int) (sceneWidth / cellSize);
@@ -68,6 +72,7 @@ public class SpatialGrid {
 		double bx = cuerpo.getHitbox().getTamanio().getX() + ax;
 		double by = cuerpo.getHitbox().getTamanio().getY() + ay;
 
+		// Si esta fuera de la pantalla, no se revisa su colision
 		if (ax > sceneWidth || ay > sceneHeight || bx < 0 || by < 0) {
 			return cells;
 		}
@@ -78,11 +83,8 @@ public class SpatialGrid {
 		int id_bx = (int) (bx / cellSize);
 		int id_by = (int) (by / cellSize);
 
-		int bottomLeft = id_ax + id_ay * width;
-		int topRight = id_bx + id_by * width;
-
-		bottomLeft = (bottomLeft >= cols * rows) ? bottomLeft - width : bottomLeft;
-		topRight = (topRight >= cols * rows) ? topRight - width : topRight;
+		int bottomLeft = capCellId(id_ax + id_ay * width);
+		int topRight = capCellId(id_bx + id_by * width);
 
 		cells.add(bottomLeft);
 
@@ -91,34 +93,37 @@ public class SpatialGrid {
 			return cells;
 		}
 
-		int topLeft = id_ax + id_by * width;
-		int bottomRight = id_bx + id_ay * width;
-
-		topLeft = (topLeft >= cols * rows) ? topLeft - width : topLeft;
-		bottomRight = (bottomRight >= cols * rows) ? bottomRight - width : bottomRight;
+		int topLeft = capCellId(id_ax + id_by * width);
+		int bottomRight = capCellId(id_bx + id_ay * width);
 
 		cells.add(topRight);
 		cells.add(topLeft);
 		cells.add(bottomRight);
 
+		// Hay celdas de por medio
 		if (topRight - topLeft > 1) {
+			int diff = bottomRight - topRight;
 			for (int i = topRight - 1; i > topLeft; i--) {
-				cells.add(i);
+				cells.add(i); // Celdas entre topLeft y topRight
+				cells.add(diff + i); // Celdas entre bottomLeft y topRight
 			}
 
-			for (int i = bottomLeft + 1; i < bottomRight; i++) {
-				cells.add(i);
-			}
+			/*
+			 * for (int i = bottomLeft + 1; i < bottomRight; i++) { cells.add(i); }
+			 */
 		}
 
+		// Hay celdas de por medio, entre top y bottom
 		if (bottomLeft % width == topLeft) {
+			int diff = bottomRight - bottomLeft;
 			for (int i = bottomLeft - width; i > topLeft; i -= width) {
-				cells.add(i);
+				cells.add(i); // Celdas entre topLeft y bottomLeft
+				cells.add(diff + i); // Celdas entre topRight y bottomRight
 			}
 
-			for (int i = bottomRight - width; i > topRight; i -= width) {
-				cells.add(i);
-			}
+			/*
+			 * for (int i = bottomRight - width; i > topRight; i -= width) { cells.add(i); }
+			 */
 		}
 
 		return cells;

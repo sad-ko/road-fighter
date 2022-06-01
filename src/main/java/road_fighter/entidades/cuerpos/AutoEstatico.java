@@ -48,5 +48,5 @@ public class AutoEstatico extends Auto {
 			break;
 		}
 	}
-	
+
 }

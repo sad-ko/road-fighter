@@ -17,8 +17,7 @@ import road_fighter.fisica.Vector2D;
 import road_fighter.logica.Invocador;
 
 public class TestJugador {
-	
-	
+
 	/**
 	 * Test donde se verifica que el jugado cuando acelere, se haya desplazado una
 	 * distancia Y, y su velocidad actual haya sido modificada.
@@ -27,7 +26,7 @@ public class TestJugador {
 	public void testAcelerarJugador() {
 		Jugador jugador = new Jugador(new Vector2D(0, 0), "Arnold");
 		jugador.acelerar();
-		
+
 		assertEquals(1f, jugador.getVelocidad(), 0.01f);
 		assertEquals(-1f, jugador.getPosicion().getY(), 0.01f);
 	}
@@ -58,7 +57,7 @@ public class TestJugador {
 		for (int i = 0; i < 250; i++) {
 			jugador.acelerar();
 		}
-		
+
 		assertEquals(true, jugador.getVelocidad() == jugador.getVelocidadMax());
 	}
 

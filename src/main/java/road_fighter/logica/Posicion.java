@@ -1,19 +1,19 @@
 package road_fighter.logica;
 
-import road_fighter.entidades.cuerpos.Jugador;
+import road_fighter.entidades.cuerpos.Competidor;
 
 public class Posicion {
 
-	private final Jugador jugador;
+	private final Competidor competidor;
 	private int posicionActual;
 
-	public Posicion(Jugador jugador) {
-		this.jugador = jugador;
+	public Posicion(Competidor competidor) {
+		this.competidor = competidor;
 		this.posicionActual = 0;
 	}
 
-	public Jugador getJugador() {
-		return jugador;
+	public Competidor getCompetidor() {
+		return competidor;
 	}
 
 	public void setPosicionActual(int posicionActual) {
@@ -22,6 +22,6 @@ public class Posicion {
 
 	@Override
 	public String toString() {
-		return jugador.getNombre() + " - Pos: " + posicionActual;
+		return competidor.getNombre() + " - Pos: " + posicionActual + " - " + competidor.getCurrentPos();
 	}
 }

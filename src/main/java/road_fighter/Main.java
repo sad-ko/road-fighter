@@ -11,6 +11,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) {
+		// menu = new Menu(stage);
 		game = new Game(stage);
 
 		stage.getIcons().add(new Image("file:src/main/resources/ico/logo.png"));
