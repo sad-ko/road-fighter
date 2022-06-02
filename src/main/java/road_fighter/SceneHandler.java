@@ -19,6 +19,7 @@ public abstract class SceneHandler {
 	protected AnimationTimer gameTimer;
 	protected long previousNanoFrame;
 	protected long previousNanoSecond;
+	protected Main main;
 
 	protected Scene scene;
 
@@ -26,7 +27,8 @@ public abstract class SceneHandler {
 	protected EventHandler<KeyEvent> keyReleasedEventHandler;
 	protected EventHandler<MouseEvent> mouseEventHandler;
 
-	protected SceneHandler() {
+	protected SceneHandler(Main main) {
+		this.main=main;
 		prepareScene();
 		defineEventHandlers();
 	}
@@ -99,7 +101,7 @@ public abstract class SceneHandler {
 
 	protected abstract void defineEventHandlers();
 
-	protected abstract void load();
+	protected abstract void load(boolean start);
 
 	protected void unload() {
 		Invocador.getInstancia().clear();

@@ -14,7 +14,11 @@ public final class Jugador extends Competidor {
 	 */
 	private double velocidadMax = 200.0;
 	private double aceleracion = 5;
+
+
 	private double desplazamiento = 5;
+
+
 
 	private boolean z = false;
 	private boolean right = false;
@@ -114,5 +118,10 @@ public final class Jugador extends Competidor {
 	public double getVelocidadMax() {
 		return velocidadMax;
 	}
+	
+	public void setAceleracion(double aceleracion) {
+		this.aceleracion = aceleracion;
+	}
+
 
 }

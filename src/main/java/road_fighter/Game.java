@@ -25,12 +25,12 @@ public class Game extends SceneHandler {
 	private Jugador jugador;
 	private Partida partida;
 
-	public Game(Stage stage) {
-		super();
-		stage.setScene(this.scene);
-		load();
-		addTimeEventsAnimationTimer();
-		addInputEvents();
+	public Game(Main main) {
+		super(main);
+		//stage.setScene(this.scene);
+		//load();
+		//addTimeEventsAnimationTimer();
+		//addInputEvents();
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class Game extends SceneHandler {
 	}
 
 	@Override
-	protected void load() {
+	protected void load(boolean start) {
 		Group root = new Group();
 		scene.setRoot(root);
 
@@ -115,18 +115,43 @@ public class Game extends SceneHandler {
 		Invocador.getInstancia().add(velocidadInfo);
 		Invocador.getInstancia().addToGroup(root.getChildren());
 
-		AudioSound.getInstancia().playGameSound();
-		AudioSFX.getInstancia().subirVolumenSound();
-		AudioSound.getInstancia().bajarVolumenSound();
-
-		TimerTask task = new TimerTask() {
+		AudioSound.getInstancia().stopSound();
+		AudioSound.getInstancia().playGameStartSound();
+		//jugador.setDesplazamiento(0);
+		jugador.setAceleracion(0);
+		
+		TimerTask task2 = new TimerTask() {
 			public void run() {
-				partida.getCompetidor(6).setVelocidad(200);
+				AudioSFX.getInstancia().play("largada_start");
+				AudioSound.getInstancia().playGameSound();				
+				jugador.setAceleracion(5);
+				TimerTask task = new TimerTask() {
+					public void run() {
+						
+						partida.getCompetidor(6).setVelocidad(200);
+					}
+				};
+
+				Timer timer = new Timer();
+				timer.schedule(task, 500L);
+		
 			}
 		};
 
-		Timer timer = new Timer();
-		timer.schedule(task, 1000L);
+		Timer timer2 = new Timer();
+		timer2.schedule(task2, 4000L);
+		
+		//jugador.setDesplazamiento(5);
+		
+		if (start) {
+			addTimeEventsAnimationTimer();
+			addInputEvents();
+		}
+		
+		AudioSFX.getInstancia().subirVolumenSound();
+		AudioSound.getInstancia().bajarVolumenSound();
+
+		
 	}
 
 }

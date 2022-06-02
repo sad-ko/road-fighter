@@ -62,7 +62,7 @@ public class Partida {
 		Jugador jugador = this.mapa.posicionarCompetidores(this, cantJugadores);
 		this.mapa.crearMeta(this);
 
-		AudioSFX.getInstancia().play("largada_start");
+		//AudioSFX.getInstancia().play("largada_start"); //
 		return jugador;
 	}
 
