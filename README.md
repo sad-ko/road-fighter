@@ -8,4 +8,4 @@
 ## TODO:
     • Mejorar spawneo aleatorio.
     • Pulir codebase.
-    • Actualizar diagrama.
+    • Actualizar diagrama. -- EN CURSO
