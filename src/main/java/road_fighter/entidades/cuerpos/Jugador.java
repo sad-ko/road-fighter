@@ -15,10 +15,7 @@ public final class Jugador extends Competidor {
 	private double velocidadMax = 200.0;
 	private double aceleracion = 5;
 
-
 	private double desplazamiento = 5;
-
-
 
 	private boolean z = false;
 	private boolean right = false;
@@ -76,13 +73,13 @@ public final class Jugador extends Competidor {
 	 * @param delta :float - Lapso de tiempo en segundos, desde el anterior frame a
 	 *              este
 	 */
-	public void desacelerar() {
+	public void desacelerar(double desaceleracion) {
 		if (z) {
 			return;
 		}
 
 		if (this.velocidad > 0.0) {
-			this.velocidad -= (this.aceleracion * this.velocidad);
+			this.velocidad -= (this.aceleracion * desaceleracion);
 		} else {
 			this.velocidad = 0.00;
 		}
@@ -90,11 +87,18 @@ public final class Jugador extends Competidor {
 
 	@Override
 	protected void mover(double delta) {
+		if (choque || exploto) {
+			z = false;
+			desacelerar(0.5);
+			AudioSFX.getInstancia().play(choque ? "derrape" : "explosion");
+			return;
+		}
+
 		if (z) {
 			acelerar();
 			AudioSFX.getInstancia().play("running");
 		} else {
-			desacelerar();
+			desacelerar(this.velocidad);
 			AudioSFX.getInstancia().stop("running");
 		}
 
@@ -118,10 +122,9 @@ public final class Jugador extends Competidor {
 	public double getVelocidadMax() {
 		return velocidadMax;
 	}
-	
+
 	public void setAceleracion(double aceleracion) {
 		this.aceleracion = aceleracion;
 	}
-
 
 }

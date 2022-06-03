@@ -13,7 +13,6 @@ import road_fighter.entidades.Etiqueta;
 import road_fighter.entidades.cuerpos.Competidor;
 import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.fisica.Vector2D;
-import road_fighter.graficos.AudioSFX;
 
 /**
  * La clase {@code Partida} es la clase principal del juego, la que comienza,
@@ -62,7 +61,7 @@ public class Partida {
 		Jugador jugador = this.mapa.posicionarCompetidores(this, cantJugadores);
 		this.mapa.crearMeta(this);
 
-		//AudioSFX.getInstancia().play("largada_start"); //
+		// AudioSFX.getInstancia().play("largada_start"); //
 		return jugador;
 	}
 

@@ -11,14 +11,15 @@ public class Sprite {
 
 	private ImageView render;
 	private Vector2D scale;
+	private Image sprite;
 
 	public Sprite(String imageDir, Vector2D imageSize, Vector2D scale) {
-		Image sprite = new Image(RESOURCES_DIR + imageDir, imageSize.getX() * scale.getX(),
+		this.sprite = new Image(RESOURCES_DIR + imageDir, imageSize.getX() * scale.getX(),
 				imageSize.getY() * scale.getY(), false, true);
 		this.render = new ImageView(sprite);
 		this.scale = scale;
 	}
-	
+
 	public Sprite(String imageDir, Vector2D imageSize, float scale) {
 		this(imageDir, imageSize, new Vector2D(scale, scale));
 	}
@@ -35,19 +36,23 @@ public class Sprite {
 	public void realocate(Vector2D position) {
 		this.render.relocate(position.getX() * this.scale.getX(), position.getY() * this.scale.getY());
 	}
-	
+
 	public void setViewport(Vector2D position, Vector2D size) {
 		double x = position.getX() * this.scale.getX();
 		double y = position.getY() * this.scale.getY();
-		
+
 		double ancho = size.getX() * this.scale.getX();
 		double alto = size.getY() * this.scale.getY();
-		
-		Rectangle2D value = new Rectangle2D(x,y, ancho, alto);
+
+		Rectangle2D value = new Rectangle2D(x, y, ancho, alto);
 		this.render.setViewport(value);
 	}
 
 	public ImageView getRender() {
 		return render;
+	}
+
+	public Image getSprite() {
+		return sprite;
 	}
 }

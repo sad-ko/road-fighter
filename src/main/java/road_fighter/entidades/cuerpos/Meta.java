@@ -45,9 +45,4 @@ public class Meta extends Colisionables {
 		}
 	}
 
-	@Override
-	public void remover() {
-		// TODO Auto-generated method stub
-	}
-
 }

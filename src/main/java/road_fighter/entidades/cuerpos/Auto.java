@@ -1,8 +1,15 @@
 package road_fighter.entidades.cuerpos;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+import road_fighter.Config;
 import road_fighter.entidades.Entidad;
 import road_fighter.fisica.Vector2D;
+import road_fighter.graficos.AnimatedSprite;
 import road_fighter.graficos.Sprite;
 
 /**
@@ -11,15 +18,14 @@ import road_fighter.graficos.Sprite;
  */
 public abstract class Auto extends Cuerpo {
 
-	/**
-	 * Velocidad inicial del {@code Auto}, comienza en 0.0f
-	 */
 	protected double velocidad = 0.0;
-	private boolean exploto = false; // Temporal, solo para probar los Unit Test
-	private boolean impacto = false; // Temporal, solo para probar los Unit Test
-	private Sprite sprite;
-
-	private int orientation;
+	protected int orientation;
+	protected boolean choque = false;
+	protected boolean exploto = false;
+	protected AnimatedSprite explosionAnimation;
+	protected Sprite sprite;
+	protected ImageView render;
+	protected double ancho;
 
 	/**
 	 * @param clase    :{@code String} - Nombre de la clase no-abstracta que hereda
@@ -33,6 +39,14 @@ public abstract class Auto extends Cuerpo {
 		this.sprite.realocate(new Vector2D(0, -imgSize.getY()));
 
 		this.render = sprite.getRender();
+		this.ancho = imgSize.getX();
+
+		Image explosion_1 = new Image("file:src/main/resources/img/explosion_1.png", 36, 39, false, false);
+		Image explosion_2 = new Image("file:src/main/resources/img/explosion_2.png", 45, 48, false, false);
+		Image explosion_3 = new Image("file:src/main/resources/img/explosion_3.png", 39, 48, false, false);
+
+		explosionAnimation = new AnimatedSprite(new Image[] { explosion_1, explosion_2, explosion_3 }, render,
+				Duration.seconds(1.5));
 	}
 
 	/**
@@ -40,51 +54,59 @@ public abstract class Auto extends Cuerpo {
 	 * 
 	 * @param otroAuto :{@code Auto} - Auto con el que se impacto
 	 */
-	public void impacto(Auto otroAuto) {
-		this.impacto = true; // Temporal, solo para probar los Unit Test
-		otroAuto.impacto = true;
-		/*
-		 * orientation = (otroAuto.getPosicion().getX() - posicion.getX() > 0) ? -1 : 1;
-		 * 
-		 * TimerTask task = new TimerTask() { public void run() { impacto = false; } };
-		 * 
-		 * Timer timer = new Timer(); timer.schedule(task, 1000L);
-		 */
+	protected void impacto(Auto otroAuto) {
+		this.choque = true;
+		otroAuto.choque = true;
+		orientation = (otroAuto.getPosicion().getX() - posicion.getX() > 0) ? -1 : 1;
+
+		TimerTask task = new TimerTask() {
+			public void run() {
+				choque = false;
+			}
+		};
+
+		Timer timer = new Timer();
+		timer.schedule(task, 1000L);
 	}
 
-	public void explotar() {
-		// TODO: Animar choque contra borde del mapa
-		this.exploto = true; // Temporal, solo para probar los Unit Test
+	protected void explotar() {
+		this.exploto = true;
+		this.velocidad = 0;
+
+		explosionAnimation.setOnFinished(event -> this.remover());
+		explosionAnimation.play();
 	}
 
 	protected abstract void mover(double delta);
 
 	@Override
 	public void update(double delta) {
-		Sprite.setRenderPosition((ImageView) this.render, this.posicion);
+		if (choque) {
+			this.posicion.setX(posicion.getX() + (2 * this.orientation));
+		}
+
+		Sprite.setRenderPosition(this.render, this.posicion);
 		mover(delta);
 
-		if (impacto) {
-			this.posicion.setX(posicion.getX() + (5 * this.orientation));
+		double x = this.posicion.getX();
+		if (x < Config.mapLeft - this.ancho) {
+			this.posicion.setX(x + this.ancho / 2);
+		} else if (x > Config.mapRight) {
+			this.posicion.setX(x - this.ancho / 2);
 		}
 	}
 
-	@Override
-	public void remover() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public boolean getExploto() {
-		return this.exploto; // Temporal, solo para probar los Unit Test
-	}
-
 	public boolean getImpacto() {
-		return this.impacto; // Temporal, solo para probar los Unit Test
+		return this.choque;
 	}
 
 	public double getVelocidad() {
 		return velocidad;
+	}
+
+	@Override
+	public Node getRender() {
+		return this.render;
 	}
 
 	public void setVelocidad(double velocidad) {

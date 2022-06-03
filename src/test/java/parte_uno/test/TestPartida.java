@@ -66,7 +66,7 @@ public class TestPartida {
 			jugador.desplazar();
 		}
 
-		assertEquals(true, jugador.getExploto());
+		assertEquals(true, jugador.getImpacto());
 	}
 
 	// @Test

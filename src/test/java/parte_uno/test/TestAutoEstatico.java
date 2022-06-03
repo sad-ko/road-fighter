@@ -41,7 +41,7 @@ public class TestAutoEstatico {
 		}
 
 		invocador.calcularColisiones();
-		assertEquals(true, auto.getExploto());
+		assertEquals(true, auto.getImpacto());
 	}
 
 }

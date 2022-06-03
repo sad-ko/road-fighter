@@ -73,6 +73,17 @@ public class Mapa {
 		return new Vector2D(x, -y);
 	}
 
+	private Vector2D generarCoordenadasObstaculo(double espaciado) {
+		// Para que el Cuerpo no sea instanciado exactamente en los bordes ni en la meta
+		double ld = limiteDerecho - espaciado;
+
+		// rangeMin + (rangeMax - rangeMin) * r.nextDouble()
+		double x = (rand.nextBoolean()) ? ld : limiteIzquierdo;
+		double y = (longitud - Config.height) * rand.nextDouble();
+
+		return new Vector2D(x, -y);
+	}
+
 	/**
 	 * Genera esparcidamente por el mapa {@code Cuerpo}s de la clase especificada.
 	 * 
@@ -101,7 +112,7 @@ public class Mapa {
 
 		case OBSTACULO:
 			for (int i = 0; i < cantidad; i++) {
-				Vector2D pos = generarCoordenadas(Entidad.OBSTACULO.getAncho());
+				Vector2D pos = generarCoordenadasObstaculo(Entidad.OBSTACULO.getAncho());
 				Obstaculo obstaculo = new Obstaculo(pos);
 				this.invocador.add(obstaculo);
 			}

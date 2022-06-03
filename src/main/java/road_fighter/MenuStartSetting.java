@@ -1,8 +1,5 @@
 package road_fighter;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -10,21 +7,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
-import road_fighter.entidades.Entidad;
-import road_fighter.entidades.Etiqueta;
-import road_fighter.entidades.FPS;
 import road_fighter.entidades.TextoMenuSetting;
-import road_fighter.entidades.TextoStart;
-import road_fighter.entidades.VelocidadInfo;
-import road_fighter.entidades.cuerpos.Jugador;
-import road_fighter.fisica.Vector2D;
 import road_fighter.graficos.AudioSFX;
 import road_fighter.graficos.AudioSound;
 import road_fighter.logica.Invocador;
-import road_fighter.logica.Mapa;
-import road_fighter.logica.Partida;
 
 public class MenuStartSetting extends SceneHandler {
 
@@ -34,21 +20,21 @@ public class MenuStartSetting extends SceneHandler {
 
 	public MenuStartSetting(Main main) {
 		super(main);
-		//stage.setScene(this.scene);
-		//load();
-		//addTimeEventsAnimationTimer();
-		//addInputEvents();
+		// stage.setScene(this.scene);
+		// load();
+		// addTimeEventsAnimationTimer();
+		// addInputEvents();
 	}
 
 	@Override
 	protected void prepareScene() {
-		 rootGroup = new Group();
+		rootGroup = new Group();
 		this.scene = new Scene(rootGroup, Config.width, Config.height, Color.BLACK);
 	}
 
 	@Override
 	protected void defineEventHandlers() {
-		
+
 		keyEventHandler = new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
@@ -56,7 +42,7 @@ public class MenuStartSetting extends SceneHandler {
 				case ENTER:
 					main.startGame();
 					break;
-				case A:		
+				case A:
 					AudioSFX.getInstancia().stop("largada_start");
 					AudioSFX.getInstancia().bajarVolumenSound();
 					AudioSFX.getInstancia().play("largada_start");
@@ -65,7 +51,7 @@ public class MenuStartSetting extends SceneHandler {
 					root.getChildren().add(menu.getRenderTextPorcentajeSFX());
 					menu.getRenderTextPorcentajeSFX().setVisible(true);
 					break;
-				case D:		
+				case D:
 					AudioSFX.getInstancia().stop("largada_start");
 					AudioSFX.getInstancia().subirVolumenSound();
 					AudioSFX.getInstancia().play("largada_start");
@@ -105,31 +91,27 @@ public class MenuStartSetting extends SceneHandler {
 
 	@Override
 	protected void load(boolean start) {
-		
 		root = new Group();
 		rootGroup.getChildren().add(root);
-		
+		Invocador.getInstancia().setRoot(root);
+
 		Image fondo = new Image("file:src/main/resources/img/start.png", Config.width, Config.height, false, false);
 		ImageView imageView = new ImageView(fondo);
 		root.getChildren().add(imageView);
-		
+
 		menu = new TextoMenuSetting();
 		root.getChildren().add(menu.getRender());
 		root.getChildren().add(menu.getRenderTextAudio());
 		root.getChildren().add(menu.getRenderTextSFX());
 		root.getChildren().add(menu.getRenderTextPorcentajeAudio());
 		root.getChildren().add(menu.getRenderTextPorcentajeSFX());
-		
-		Invocador.getInstancia().addToGroup(root.getChildren());
 
-		
 		if (start) {
 			addTimeEventsAnimationTimer();
 			addInputEvents();
 		}
 	}
-	
-	
+
 	public void unload() {
 		rootGroup.getChildren().remove(0);
 		super.unload();

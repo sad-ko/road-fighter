@@ -2,6 +2,7 @@ package road_fighter.entidades;
 
 import javafx.scene.Node;
 import road_fighter.fisica.Vector2D;
+import road_fighter.logica.Invocador;
 
 /**
  * La clase {@code Objeto} es una clase abstracta de la cual heredan todas las
@@ -36,7 +37,9 @@ public abstract class Objeto {
 
 	public abstract void update(double delta);
 
-	public abstract void remover();
+	public void remover() {
+		Invocador.getInstancia().remove(this);
+	}
 
 	public Entidad getClase() {
 		return this.clase;

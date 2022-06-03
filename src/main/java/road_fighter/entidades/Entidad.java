@@ -1,7 +1,7 @@
 package road_fighter.entidades;
 
 public enum Entidad {
-	AUTO_ESTATICO(35), BORDE, JUGADOR, META, OBSTACULO, POWERUP, TEXT, ESCENARIO;
+	AUTO_ESTATICO(35), BORDE, JUGADOR, META, OBSTACULO(160), POWERUP(30), TEXT, ESCENARIO;
 
 	private double ancho;
 

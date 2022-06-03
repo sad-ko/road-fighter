@@ -2,13 +2,11 @@ package road_fighter;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import road_fighter.entidades.Entidad;
 import road_fighter.entidades.FPS;
 import road_fighter.entidades.VelocidadInfo;
@@ -27,10 +25,10 @@ public class Game extends SceneHandler {
 
 	public Game(Main main) {
 		super(main);
-		//stage.setScene(this.scene);
-		//load();
-		//addTimeEventsAnimationTimer();
-		//addInputEvents();
+		// stage.setScene(this.scene);
+		// load();
+		// addTimeEventsAnimationTimer();
+		// addInputEvents();
 	}
 
 	@Override
@@ -101,57 +99,55 @@ public class Game extends SceneHandler {
 	protected void load(boolean start) {
 		Group root = new Group();
 		scene.setRoot(root);
+		Invocador.getInstancia().setRoot(root);
 
 		FPS fpsInfo = new FPS(fps, new Vector2D(800, Config.height - 50));
 		VelocidadInfo velocidadInfo = new VelocidadInfo(new Vector2D(800, Config.height - 100));
 
-		Mapa mapa = new Mapa(Config.height * 6, 224, 616);
-		mapa.agregarObstaculos(Entidad.AUTO_ESTATICO, 100);
+		Mapa mapa = new Mapa(Config.height * 12, Config.mapLeft, Config.mapRight);
+		mapa.agregarObstaculos(Entidad.AUTO_ESTATICO, 50);
+		mapa.agregarObstaculos(Entidad.POWERUP, 5);
+		mapa.agregarObstaculos(Entidad.OBSTACULO, 15);
 
 		this.partida = new Partida(mapa, 2000L);
 		this.jugador = this.partida.comenzar(7);
 
 		Invocador.getInstancia().add(fpsInfo);
 		Invocador.getInstancia().add(velocidadInfo);
-		Invocador.getInstancia().addToGroup(root.getChildren());
 
 		AudioSound.getInstancia().stopSound();
 		AudioSound.getInstancia().playGameStartSound();
-		//jugador.setDesplazamiento(0);
+
 		jugador.setAceleracion(0);
-		
+
 		TimerTask task2 = new TimerTask() {
 			public void run() {
 				AudioSFX.getInstancia().play("largada_start");
-				AudioSound.getInstancia().playGameSound();				
+				AudioSound.getInstancia().playGameSound();
 				jugador.setAceleracion(5);
 				TimerTask task = new TimerTask() {
 					public void run() {
-						
+
 						partida.getCompetidor(6).setVelocidad(200);
 					}
 				};
 
 				Timer timer = new Timer();
 				timer.schedule(task, 500L);
-		
+
 			}
 		};
 
 		Timer timer2 = new Timer();
 		timer2.schedule(task2, 4000L);
-		
-		//jugador.setDesplazamiento(5);
-		
+
 		if (start) {
 			addTimeEventsAnimationTimer();
 			addInputEvents();
 		}
-		
+
 		AudioSFX.getInstancia().subirVolumenSound();
 		AudioSound.getInstancia().bajarVolumenSound();
-
-		
 	}
 
 }

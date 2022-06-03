@@ -39,9 +39,9 @@ public class TestJugador {
 		Jugador jugador = new Jugador(new Vector2D(0, 0), "Alexander");
 
 		jugador.acelerar();
-		jugador.desacelerar();
-		jugador.desacelerar();
-		jugador.desacelerar();
+		jugador.desacelerar(4);
+		jugador.desacelerar(4);
+		jugador.desacelerar(4);
 
 		assertEquals(true, jugador.getVelocidad() == 0);
 	}
@@ -183,7 +183,7 @@ public class TestJugador {
 		}
 
 		assertTrue(jugador.getHitbox().intersecta(obstaculo));
-		assertTrue(jugador.getExploto());
+		assertTrue(jugador.getImpacto());
 	}
 
 }

@@ -2,9 +2,11 @@ package road_fighter.entidades.cuerpos;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
+import javafx.scene.image.ImageView;
+import road_fighter.Config;
 import road_fighter.entidades.Entidad;
 import road_fighter.fisica.Vector2D;
+import road_fighter.graficos.Sprite;
 
 /**
  * La clase {@code PowerUp} hija de {@code Cuerpo}, aplica un boost de velocidad
@@ -12,14 +14,20 @@ import road_fighter.fisica.Vector2D;
  */
 public class PowerUp extends Colisionables {
 
-	private double power = 1.5;
-	private long tiempo = 5000L;
+	private double power = 1.2;
+	private long tiempo = 3500L;
+	private Sprite sprite;
 
 	/**
 	 * @param posicion :{@code Vector2D} - Posicion del objeto en el plano (x,y).
 	 */
 	public PowerUp(Vector2D posicion) {
-		super(Entidad.POWERUP, posicion, new Vector2D(1, 1));
+		super(Entidad.POWERUP, posicion, new Vector2D(30, -30));
+
+		this.sprite = new Sprite("img/powerUp.png", new Vector2D(30, 30));
+		this.sprite.realocate(new Vector2D(0, -30));
+
+		this.render = sprite.getRender();
 	}
 
 	/**
@@ -32,6 +40,8 @@ public class PowerUp extends Colisionables {
 			public void run() {
 				double vel = competidor.getVelocidad() / power;
 				competidor.setVelocidad(vel);
+				competidor.setPower(false);
+				competidor.getRender().setEffect(null);
 			}
 		};
 
@@ -48,15 +58,10 @@ public class PowerUp extends Colisionables {
 	}
 
 	@Override
-	public void update(double deltaTime) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void remover() {
-		// TODO Auto-generated method stub
-
+	public void update(double delta) {
+		double y = (Config.currentVelocity > 0.0) ? (Config.currentVelocity * delta / Config.acceleration) : 0.0;
+		this.posicion.setY(this.posicion.getY() + y);
+		Sprite.setRenderPosition((ImageView) this.render, this.posicion);
 	}
 
 }

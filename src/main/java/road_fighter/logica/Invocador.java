@@ -2,8 +2,7 @@ package road_fighter.logica;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
+import javafx.scene.Group;
 import road_fighter.Config;
 import road_fighter.entidades.Objeto;
 import road_fighter.entidades.cuerpos.Cuerpo;
@@ -18,6 +17,7 @@ public class Invocador {
 	private static Invocador instancia = null;
 
 	private SpatialGrid grid;
+	private Group root;
 	private List<Objeto> objInstancias;
 	private List<Cuerpo> instancias;
 
@@ -34,23 +34,42 @@ public class Invocador {
 		return instancia;
 	}
 
+	public void setRoot(Group root) {
+		if (this.root == null) {
+			this.root = root;
+		}
+	}
+
+	private void addToRoot(Objeto obj) {
+		if (obj.getRender() != null) {
+			this.root.getChildren().add(obj.getRender());
+		}
+	}
+
 	public void add(Cuerpo cuerpo) {
 		this.instancias.add(cuerpo);
+		this.addToRoot(cuerpo);
 	}
 
 	public void add(Objeto obj) {
 		this.objInstancias.add(obj);
+		this.addToRoot(obj);
+	}
+
+	public void remove(Cuerpo cuerpo) {
+		instancias.remove(cuerpo);
+		root.getChildren().remove(cuerpo.getRender());
+	}
+
+	public void remove(Objeto obj) {
+		instancias.remove(obj);
+		root.getChildren().remove(obj.getRender());
 	}
 
 	public void clear() {
-		for (Cuerpo cuerpo : instancias) {
-			cuerpo.remover();
-		}
+		root.getChildren().clear();
+		root = null;
 		instancias.clear();
-
-		for (Objeto obj : objInstancias) {
-			obj.remover();
-		}
 		objInstancias.clear();
 	}
 
@@ -78,20 +97,6 @@ public class Invocador {
 		}
 
 		grid.checkCollisions();
-	}
-
-	public void addToGroup(ObservableList<Node> groupList) {
-		for (Cuerpo cuerpo : instancias) {
-			if (cuerpo.getRender() != null) {
-				groupList.add(cuerpo.getRender());
-			}
-		}
-
-		for (Objeto obj : objInstancias) {
-			if (obj.getRender() != null) {
-				groupList.add(obj.getRender());
-			}
-		}
 	}
 
 	public void update(double delta) {
