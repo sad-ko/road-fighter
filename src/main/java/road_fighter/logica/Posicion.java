@@ -22,6 +22,6 @@ public class Posicion {
 
 	@Override
 	public String toString() {
-		return competidor.getNombre() + " - Pos: " + posicionActual + " - " + competidor.getCurrentPos();
+		return posicionActual + " - " + competidor.getNombre();
 	}
 }

@@ -11,7 +11,7 @@ public class Obstaculo extends Colisionables {
 	private Sprite sprite;
 
 	public Obstaculo(Vector2D posicion) {
-		super(Entidad.OBSTACULO, posicion, new Vector2D(160, -56));
+		super(Entidad.OBSTACULO, posicion, new Vector2D(155, -50));
 
 		this.sprite = new Sprite("img/obstaculo.png", new Vector2D(80, 28), 2);
 		this.sprite.realocate(new Vector2D(0, -28));

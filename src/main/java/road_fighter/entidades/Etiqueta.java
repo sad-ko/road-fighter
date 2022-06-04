@@ -17,28 +17,28 @@ public class Etiqueta extends Objeto {
 		text = new Text();
 		this.contenido = contenido;
 
-		render = new VBox(text);
-		render.setTranslateY(posicion.getY());
-		render.setTranslateX(posicion.getX());
+		this.render = new VBox(text);
+		this.render.setTranslateY(posicion.getY());
+		this.render.setTranslateX(posicion.getX());
 
 		text.setFont(Font.font("MONOSPACED", 32));
 		text.setFill(Color.WHITE);
 	}
 
-	protected void setText(String contenido) {
-		this.contenido = contenido;
-		text.setText(contenido);
-	}
-
 	@Override
 	public void update(double delta) {
 		this.setText(contenido);
-		render.toFront();
+		this.render.toFront();
 	}
 
 	@Override
 	public void remover() {
 		// TODO Auto-generated method stub
+	}
+
+	public void setText(String contenido) {
+		this.contenido = contenido;
+		text.setText(contenido);
 	}
 
 	public void setVisible(boolean value) {

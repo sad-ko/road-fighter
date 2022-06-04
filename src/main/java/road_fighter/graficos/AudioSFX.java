@@ -27,16 +27,20 @@ public final class AudioSFX extends Audio {
 		return instancia;
 	}
 
-	public void play(String name) {
+	public void play(String name, boolean forcePlay) {
 		AudioClip audio = audios.get(name);
 
-		if (audio == null) {
+		if (audio == null || volumen == 0.0) {
 			return;
 		}
 
-		if (!audio.isPlaying()) {
+		if (!audio.isPlaying() || forcePlay) {
 			audio.play(this.volumen);
 		}
+	}
+
+	public void play(String name) {
+		play(name, false);
 	}
 
 	public void stop(String name) {

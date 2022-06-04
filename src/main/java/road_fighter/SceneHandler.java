@@ -28,7 +28,7 @@ public abstract class SceneHandler {
 	protected EventHandler<MouseEvent> mouseEventHandler;
 
 	protected SceneHandler(Main main) {
-		this.main=main;
+		this.main = main;
 		prepareScene();
 		defineEventHandlers();
 	}

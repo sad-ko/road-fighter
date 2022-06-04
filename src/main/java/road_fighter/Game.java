@@ -7,38 +7,40 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import road_fighter.entidades.Entidad;
 import road_fighter.entidades.FPS;
 import road_fighter.entidades.VelocidadInfo;
 import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.fisica.Vector2D;
 import road_fighter.graficos.AudioSFX;
 import road_fighter.graficos.AudioSound;
+import road_fighter.logica.Dificultad;
 import road_fighter.logica.Invocador;
 import road_fighter.logica.Mapa;
 import road_fighter.logica.Partida;
 
 public class Game extends SceneHandler {
 
+	private Group root;
 	private Jugador jugador;
 	private Partida partida;
+	private Timer starting;
+	private Dificultad dificultad;
 
-	public Game(Main main) {
+	public Game(Main main, int dificultad) {
 		super(main);
-		// stage.setScene(this.scene);
-		// load();
-		// addTimeEventsAnimationTimer();
-		// addInputEvents();
+		this.dificultad = Dificultad.values()[dificultad];
 	}
 
 	@Override
 	protected void prepareScene() {
-		Group root = new Group();
+		root = new Group();
 		this.scene = new Scene(root, Config.width, Config.height, Color.BLACK);
 	}
 
 	@Override
 	protected void defineEventHandlers() {
+		SceneHandler me = this;
+
 		keyEventHandler = new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
@@ -54,6 +56,11 @@ public class Game extends SceneHandler {
 
 				case RIGHT:
 					jugador.setRight(true);
+					break;
+
+				case Q:
+				case ESCAPE:
+					main.startMenuIntro(me);
 					break;
 
 				default:
@@ -97,20 +104,16 @@ public class Game extends SceneHandler {
 
 	@Override
 	protected void load(boolean start) {
-		Group root = new Group();
-		scene.setRoot(root);
 		Invocador.getInstancia().setRoot(root);
 
 		FPS fpsInfo = new FPS(fps, new Vector2D(800, Config.height - 50));
 		VelocidadInfo velocidadInfo = new VelocidadInfo(new Vector2D(800, Config.height - 100));
 
 		Mapa mapa = new Mapa(Config.height * 12, Config.mapLeft, Config.mapRight);
-		mapa.agregarObstaculos(Entidad.AUTO_ESTATICO, 50);
-		mapa.agregarObstaculos(Entidad.POWERUP, 5);
-		mapa.agregarObstaculos(Entidad.OBSTACULO, 15);
+		mapa.generarMapa(dificultad);
 
 		this.partida = new Partida(mapa, 2000L);
-		this.jugador = this.partida.comenzar(7);
+		this.jugador = this.partida.comenzar(2);
 
 		Invocador.getInstancia().add(fpsInfo);
 		Invocador.getInstancia().add(velocidadInfo);
@@ -120,34 +123,29 @@ public class Game extends SceneHandler {
 
 		jugador.setAceleracion(0);
 
-		TimerTask task2 = new TimerTask() {
+		TimerTask startingUp = new TimerTask() {
 			public void run() {
 				AudioSFX.getInstancia().play("largada_start");
 				AudioSound.getInstancia().playGameSound();
 				jugador.setAceleracion(5);
-				TimerTask task = new TimerTask() {
-					public void run() {
-
-						partida.getCompetidor(6).setVelocidad(200);
-					}
-				};
-
-				Timer timer = new Timer();
-				timer.schedule(task, 500L);
-
+				partida.getCompetidor(1).bot(true);
 			}
 		};
 
-		Timer timer2 = new Timer();
-		timer2.schedule(task2, 4000L);
+		starting = new Timer();
+		starting.schedule(startingUp, 3000L);
 
 		if (start) {
 			addTimeEventsAnimationTimer();
 			addInputEvents();
 		}
+	}
 
-		AudioSFX.getInstancia().subirVolumenSound();
-		AudioSound.getInstancia().bajarVolumenSound();
+	@Override
+	public void unload() {
+		starting.cancel();
+		root.getChildren().clear();
+		super.unload();
 	}
 
 }

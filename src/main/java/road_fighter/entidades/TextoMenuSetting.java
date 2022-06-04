@@ -8,136 +8,120 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import road_fighter.Config;
+import road_fighter.fisica.Vector2D;
 import road_fighter.graficos.AudioSFX;
 import road_fighter.graficos.AudioSound;
+import road_fighter.logica.Dificultad;
 
-public class TextoMenuSetting {
+public class TextoMenuSetting extends Objeto {
 
-	public static final double height = Config.height;
-
-	private final double Y = height * 3 / 5;
-
-	private VBox render;
-	private VBox renderTextAudio;
-	private VBox renderTextSFX;
-	private VBox renderTextPorcentajeAudio;
-	private VBox renderTextPorcentajeSFX;
+	private static final double X = Config.width / 4.0;
+	private static final double Y = Config.height * (3.0 / 5.0);
 
 	private Font font;
+	private Text[] texts;
+	private int focus = 0;
 
-	public TextoMenuSetting() {
+	protected VBox render;
+
+	public TextoMenuSetting(int dificultad) {
+		super(Entidad.TEXT, new Vector2D(0, 0));
 		font = Font.loadFont(ClassLoader.getSystemResource("font/nintendo-nes-font.ttf").toString(), 30);
-		startGame();
-		Textaudio();
-		TextSFX();
-		TextPorcentajeAudio();
-		TextPorcentajeSFX();
+		render = new VBox();
+		texts = new Text[3];
+
+		startGame(dificultad);
+		audioText();
+		textSFX();
 	}
 
-	public void startGame() {
-		Text text = new Text("START GAME -ENTER-");
-
-		render = new VBox(text);
-		render.setAlignment(Pos.TOP_CENTER);
-		render.setTranslateY(Y);
-		// Esto debería heredarse?
-		render.setPrefWidth(Config.width);
-
-		// Font font = Font.font("Verdana", FontWeight.NORMAL, 40);
-		text.setTextAlignment(TextAlignment.CENTER);
-		text.setFont(font);
-		text.setFill(Color.WHITE);
+	@Override
+	public void update(double delta) {
+		texts[1].setText("SOUND: " + getPorcentajeAudio());
+		texts[2].setText("SFX: " + getPorcentajeSFX());
+		texts[focus].setFill(Color.CORAL);
 	}
 
-	public void Textaudio() {
-		Text text = new Text("SOUND: ");
+	public void startGame(int dificultad) {
+		texts[0] = new Text("START GAME: " + Dificultad.values()[dificultad]);
+		texts[0].setTextAlignment(TextAlignment.CENTER);
+		texts[0].setFont(font);
+		texts[0].setFill(Color.WHITE);
 
-		renderTextAudio = new VBox(text);
+		texts[0].setX(X);
+		texts[0].setY(Y);
+
+		VBox renderTitle = new VBox(texts[0]);
+		renderTitle.setAlignment(Pos.TOP_CENTER);
+		renderTitle.setTranslateY(Y);
+		renderTitle.setPrefWidth(Config.width);
+
+		render.getChildren().add(renderTitle);
+	}
+
+	public void audioText() {
+		texts[1] = new Text("SOUND: " + getPorcentajeAudio());
+		texts[1].setTextAlignment(TextAlignment.CENTER);
+		texts[1].setFont(font);
+		texts[1].setFill(Color.WHITE);
+
+		texts[1].setX(X);
+		texts[1].setY(Y + 50);
+
+		VBox renderTextAudio = new VBox(texts[1]);
 		renderTextAudio.setAlignment(Pos.TOP_CENTER);
 		renderTextAudio.setTranslateY(Y + 50);
-		// Esto debería heredarse?
 		renderTextAudio.setPrefWidth(Config.width);
 
-		// Font font = Font.font("Verdana", FontWeight.NORMAL, 40);
-		text.setTextAlignment(TextAlignment.CENTER);
-		text.setFont(font);
-		text.setFill(Color.WHITE);
+		render.getChildren().add(renderTextAudio);
 	}
 
-	public void TextSFX() {
-		Text text = new Text("SFX: ");
+	public void textSFX() {
+		texts[2] = new Text("SFX: " + getPorcentajeSFX());
+		texts[2].setTextAlignment(TextAlignment.CENTER);
+		texts[2].setFont(font);
+		texts[2].setFill(Color.WHITE);
 
-		renderTextSFX = new VBox(text);
+		texts[2].setX(X);
+		texts[2].setY(Y + 100);
+
+		VBox renderTextSFX = new VBox(texts[2]);
 		renderTextSFX.setAlignment(Pos.TOP_CENTER);
 		renderTextSFX.setTranslateY(Y + 100);
-		// Esto debería heredarse?
 		renderTextSFX.setPrefWidth(Config.width);
 
-		// Font font = Font.font("Verdana", FontWeight.NORMAL, 40);
-		text.setTextAlignment(TextAlignment.CENTER);
-		text.setFont(font);
-		text.setFill(Color.WHITE);
+		render.getChildren().add(renderTextSFX);
 	}
 
-	public String getPorcentajeAudio() {
-		String porcentaje = String.valueOf((int) (AudioSound.getInstancia().getVolumen() * 100));
-		return porcentaje;
+	private int getPorcentajeAudio() {
+		return (int) (AudioSound.getInstancia().getVolumen() * 100);
 	}
 
-	public String getPorcentajeSFX() {
-		String porcentaje = String.valueOf((int) (AudioSFX.getInstancia().getVolumen() * 100));
-		return porcentaje;
+	private int getPorcentajeSFX() {
+		return (int) (AudioSFX.getInstancia().getVolumen() * 100);
 	}
 
-	public void TextPorcentajeAudio() {
-		Text text = new Text(getPorcentajeAudio());
-
-		renderTextPorcentajeAudio = new VBox(text);
-		renderTextPorcentajeAudio.setAlignment(Pos.TOP_CENTER);
-		renderTextPorcentajeAudio.setTranslateY(Y + 50);
-		renderTextPorcentajeAudio.setTranslateX(renderTextPorcentajeAudio.getTranslateX() + 150);
-		// Esto debería heredarse?
-		renderTextPorcentajeAudio.setPrefWidth(Config.width);
-
-		// Font font = Font.font("Verdana", FontWeight.NORMAL, 40);
-		text.setTextAlignment(TextAlignment.CENTER);
-		text.setFont(font);
-		text.setFill(Color.WHITE);
+	public void moveUp() {
+		texts[focus].setFill(Color.WHITE);
+		focus = (focus == 0) ? 0 : focus - 1;
 	}
 
-	public void TextPorcentajeSFX() {
-		Text text = new Text(getPorcentajeSFX());
-
-		renderTextPorcentajeSFX = new VBox(text);
-		renderTextPorcentajeSFX.setAlignment(Pos.TOP_CENTER);
-		renderTextPorcentajeSFX.setTranslateY(Y + 100);
-		renderTextPorcentajeSFX.setTranslateX(renderTextPorcentajeSFX.getTranslateX() + 150);
-		// Esto debería heredarse?
-		renderTextPorcentajeSFX.setPrefWidth(Config.width);
-
-		// Font font = Font.font("Verdana", FontWeight.NORMAL, 40);
-		text.setTextAlignment(TextAlignment.CENTER);
-		text.setFont(font);
-		text.setFill(Color.WHITE);
+	public void moveDown() {
+		texts[focus].setFill(Color.WHITE);
+		focus = (focus == texts.length - 1) ? texts.length - 1 : focus + 1;
 	}
 
-	public Node getRenderTextPorcentajeSFX() {
-		return renderTextPorcentajeSFX;
+	public void setDificultad(int dificultad) {
+		texts[0].setText("START GAME: " + Dificultad.values()[dificultad]);
 	}
 
-	public Node getRenderTextPorcentajeAudio() {
-		return renderTextPorcentajeAudio;
-	}
-
+	@Override
 	public Node getRender() {
 		return render;
 	}
 
-	public Node getRenderTextAudio() {
-		return renderTextAudio;
+	public int getFocus() {
+		return focus;
 	}
 
-	public Node getRenderTextSFX() {
-		return renderTextSFX;
-	}
 }

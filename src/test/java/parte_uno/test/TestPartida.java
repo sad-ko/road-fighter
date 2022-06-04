@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 
-import road_fighter.entidades.Entidad;
 import road_fighter.entidades.cuerpos.Competidor;
 import road_fighter.entidades.cuerpos.Jugador;
+import road_fighter.logica.Dificultad;
 import road_fighter.logica.Invocador;
 import road_fighter.logica.Mapa;
 import road_fighter.logica.Partida;
@@ -25,9 +25,7 @@ public class TestPartida {
 	 */
 	public void setup() {
 		Mapa mapa = new Mapa(1500f, 5f, 150f);
-		mapa.agregarObstaculos(Entidad.AUTO_ESTATICO, 5);
-		mapa.agregarObstaculos(Entidad.POWERUP, 3);
-		mapa.agregarObstaculos(Entidad.OBSTACULO, 15);
+		mapa.generarMapa(Dificultad.FACIL);
 
 		invocador = Invocador.getInstancia();
 

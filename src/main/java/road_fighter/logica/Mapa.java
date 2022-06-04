@@ -1,5 +1,7 @@
 package road_fighter.logica;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import road_fighter.Config;
 import road_fighter.entidades.Entidad;
@@ -26,6 +28,7 @@ public class Mapa {
 	private double limiteIzquierdo;
 	private Invocador invocador;
 	private Random rand;
+	private List<Vector2D> spawnPoints;
 
 	/**
 	 * @param longitud        :{@code float} - Largo del mapa, tambien cuenta como
@@ -61,25 +64,25 @@ public class Mapa {
 	 * 
 	 * @return Vector2D generado aleatoriamente dentro de los limites del mapa.
 	 */
-	private Vector2D generarCoordenadas(double espaciado) {
+	private Vector2D generarCoordenadas(double espaciado, double desde, double hasta) {
 		// Para que el Cuerpo no sea instanciado exactamente en los bordes ni en la meta
 		double ld = limiteDerecho - espaciado;
 		double li = limiteIzquierdo + espaciado;
 
 		// rangeMin + (rangeMax - rangeMin) * r.nextDouble()
 		double x = li + (ld - li) * rand.nextDouble();
-		double y = (longitud - Config.height) * rand.nextDouble();
+		double y = desde + (hasta - desde) * rand.nextDouble();
 
 		return new Vector2D(x, -y);
 	}
 
-	private Vector2D generarCoordenadasObstaculo(double espaciado) {
+	private Vector2D generarCoordenadasObstaculo(double espaciado, double desde, double hasta) {
 		// Para que el Cuerpo no sea instanciado exactamente en los bordes ni en la meta
 		double ld = limiteDerecho - espaciado;
 
 		// rangeMin + (rangeMax - rangeMin) * r.nextDouble()
 		double x = (rand.nextBoolean()) ? ld : limiteIzquierdo;
-		double y = (longitud - Config.height) * rand.nextDouble();
+		double y = desde + (hasta - desde) * rand.nextDouble();
 
 		return new Vector2D(x, -y);
 	}
@@ -92,34 +95,103 @@ public class Mapa {
 	 * @param cantidad       :{@code int} - Cantidad de {@code Cuerpo}s a agregar en
 	 *                       el mapa.
 	 */
-	public void agregarObstaculos(Entidad obstaculoClase, int cantidad) {
+	private void agregarObstaculos(Entidad obstaculoClase, int cantidad, double desde, double hasta) {
+		Vector2D pos;
+
 		switch (obstaculoClase) {
 		case AUTO_ESTATICO:
 			for (int i = 0; i < cantidad; i++) {
-				Vector2D pos = generarCoordenadas(Entidad.AUTO_ESTATICO.getAncho());
+
+				do {
+					pos = generarCoordenadas(Entidad.AUTO_ESTATICO.getAncho(), desde, hasta);
+				} while (this.spawnPoints.contains(pos));
+
 				AutoEstatico auto = new AutoEstatico(pos);
 				this.invocador.add(auto);
+				this.spawnPoints.add(pos);
 			}
 			break;
 
 		case POWERUP:
 			for (int i = 0; i < cantidad; i++) {
-				Vector2D pos = generarCoordenadas(Entidad.POWERUP.getAncho());
+				do {
+					pos = generarCoordenadas(Entidad.POWERUP.getAncho(), desde, hasta);
+				} while (this.spawnPoints.contains(pos));
+
 				PowerUp power = new PowerUp(pos);
 				this.invocador.add(power);
+				this.spawnPoints.add(pos);
 			}
 			break;
 
 		case OBSTACULO:
 			for (int i = 0; i < cantidad; i++) {
-				Vector2D pos = generarCoordenadasObstaculo(Entidad.OBSTACULO.getAncho());
+				do {
+					pos = generarCoordenadasObstaculo(Entidad.OBSTACULO.getAncho(), desde, hasta);
+				} while (this.spawnPoints.contains(pos));
+
 				Obstaculo obstaculo = new Obstaculo(pos);
 				this.invocador.add(obstaculo);
+				this.spawnPoints.add(pos);
 			}
 			break;
 
 		default:
 			break;
+		}
+	}
+
+	public void generarMapa(Dificultad dificultad) {
+		int autosEstaticos = 0;
+		int obstaculos = 0;
+		int powerUps = 0;
+
+		switch (dificultad) {
+		case FACIL:
+			autosEstaticos = 40;
+			obstaculos = 5;
+			powerUps = 20;
+			break;
+
+		case NORMAL:
+			autosEstaticos = 50;
+			obstaculos = 10;
+			powerUps = 10;
+			break;
+
+		case DIFICIL:
+			autosEstaticos = 75;
+			obstaculos = 25;
+			powerUps = 5;
+			break;
+
+		default:
+			break;
+		}
+
+		int chunks = (int) ((this.longitud - Config.height * 2) / Config.height);
+		for (int i = 0; i < chunks; i++) {
+			if (this.spawnPoints != null) {
+				this.spawnPoints.clear();
+			}
+
+			this.spawnPoints = new ArrayList<>((autosEstaticos + obstaculos + powerUps) / chunks);
+
+			double desde = Config.height * (i + 1);
+			double hasta = desde + Config.height;
+
+			int cantAutos = autosEstaticos / chunks;
+			cantAutos = (cantAutos == 0) ? 1 : cantAutos;
+
+			int cantObst = obstaculos / chunks;
+			cantObst = (cantObst == 0) ? 1 : cantObst;
+
+			int cantPowers = powerUps / chunks;
+			cantPowers = (cantPowers == 0) ? 1 : cantPowers;
+
+			this.agregarObstaculos(Entidad.AUTO_ESTATICO, cantAutos, desde, hasta);
+			this.agregarObstaculos(Entidad.OBSTACULO, cantObst, desde, hasta);
+			this.agregarObstaculos(Entidad.POWERUP, cantPowers, desde, hasta);
 		}
 	}
 

@@ -30,11 +30,21 @@ public class AudioSound extends Audio {
 	}
 
 	private void play(Media media, boolean loop) {
+		if (this.volumen == 0.0) {
+			return;
+		}
+
+		if (mediaPlayer != null) {
+			mediaPlayer.stop();
+		}
+
 		mediaPlayer = new MediaPlayer(media);
 		mediaPlayer.setVolume(this.volumen);
+
 		if (loop) {
 			mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 		}
+
 		mediaPlayer.play();
 	}
 

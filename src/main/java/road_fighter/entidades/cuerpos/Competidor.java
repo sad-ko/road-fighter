@@ -20,6 +20,8 @@ public class Competidor extends Auto {
 	/**
 	 * Velocidad maxima del {@code Jugador}, actualmente es 200.0f
 	 */
+	protected double velocidadMax = 200.0;
+	protected double aceleracion = 5;
 	protected double currentPos = 0.0;
 	protected boolean llegoMeta = false;
 	protected String nombre;
@@ -27,6 +29,8 @@ public class Competidor extends Auto {
 	private boolean power = false;
 	private Lighting rainbowEffect;
 	private double hue = 0.0;
+	private RotateTransition rotateAnim;
+	private boolean isBot = false;
 
 	/**
 	 * @param posicion :{@code Vector2D} - Posicion del {@code Jugador} en el plano
@@ -51,6 +55,12 @@ public class Competidor extends Auto {
 			this.rainbowEffect.setLight(new Light.Distant(90, 90, Color.hsb(hue, 1.0, 1.0)));
 			this.render.setEffect(rainbowEffect);
 		}
+
+		if (isBot) {
+			if (this.velocidad < this.velocidadMax) {
+				this.velocidad += this.aceleracion;
+			}
+		}
 	}
 
 	@Override
@@ -63,10 +73,10 @@ public class Competidor extends Auto {
 	protected void impacto(Auto otroAuto) {
 		super.impacto(otroAuto);
 
-		RotateTransition rt = new RotateTransition(Duration.millis(1000), render);
-		rt.setByAngle(360);
-		rt.setOnFinished(event -> render.setRotate(0));
-		rt.play();
+		rotateAnim = new RotateTransition(Duration.millis(1000), render);
+		rotateAnim.setByAngle(360);
+		rotateAnim.setOnFinished(event -> render.setRotate(0));
+		rotateAnim.play();
 	}
 
 	@Override
@@ -85,7 +95,12 @@ public class Competidor extends Auto {
 			break;
 
 		case BORDE:
-			this.explotar();
+			if (this.velocidad > 1.5) {
+				if (rotateAnim != null) {
+					rotateAnim.stop();
+				}
+				this.explotar();
+			}
 			break;
 
 		case JUGADOR:
@@ -117,7 +132,7 @@ public class Competidor extends Auto {
 
 			PowerUp powerUp = (PowerUp) cuerpo;
 			this.power = true;
-			this.setVelocidad(this.getVelocidad() * powerUp.getPowerUp());
+			this.setVelocidad(powerUp.getPowerUp());
 			powerUp.timeout(this);
 			powerUp.remover();
 			AudioSFX.getInstancia().play("powerUp");
@@ -126,6 +141,10 @@ public class Competidor extends Auto {
 		default:
 			break;
 		}
+	}
+
+	public void bot(boolean activate) {
+		this.isBot = activate;
 	}
 
 	public String getNombre() {
@@ -138,5 +157,14 @@ public class Competidor extends Auto {
 
 	public void setPower(boolean power) {
 		this.power = power;
+	}
+
+	@Override
+	public void setVelocidad(double velocidad) {
+		this.velocidad *= velocidad;
+	}
+
+	public void unsetVelocidad(double velocidad) {
+		this.velocidad /= velocidad;
 	}
 }

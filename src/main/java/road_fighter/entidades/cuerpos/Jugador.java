@@ -9,14 +9,7 @@ import road_fighter.graficos.AudioSFX;
  */
 public final class Jugador extends Competidor {
 
-	/**
-	 * Velocidad maxima del {@code Jugador}, actualmente es 200.0f
-	 */
-	private double velocidadMax = 200.0;
-	private double aceleracion = 5;
-
 	private double desplazamiento = 5;
-
 	private boolean z = false;
 	private boolean right = false;
 	private boolean left = false;
@@ -125,6 +118,18 @@ public final class Jugador extends Competidor {
 
 	public void setAceleracion(double aceleracion) {
 		this.aceleracion = aceleracion;
+	}
+
+	@Override
+	public void setVelocidad(double velocidad) {
+		this.velocidadMax *= velocidad;
+		this.velocidad *= velocidad;
+	}
+
+	@Override
+	public void unsetVelocidad(double velocidad) {
+		this.velocidadMax /= velocidad;
+		this.velocidad /= velocidad;
 	}
 
 }

@@ -24,7 +24,7 @@ public class Partida {
 	private long tiempoEspera;
 	private Mapa mapa;
 	private Competidor ganador;
-	private Etiqueta victoryLabel;
+	private Etiqueta resultadosLabel;
 
 	/**
 	 * @param mapa         :{@code Mapa} - Mapa donde se jugara la partida.
@@ -38,17 +38,21 @@ public class Partida {
 		this.tiempoEspera = tiempoEspera;
 		this.posiciones = new ArrayList<>();
 
-		victoryLabel = new Etiqueta("VICTORY", new Vector2D(Config.width / 6, Config.height / 4));
-		victoryLabel.setFont(Font.font("MONOSPACED", 128));
-		victoryLabel.setColor(Color.GOLD);
-		victoryLabel.setVisible(false);
-		Invocador.getInstancia().add(victoryLabel);
+		resultadosLabel = new Etiqueta("...", new Vector2D(800, Config.height / 4));
+		resultadosLabel.setFont(Font.font("MONOSPACED", 16));
+		resultadosLabel.setColor(Color.CORAL);
+		Invocador.getInstancia().add(resultadosLabel);
 	}
 
-	private void terminarPartida() {
-		// TODO: Ganador deberia ser asignado aqui en base a las posiciones finales.
-		System.out.println("[PARTIDA TERMINADA]");
-		this.posiciones.forEach(System.out::println);
+	private String resultados() {
+		StringBuilder str = new StringBuilder();
+
+		str.append(posiciones.get(0));
+		for (int i = 1; i < posiciones.size(); i++) {
+			str.append("\n" + posiciones.get(i));
+		}
+
+		return str.toString();
 	}
 
 	/**
@@ -60,8 +64,6 @@ public class Partida {
 	public Jugador comenzar(int cantJugadores) {
 		Jugador jugador = this.mapa.posicionarCompetidores(this, cantJugadores);
 		this.mapa.crearMeta(this);
-
-		// AudioSFX.getInstancia().play("largada_start"); //
 		return jugador;
 	}
 
@@ -76,7 +78,7 @@ public class Partida {
 	public void iniciarEspera() {
 		TimerTask task = new TimerTask() {
 			public void run() {
-				terminarPartida();
+				resultadosLabel.setText(resultados() + "\n [FIN]");
 			}
 		};
 
@@ -103,6 +105,10 @@ public class Partida {
 		for (int i = 0; i < this.posiciones.size(); i++) {
 			this.posiciones.get(i).setPosicionActual(i + 1);
 		}
+
+		if (this.ganador == null) {
+			resultadosLabel.setText(resultados());
+		}
 	}
 
 	public int getCantidadJugadores() {
@@ -123,7 +129,6 @@ public class Partida {
 
 	public void setGanador(Competidor ganador) {
 		this.ganador = ganador;
-		this.victoryLabel.setVisible(true);
 	}
 
 }

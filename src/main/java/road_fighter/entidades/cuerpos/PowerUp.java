@@ -38,8 +38,7 @@ public class PowerUp extends Colisionables {
 	public void timeout(Competidor competidor) {
 		TimerTask task = new TimerTask() {
 			public void run() {
-				double vel = competidor.getVelocidad() / power;
-				competidor.setVelocidad(vel);
+				competidor.unsetVelocidad(power);
 				competidor.setPower(false);
 				competidor.getRender().setEffect(null);
 			}

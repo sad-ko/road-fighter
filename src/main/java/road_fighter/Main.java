@@ -8,22 +8,19 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	private Stage stage;
-	private MenuStart menuSceneHandler;
-	private Game gameSceneHandler;
-	private MenuStartSetting menuSettingSceneHandler;
+	private Game gameScene;
+	private MenuIntro menuIntroScene;
+	private MenuOptions menuOptionsScene;
 
 	@Override
 	public void start(Stage stage) {
-		// menu = new Menu(stage);
-		// gameSceneHandler = new Game(stage);
-
 		this.stage = stage;
 
-		menuSceneHandler = new MenuStart(this);
-		Scene scene = menuSceneHandler.getScene();
+		menuIntroScene = new MenuIntro(this);
+		Scene scene = menuIntroScene.getScene();
 		stage.setScene(scene);
 
-		menuSceneHandler.load(true);
+		menuIntroScene.load(true);
 
 		stage.getIcons().add(new Image("file:src/main/resources/ico/logo.png"));
 		stage.setTitle("Road Fighter");
@@ -35,27 +32,27 @@ public class Main extends Application {
 		launch();
 	}
 
-	public void startGame() {
-		menuSettingSceneHandler.unload();// menuSceneHandler.unload();
-		gameSceneHandler = new Game(this);
-		Scene scene = gameSceneHandler.getScene();
+	public void startGame(SceneHandler previousScene, int dificultad) {
+		previousScene.unload();
+		gameScene = new Game(this, dificultad);
+		Scene scene = gameScene.getScene();
 		stage.setScene(scene);
-		gameSceneHandler.load(true);
+		gameScene.load(true);
 	}
 
-	public void startMenu() {
-		gameSceneHandler.unload();
-		menuSceneHandler = new MenuStart(this);
-		Scene scene = menuSceneHandler.getScene();
+	public void startMenuIntro(SceneHandler previousScene) {
+		previousScene.unload();
+		menuIntroScene = new MenuIntro(this);
+		Scene scene = menuIntroScene.getScene();
 		stage.setScene(scene);
-		menuSceneHandler.load(true);
+		menuIntroScene.load(true);
 	}
 
-	public void startMenuSetting() {
-		menuSceneHandler.unload();
-		menuSettingSceneHandler = new MenuStartSetting(this);
-		Scene scene = menuSettingSceneHandler.getScene();
+	public void startMenuOptions(SceneHandler previousScene) {
+		previousScene.unload();
+		menuOptionsScene = new MenuOptions(this);
+		Scene scene = menuOptionsScene.getScene();
 		stage.setScene(scene);
-		menuSettingSceneHandler.load(true);
+		menuOptionsScene.load(true);
 	}
 }

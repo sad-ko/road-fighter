@@ -6,6 +6,5 @@
 
 
 ## TODO:
-    • Mejorar spawneo aleatorio.
     • Pulir codebase.
-    • Actualizar diagrama. -- EN CURSO
+    • Actualizar diagrama.
