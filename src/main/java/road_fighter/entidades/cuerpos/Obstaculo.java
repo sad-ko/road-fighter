@@ -8,13 +8,14 @@ import road_fighter.graficos.Sprite;
 
 public class Obstaculo extends Colisionables {
 
+	private static final int SIZE = (int) (Config.width * 0.002);
 	private Sprite sprite;
 
 	public Obstaculo(Vector2D posicion) {
-		super(Entidad.OBSTACULO, posicion, new Vector2D(155, -50));
+		super(Entidad.OBSTACULO, posicion, new Vector2D(63 * SIZE, -26 * SIZE));
 
-		this.sprite = new Sprite("img/obstaculo.png", new Vector2D(80, 28), 2);
-		this.sprite.realocate(new Vector2D(0, -28));
+		this.sprite = new Sprite("img/obstaculo.png", new Vector2D(64, 27), SIZE);
+		this.sprite.realocate(new Vector2D(0, -27));
 
 		this.render = sprite.getRender();
 	}
@@ -29,6 +30,10 @@ public class Obstaculo extends Colisionables {
 	@Override
 	public void remover() {
 		// TODO Auto-generated method stub
+	}
+
+	public static int getAncho() {
+		return SIZE * 64;
 	}
 
 }

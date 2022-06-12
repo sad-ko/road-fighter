@@ -1,5 +1,6 @@
 package road_fighter.entidades.cuerpos;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
@@ -9,6 +10,7 @@ import road_fighter.Config;
 import road_fighter.entidades.Entidad;
 import road_fighter.fisica.Vector2D;
 import road_fighter.graficos.AudioSFX;
+import road_fighter.graficos.AudioSound;
 import road_fighter.logica.Partida;
 
 /**
@@ -21,10 +23,11 @@ public class Competidor extends Auto {
 	 * Velocidad maxima del {@code Jugador}, actualmente es 200.0f
 	 */
 	protected double velocidadMax = 200.0;
-	protected double aceleracion = 5;
+	protected double aceleracion = 2.5;
 	protected double currentPos = 0.0;
 	protected boolean llegoMeta = false;
 	protected String nombre;
+	protected FadeTransition spawningAnim;
 
 	private boolean power = false;
 	private Lighting rainbowEffect;
@@ -40,7 +43,28 @@ public class Competidor extends Auto {
 	public Competidor(Vector2D posicion, String nombre) {
 		super(Entidad.JUGADOR, posicion, "img/auto.png", new Vector2D(11, 16));
 		this.nombre = nombre;
-		this.rainbowEffect = new Lighting(new Light.Distant(90, 90, Color.hsb(hue, 1.0, 1.0)));
+		this.rainbowEffect = new Lighting(new Light.Distant(0, 90, Color.hsb(hue, 0.75, 0.75)));
+
+		spawningAnim = new FadeTransition(Duration.millis(500), render);
+		spawningAnim.setFromValue(1.0);
+		spawningAnim.setToValue(0.3);
+		spawningAnim.setCycleCount(6);
+		spawningAnim.setAutoReverse(true);
+		spawningAnim.setOnFinished(event -> {
+			render.setOpacity(1.0);
+			hitbox.desactivar(false);
+			aceleracion = 2.5;
+		});
+
+		spawning();
+		aceleracion = 0.0;
+	}
+
+	protected void spawning() {
+		spawningAnim.play();
+		render.setImage(sprite.getSprite());
+		hitbox.desactivar(true);
+		aceleracion = 0.5;
 	}
 
 	@Override
@@ -52,7 +76,7 @@ public class Competidor extends Auto {
 
 		if (power) {
 			this.hue++;
-			this.rainbowEffect.setLight(new Light.Distant(90, 90, Color.hsb(hue, 1.0, 1.0)));
+			this.rainbowEffect.setLight(new Light.Distant(0, 90, Color.hsb(hue, 0.75, 0.75)));
 			this.render.setEffect(rainbowEffect);
 		}
 
@@ -61,6 +85,8 @@ public class Competidor extends Auto {
 				this.velocidad += this.aceleracion;
 			}
 		}
+
+		System.out.println(this.nombre + "\n" + this.posicion);
 	}
 
 	@Override
@@ -73,17 +99,16 @@ public class Competidor extends Auto {
 	protected void impacto(Auto otroAuto) {
 		super.impacto(otroAuto);
 
-		rotateAnim = new RotateTransition(Duration.millis(1000), render);
-		rotateAnim.setByAngle(360);
-		rotateAnim.setOnFinished(event -> render.setRotate(0));
+		rotateAnim = new RotateTransition(Duration.seconds(1), render);
+		rotateAnim.setByAngle(360.0 * this.orientation);
+		rotateAnim.setOnFinished(event -> render.setRotate(0.0));
 		rotateAnim.play();
 	}
 
 	@Override
 	public void remover() {
-		this.render.setImage(sprite.getSprite());
+		spawning();
 		this.exploto = false;
-
 		this.posicion.setX(Config.mapRight - Config.mapLeft + this.ancho);
 	}
 
@@ -91,20 +116,17 @@ public class Competidor extends Auto {
 	public void enChoque(Cuerpo cuerpo) {
 		switch (cuerpo.getClase()) {
 		case AUTO_ESTATICO:
+		case JUGADOR:
 			this.impacto((Auto) cuerpo);
 			break;
 
 		case BORDE:
-			if (this.velocidad > 1.5) {
+			if (this.velocidad > 2.0 || this.choque) {
 				if (rotateAnim != null) {
 					rotateAnim.stop();
 				}
 				this.explotar();
 			}
-			break;
-
-		case JUGADOR:
-			this.impacto((Auto) cuerpo);
 			break;
 
 		case META:
@@ -114,9 +136,11 @@ public class Competidor extends Auto {
 			if (partidaActual.getGanador() == null) {
 				partidaActual.setGanador(this);
 				partidaActual.iniciarEspera();
-				AudioSFX.getInstancia().play("powerUp");
+				AudioSound.getInstancia().playGanadorSound();
 			}
 
+			this.aceleracion = 0.0;
+			this.velocidad = 0.0;
 			this.llegoMeta = true;
 			break;
 
@@ -133,8 +157,8 @@ public class Competidor extends Auto {
 			PowerUp powerUp = (PowerUp) cuerpo;
 			this.power = true;
 			this.setVelocidad(powerUp.getPowerUp());
+			powerUp.getRender().setVisible(false);
 			powerUp.timeout(this);
-			powerUp.remover();
 			AudioSFX.getInstancia().play("powerUp");
 			break;
 
@@ -167,4 +191,5 @@ public class Competidor extends Auto {
 	public void unsetVelocidad(double velocidad) {
 		this.velocidad /= velocidad;
 	}
+
 }

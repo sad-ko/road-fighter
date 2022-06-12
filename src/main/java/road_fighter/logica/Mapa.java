@@ -3,6 +3,7 @@ package road_fighter.logica;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import road_fighter.Config;
 import road_fighter.entidades.Entidad;
 import road_fighter.entidades.Escenario;
@@ -29,6 +30,7 @@ public class Mapa {
 	private Invocador invocador;
 	private Random rand;
 	private List<Vector2D> spawnPoints;
+	private int obs = 0;
 
 	/**
 	 * @param longitud        :{@code float} - Largo del mapa, tambien cuenta como
@@ -81,7 +83,7 @@ public class Mapa {
 		double ld = limiteDerecho - espaciado;
 
 		// rangeMin + (rangeMax - rangeMin) * r.nextDouble()
-		double x = (rand.nextBoolean()) ? ld : limiteIzquierdo;
+		double x = (obs++ % 2 == 0) ? ld : limiteIzquierdo;
 		double y = desde + (hasta - desde) * rand.nextDouble();
 
 		return new Vector2D(x, -y);
@@ -101,9 +103,8 @@ public class Mapa {
 		switch (obstaculoClase) {
 		case AUTO_ESTATICO:
 			for (int i = 0; i < cantidad; i++) {
-
 				do {
-					pos = generarCoordenadas(Entidad.AUTO_ESTATICO.getAncho(), desde, hasta);
+					pos = generarCoordenadas(AutoEstatico.getAncho(), desde, hasta);
 				} while (this.spawnPoints.contains(pos));
 
 				AutoEstatico auto = new AutoEstatico(pos);
@@ -115,7 +116,7 @@ public class Mapa {
 		case POWERUP:
 			for (int i = 0; i < cantidad; i++) {
 				do {
-					pos = generarCoordenadas(Entidad.POWERUP.getAncho(), desde, hasta);
+					pos = generarCoordenadas(PowerUp.getAncho(), desde, hasta);
 				} while (this.spawnPoints.contains(pos));
 
 				PowerUp power = new PowerUp(pos);
@@ -127,7 +128,7 @@ public class Mapa {
 		case OBSTACULO:
 			for (int i = 0; i < cantidad; i++) {
 				do {
-					pos = generarCoordenadasObstaculo(Entidad.OBSTACULO.getAncho(), desde, hasta);
+					pos = generarCoordenadasObstaculo(Obstaculo.getAncho(), desde, hasta);
 				} while (this.spawnPoints.contains(pos));
 
 				Obstaculo obstaculo = new Obstaculo(pos);
@@ -151,18 +152,21 @@ public class Mapa {
 			autosEstaticos = 40;
 			obstaculos = 5;
 			powerUps = 20;
+			Config.acceleration = 0.25;
 			break;
 
 		case NORMAL:
 			autosEstaticos = 50;
 			obstaculos = 10;
 			powerUps = 10;
+			Config.acceleration = 0.2;
 			break;
 
 		case DIFICIL:
 			autosEstaticos = 75;
 			obstaculos = 25;
 			powerUps = 5;
+			Config.acceleration = 0.1;
 			break;
 
 		default:

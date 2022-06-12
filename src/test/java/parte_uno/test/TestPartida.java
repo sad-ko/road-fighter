@@ -64,7 +64,7 @@ public class TestPartida {
 			jugador.desplazar();
 		}
 
-		assertEquals(true, jugador.getImpacto());
+		assertEquals(true, jugador.isChoque());
 	}
 
 	// @Test

@@ -18,13 +18,16 @@ public class Invocador {
 
 	private SpatialGrid grid;
 	private Group root;
-	private List<Objeto> objInstancias;
-	private List<Cuerpo> instancias;
+	private List<Objeto> instancias;
+	private List<Cuerpo> colisionables;
+	private List<Objeto> toRemove;
+	private boolean inUpdate = false;
 
 	private Invocador() {
 		this.instancias = new ArrayList<>();
-		this.objInstancias = new ArrayList<>();
-		this.grid = new SpatialGrid(Config.width, Config.height, Config.cellSize);
+		this.colisionables = new ArrayList<>();
+		this.toRemove = new ArrayList<>();
+		this.grid = new SpatialGrid(Config.width, Config.mapaLength + Config.height, Config.cellSize);
 	}
 
 	public static Invocador getInstancia() {
@@ -47,30 +50,49 @@ public class Invocador {
 	}
 
 	public void add(Cuerpo cuerpo) {
-		this.instancias.add(cuerpo);
-		this.addToRoot(cuerpo);
+		this.add((Objeto) cuerpo);
+		colisionables.add(cuerpo);
 	}
 
 	public void add(Objeto obj) {
-		this.objInstancias.add(obj);
+		this.instancias.add(obj);
 		this.addToRoot(obj);
 	}
 
-	public void remove(Cuerpo cuerpo) {
-		instancias.remove(cuerpo);
-		root.getChildren().remove(cuerpo.getRender());
-	}
-
 	public void remove(Objeto obj) {
-		instancias.remove(obj);
-		root.getChildren().remove(obj.getRender());
+		if (!this.inUpdate) {
+			instancias.remove(obj);
+			root.getChildren().remove(obj.getRender());
+
+			if (obj.getClass() == Cuerpo.class) {
+				colisionables.remove(obj);
+			}
+		} else {
+			this.toRemove.add(obj);
+		}
 	}
 
 	public void clear() {
 		root.getChildren().clear();
 		root = null;
 		instancias.clear();
-		objInstancias.clear();
+		colisionables.clear();
+	}
+
+	public void removePendings() {
+		this.inUpdate = false;
+		for (Objeto objeto : toRemove) {
+			this.remove(objeto);
+		}
+		this.toRemove.clear();
+	}
+
+	public void update(double delta) {
+		this.inUpdate = true;
+
+		for (Objeto obj : instancias) {
+			obj.update(delta);
+		}
 	}
 
 	/**
@@ -78,12 +100,12 @@ public class Invocador {
 	 * Complejidad computacional de O(n²), no muy performante...
 	 */
 	public void OLD_calcularColisiones() {
-		int size = instancias.size();
+		int size = colisionables.size();
 
 		for (int i = 0; i < size; i++) {
-			Cuerpo a = instancias.get(i);
+			Cuerpo a = colisionables.get(i);
 			for (int j = i + 1; j < size; j++) {
-				Cuerpo b = instancias.get(j);
+				Cuerpo b = colisionables.get(j);
 				a.getHitbox().intersecta(b);
 			}
 		}
@@ -92,21 +114,11 @@ public class Invocador {
 	public void calcularColisiones() {
 		grid.clear();
 
-		for (Cuerpo cuerpo : instancias) {
+		for (Cuerpo cuerpo : colisionables) {
 			grid.add(cuerpo);
 		}
 
 		grid.checkCollisions();
-	}
-
-	public void update(double delta) {
-		for (Cuerpo cuerpo : instancias) {
-			cuerpo.update(delta);
-		}
-
-		for (Objeto obj : objInstancias) {
-			obj.update(delta);
-		}
 	}
 
 	public int size() {

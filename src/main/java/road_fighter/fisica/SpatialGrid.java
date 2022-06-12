@@ -12,7 +12,6 @@ import road_fighter.entidades.cuerpos.Cuerpo;
 public class SpatialGrid {
 
 	private double sceneWidth;
-	private double sceneHeight;
 	private int cols;
 	private int rows;
 	private int cellSize;
@@ -23,7 +22,6 @@ public class SpatialGrid {
 		this.rows = (int) Math.ceil(sceneHeight / cellSize);
 		this.cellSize = cellSize;
 		this.sceneWidth = sceneWidth;
-		this.sceneHeight = sceneHeight;
 
 		grid = new HashMap<>(rows * cols);
 		for (int i = 0; i < rows * cols; i++) {
@@ -41,7 +39,9 @@ public class SpatialGrid {
 		Set<Integer> cells = findInCells(cuerpo);
 
 		for (Integer id : cells) {
-			grid.get(id).add(cuerpo);
+			if (grid.containsKey(id)) {
+				grid.get(id).add(cuerpo);
+			}
 		}
 	}
 
@@ -73,15 +73,16 @@ public class SpatialGrid {
 		double by = cuerpo.getHitbox().getTamanio().getY() + ay;
 
 		// Si esta fuera de la pantalla, no se revisa su colision
-		if (ax > sceneWidth || ay > sceneHeight || bx < 0 || by < 0) {
+		if (ax > sceneWidth || bx < 0) {
+			System.out.println(cuerpo.getPosicion());
 			return cells;
 		}
 
-		int id_ax = (int) (ax / cellSize);
-		int id_ay = (int) (ay / cellSize);
+		int id_ax = (int) Math.abs(ax / cellSize);
+		int id_ay = (int) Math.abs(ay / cellSize);
 
-		int id_bx = (int) (bx / cellSize);
-		int id_by = (int) (by / cellSize);
+		int id_bx = (int) Math.abs(bx / cellSize);
+		int id_by = (int) Math.abs(by / cellSize);
 
 		int bottomLeft = capCellId(id_ax + id_ay * width);
 		int topRight = capCellId(id_bx + id_by * width);
@@ -107,10 +108,6 @@ public class SpatialGrid {
 				cells.add(i); // Celdas entre topLeft y topRight
 				cells.add(diff + i); // Celdas entre bottomLeft y topRight
 			}
-
-			/*
-			 * for (int i = bottomLeft + 1; i < bottomRight; i++) { cells.add(i); }
-			 */
 		}
 
 		// Hay celdas de por medio, entre top y bottom
@@ -120,10 +117,6 @@ public class SpatialGrid {
 				cells.add(i); // Celdas entre topLeft y bottomLeft
 				cells.add(diff + i); // Celdas entre topRight y bottomRight
 			}
-
-			/*
-			 * for (int i = bottomRight - width; i > topRight; i -= width) { cells.add(i); }
-			 */
 		}
 
 		return cells;

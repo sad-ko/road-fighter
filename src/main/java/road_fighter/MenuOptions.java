@@ -54,7 +54,7 @@ public class MenuOptions extends SceneHandler {
 				case RIGHT:
 					switch (menu.getFocus()) {
 					case 0:
-						dificultad = (dificultad == 2) ? 2 : dificultad + 1;
+						dificultad = (dificultad == 2) ? 0 : dificultad + 1;
 						menu.setDificultad(dificultad);
 						break;
 
@@ -72,7 +72,7 @@ public class MenuOptions extends SceneHandler {
 				case LEFT:
 					switch (menu.getFocus()) {
 					case 0:
-						dificultad = (dificultad == 0) ? 0 : dificultad - 1;
+						dificultad = (dificultad == 0) ? 2 : dificultad - 1;
 						menu.setDificultad(dificultad);
 						break;
 

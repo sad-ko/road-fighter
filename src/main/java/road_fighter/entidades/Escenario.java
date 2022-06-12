@@ -9,7 +9,7 @@ public class Escenario extends Objeto {
 
 	public Escenario(double longitud) {
 		super(Entidad.ESCENARIO, new Vector2D(0, -longitud + Config.height));
-		Image bg01 = new Image("file:src/main/resources/img/background.png", Config.width, Config.height * 2, false,
+		Image bg01 = new Image("file:src/main/resources/img/background_v2.png", Config.width, Config.height * 2, false,
 				false);
 		ImageView b1 = new ImageView(bg01);
 		this.render = b1;

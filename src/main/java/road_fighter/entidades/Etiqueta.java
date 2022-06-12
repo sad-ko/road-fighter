@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import road_fighter.Config;
 import road_fighter.fisica.Vector2D;
 
 public class Etiqueta extends Objeto {
@@ -21,7 +22,7 @@ public class Etiqueta extends Objeto {
 		this.render.setTranslateY(posicion.getY());
 		this.render.setTranslateX(posicion.getX());
 
-		text.setFont(Font.font("MONOSPACED", 32));
+		text.setFont(Font.font("MONOSPACED", Config.height / 32));
 		text.setFill(Color.WHITE);
 	}
 

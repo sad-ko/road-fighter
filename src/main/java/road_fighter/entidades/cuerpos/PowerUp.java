@@ -14,18 +14,20 @@ import road_fighter.graficos.Sprite;
  */
 public class PowerUp extends Colisionables {
 
+	private static final int SIZE = (int) (Config.width * 0.025);
 	private double power = 1.2;
 	private long tiempo = 3500L;
 	private Sprite sprite;
+	private boolean toRemove = false;
 
 	/**
 	 * @param posicion :{@code Vector2D} - Posicion del objeto en el plano (x,y).
 	 */
 	public PowerUp(Vector2D posicion) {
-		super(Entidad.POWERUP, posicion, new Vector2D(30, -30));
+		super(Entidad.POWERUP, posicion, new Vector2D(SIZE, -SIZE));
 
-		this.sprite = new Sprite("img/powerUp.png", new Vector2D(30, 30));
-		this.sprite.realocate(new Vector2D(0, -30));
+		this.sprite = new Sprite("img/powerUp.png", new Vector2D(SIZE, SIZE));
+		this.sprite.realocate(new Vector2D(0, -SIZE));
 
 		this.render = sprite.getRender();
 	}
@@ -41,6 +43,7 @@ public class PowerUp extends Colisionables {
 				competidor.unsetVelocidad(power);
 				competidor.setPower(false);
 				competidor.getRender().setEffect(null);
+				toRemove = true;
 			}
 		};
 
@@ -61,6 +64,14 @@ public class PowerUp extends Colisionables {
 		double y = (Config.currentVelocity > 0.0) ? (Config.currentVelocity * delta / Config.acceleration) : 0.0;
 		this.posicion.setY(this.posicion.getY() + y);
 		Sprite.setRenderPosition((ImageView) this.render, this.posicion);
+		
+		if (toRemove) {
+			this.remover();
+		}
+	}
+
+	public static int getAncho() {
+		return SIZE;
 	}
 
 }

@@ -18,6 +18,7 @@ import road_fighter.graficos.Sprite;
  */
 public abstract class Auto extends Cuerpo {
 
+	protected static final int SIZE = (int) (Config.width * 0.003);
 	protected double velocidad = 0.0;
 	protected int orientation;
 	protected boolean choque = false;
@@ -33,17 +34,20 @@ public abstract class Auto extends Cuerpo {
 	 * @param posicion :{@code Vector2D} - Posicion del auto en el plano (x,y).
 	 */
 	protected Auto(Entidad clase, Vector2D posicion, String imgDir, Vector2D imgSize) {
-		super(clase, posicion, new Vector2D(imgSize.getX() * 3, -imgSize.getY() * 3));
+		super(clase, posicion, new Vector2D(imgSize.getX() * SIZE * 0.8, -imgSize.getY() * SIZE));
 
-		this.sprite = new Sprite(imgDir, imgSize, 3);
+		this.sprite = new Sprite(imgDir, imgSize, SIZE);
 		this.sprite.realocate(new Vector2D(0, -imgSize.getY()));
 
 		this.render = sprite.getRender();
 		this.ancho = imgSize.getX();
 
-		Image explosion_1 = new Image("file:src/main/resources/img/explosion_1.png", 36, 39, false, false);
-		Image explosion_2 = new Image("file:src/main/resources/img/explosion_2.png", 45, 48, false, false);
-		Image explosion_3 = new Image("file:src/main/resources/img/explosion_3.png", 39, 48, false, false);
+		Image explosion_1 = new Image("file:src/main/resources/img/explosion_1.png", 12 * SIZE, 13 * SIZE, false,
+				false);
+		Image explosion_2 = new Image("file:src/main/resources/img/explosion_2.png", 15 * SIZE, 16 * SIZE, false,
+				false);
+		Image explosion_3 = new Image("file:src/main/resources/img/explosion_3.png", 13 * SIZE, 16 * SIZE, false,
+				false);
 
 		explosionAnimation = new AnimatedSprite(new Image[] { explosion_1, explosion_2, explosion_3 }, render,
 				Duration.seconds(1.5));
@@ -56,7 +60,6 @@ public abstract class Auto extends Cuerpo {
 	 */
 	protected void impacto(Auto otroAuto) {
 		this.choque = true;
-		otroAuto.choque = true;
 		orientation = (otroAuto.getPosicion().getX() - posicion.getX() > 0) ? -1 : 1;
 
 		TimerTask task = new TimerTask() {
@@ -85,8 +88,8 @@ public abstract class Auto extends Cuerpo {
 			this.posicion.setX(posicion.getX() + (2 * this.orientation));
 		}
 
-		Sprite.setRenderPosition(this.render, this.posicion);
 		mover(delta);
+		Sprite.setRenderPosition(this.render, this.posicion);
 
 		double x = this.posicion.getX();
 		if (x < Config.mapLeft - this.ancho) {
@@ -96,8 +99,12 @@ public abstract class Auto extends Cuerpo {
 		}
 	}
 
-	public boolean getImpacto() {
+	public boolean isChoque() {
 		return this.choque;
+	}
+
+	public boolean isExploto() {
+		return exploto;
 	}
 
 	public double getVelocidad() {

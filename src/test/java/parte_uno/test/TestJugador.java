@@ -94,7 +94,7 @@ public class TestJugador {
 			invocador.calcularColisiones();
 		}
 
-		assertEquals(jugador1.getImpacto(), jugador2.getImpacto());
+		assertEquals(jugador1.isChoque(), jugador2.isChoque());
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class TestJugador {
 		}
 
 		assertTrue(jugador.getHitbox().intersecta(obstaculo));
-		assertTrue(jugador.getImpacto());
+		assertTrue(jugador.isChoque());
 	}
 
 }

@@ -15,8 +15,8 @@ import road_fighter.logica.Dificultad;
 
 public class TextoMenuSetting extends Objeto {
 
-	private static final double X = Config.width / 4.0;
-	private static final double Y = Config.height * (3.0 / 5.0);
+	private static final double X = Config.width * 0.25;
+	private static final double Y = Config.height * 0.6;
 
 	private Font font;
 	private Text[] texts;
@@ -26,7 +26,8 @@ public class TextoMenuSetting extends Objeto {
 
 	public TextoMenuSetting(int dificultad) {
 		super(Entidad.TEXT, new Vector2D(0, 0));
-		font = Font.loadFont(ClassLoader.getSystemResource("font/nintendo-nes-font.ttf").toString(), 30);
+		font = Font.loadFont(ClassLoader.getSystemResource("font/nintendo-nes-font.ttf").toString(),
+				Config.height / 32);
 		render = new VBox();
 		texts = new Text[3];
 
@@ -103,12 +104,12 @@ public class TextoMenuSetting extends Objeto {
 
 	public void moveUp() {
 		texts[focus].setFill(Color.WHITE);
-		focus = (focus == 0) ? 0 : focus - 1;
+		focus = (focus == 0) ? texts.length - 1 : focus - 1;
 	}
 
 	public void moveDown() {
 		texts[focus].setFill(Color.WHITE);
-		focus = (focus == texts.length - 1) ? texts.length - 1 : focus + 1;
+		focus = (focus == texts.length - 1) ? 0 : focus + 1;
 	}
 
 	public void setDificultad(int dificultad) {
@@ -122,6 +123,12 @@ public class TextoMenuSetting extends Objeto {
 
 	public int getFocus() {
 		return focus;
+	}
+
+	@Override
+	public void remover() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

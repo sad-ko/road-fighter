@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import road_fighter.Config;
 import road_fighter.entidades.Etiqueta;
+import road_fighter.entidades.Resultados;
 import road_fighter.entidades.cuerpos.Competidor;
 import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.fisica.Vector2D;
@@ -25,6 +26,7 @@ public class Partida {
 	private Mapa mapa;
 	private Competidor ganador;
 	private Etiqueta resultadosLabel;
+	private Resultados resultadosScreen;
 
 	/**
 	 * @param mapa         :{@code Mapa} - Mapa donde se jugara la partida.
@@ -38,10 +40,14 @@ public class Partida {
 		this.tiempoEspera = tiempoEspera;
 		this.posiciones = new ArrayList<>();
 
-		resultadosLabel = new Etiqueta("...", new Vector2D(800, Config.height / 4));
-		resultadosLabel.setFont(Font.font("MONOSPACED", 16));
+		resultadosLabel = new Etiqueta("...", new Vector2D(Config.width * 0.78, Config.height / 6));
+		resultadosLabel.setFont(Font.font("MONOSPACED", Config.width / 64));
 		resultadosLabel.setColor(Color.CORAL);
 		Invocador.getInstancia().add(resultadosLabel);
+
+		resultadosScreen = new Resultados();
+		resultadosScreen.getRender().setVisible(false);
+		Invocador.getInstancia().add(resultadosScreen);
 	}
 
 	private String resultados() {
@@ -78,7 +84,9 @@ public class Partida {
 	public void iniciarEspera() {
 		TimerTask task = new TimerTask() {
 			public void run() {
-				resultadosLabel.setText(resultados() + "\n [FIN]");
+				resultadosScreen.setResultados(resultados());
+				resultadosScreen.getRender().setVisible(true);
+				resultadosLabel.getRender().setVisible(false);
 			}
 		};
 

@@ -11,7 +11,7 @@ import road_fighter.fisica.Vector2D;
 
 public class TextoStart extends Objeto {
 
-	private final double Y = (Config.height) * 3 / 5;
+	private static final double Y = Config.height * 0.6;
 	private Text text;
 
 	public TextoStart() {
@@ -23,7 +23,8 @@ public class TextoStart extends Objeto {
 		box.setTranslateY(Y);
 		box.setPrefWidth(Config.width);
 
-		Font font = Font.loadFont(ClassLoader.getSystemResource("font/nintendo-nes-font.ttf").toString(), 30);
+		Font font = Font.loadFont(ClassLoader.getSystemResource("font/nintendo-nes-font.ttf").toString(),
+				Config.height / 32);
 
 		text.setTextAlignment(TextAlignment.CENTER);
 		text.setFont(font);

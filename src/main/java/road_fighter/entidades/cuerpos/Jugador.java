@@ -9,7 +9,6 @@ import road_fighter.graficos.AudioSFX;
  */
 public final class Jugador extends Competidor {
 
-	private double desplazamiento = 5;
 	private boolean z = false;
 	private boolean right = false;
 	private boolean left = false;
@@ -38,7 +37,7 @@ public final class Jugador extends Competidor {
 			return;
 		}
 
-		double sentido = right ? desplazamiento : (desplazamiento * -1);
+		double sentido = right ? aceleracion : -aceleracion;
 		this.posicion.setX(this.posicion.getX() + sentido);
 	}
 
@@ -81,7 +80,6 @@ public final class Jugador extends Competidor {
 	@Override
 	protected void mover(double delta) {
 		if (choque || exploto) {
-			z = false;
 			desacelerar(0.5);
 			AudioSFX.getInstancia().play(choque ? "derrape" : "explosion");
 			return;
@@ -91,7 +89,7 @@ public final class Jugador extends Competidor {
 			acelerar();
 			AudioSFX.getInstancia().play("running");
 		} else {
-			desacelerar(this.velocidad);
+			desacelerar(this.aceleracion);
 			AudioSFX.getInstancia().stop("running");
 		}
 

@@ -15,6 +15,8 @@ public class Meta extends Colisionables {
 
 	private final Partida partidaActual;
 	private Sprite sprite;
+	private static final int SIZE = (int) (Config.height * 0.05);
+	private static double yPos = -Config.mapaLength + Config.height;
 
 	/**
 	 * @param meta          :{@code float} - Posicion de la meta en el eje Y.
@@ -23,11 +25,11 @@ public class Meta extends Colisionables {
 	 *                      instanciada.
 	 */
 	public Meta(double meta, double li, double ld, Partida partidaActual) {
-		super(Entidad.META, new Vector2D(li, -meta + Config.height), new Vector2D(ld - li, -50));
+		super(Entidad.META, new Vector2D(li, -meta + Config.height), new Vector2D(ld - li, -SIZE));
 		this.partidaActual = partidaActual;
 
-		this.sprite = new Sprite("img/meta.png", new Vector2D(ld - li, 50), 1);
-		this.sprite.realocate(new Vector2D(0, -50));
+		this.sprite = new Sprite("img/meta.png", new Vector2D(ld - li, SIZE));
+		this.sprite.realocate(new Vector2D(0, -SIZE));
 
 		this.render = sprite.getRender();
 		this.render.setViewOrder(10);
@@ -42,7 +44,12 @@ public class Meta extends Colisionables {
 		if (posicion.getY() < Config.height && Config.currentVelocity > 0.0) {
 			this.posicion.setY(this.posicion.getY() + (Config.currentVelocity * delta / Config.acceleration));
 			Sprite.setRenderPosition((ImageView) this.render, this.posicion);
+			yPos = this.posicion.getY();
 		}
+	}
+
+	public static double yPos() {
+		return yPos;
 	}
 
 }

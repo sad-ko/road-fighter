@@ -47,6 +47,10 @@ public abstract class SceneHandler {
 		Invocador.getInstancia().update(delta);
 	}
 
+	public void afterUpdate() {
+		Invocador.getInstancia().removePendings();
+	}
+
 	protected void addTimeEventsAnimationTimer() {
 		gameTimer = new AnimationTimer() {
 			@Override
@@ -61,6 +65,7 @@ public abstract class SceneHandler {
 					previousNanoSecond = currentNano;
 				}
 
+				afterUpdate();
 			}
 		};
 
