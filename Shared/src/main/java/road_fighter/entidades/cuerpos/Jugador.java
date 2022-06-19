@@ -2,6 +2,7 @@ package road_fighter.entidades.cuerpos;
 
 import road_fighter.fisica.Vector2D;
 import road_fighter.graficos.AudioSFX;
+import road_fighter.graficos.AudioSound;
 
 /**
  * La clase {@code Jugador} hija de {@code Cuerpo}, es la clase principal con la
@@ -95,6 +96,25 @@ public final class Jugador extends Competidor {
 
 		if (right || left) {
 			desplazar();
+		}
+	}
+
+	@Override
+	public void enChoque(Cuerpo cuerpo) {
+		super.enChoque(cuerpo);
+
+		switch (cuerpo.getClase()) {
+
+		case META:
+			AudioSound.getInstancia().playGanadorSound();
+			break;
+
+		case POWERUP:
+			AudioSFX.getInstancia().play("powerUp");
+			break;
+
+		default:
+			break;
 		}
 	}
 

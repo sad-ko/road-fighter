@@ -9,8 +9,7 @@ import javafx.util.Duration;
 import road_fighter.Config;
 import road_fighter.entidades.Entidad;
 import road_fighter.fisica.Vector2D;
-import road_fighter.graficos.AudioSFX;
-import road_fighter.graficos.AudioSound;
+import road_fighter.graficos.Sprite;
 import road_fighter.logica.Partida;
 
 /**
@@ -72,6 +71,8 @@ public class Competidor extends Auto {
 		super.update(delta);
 		if (!llegoMeta) {
 			this.currentPos += this.velocidad;
+		} else if (this.aceleracion > 0.0) {
+			this.aceleracion -= 0.1;
 		}
 
 		if (power) {
@@ -108,13 +109,13 @@ public class Competidor extends Auto {
 		spawning();
 		this.exploto = false;
 		this.posicion.setX(Config.mapRight - Config.mapLeft + this.ancho);
+		Sprite.setRenderPosition(this.render, this.posicion);
 	}
 
 	@Override
 	public void enChoque(Cuerpo cuerpo) {
 		switch (cuerpo.getClase()) {
-		case AUTO_ESTATICO:
-		case JUGADOR:
+		case AUTO_ESTATICO, JUGADOR:
 			this.impacto((Auto) cuerpo);
 			break;
 
@@ -134,11 +135,8 @@ public class Competidor extends Auto {
 			if (partidaActual.getGanador() == null) {
 				partidaActual.setGanador(this);
 				partidaActual.iniciarEspera();
-				AudioSound.getInstancia().playGanadorSound();
 			}
 
-			this.aceleracion = 0.0;
-			this.velocidad = 0.0;
 			this.llegoMeta = true;
 			break;
 
@@ -157,7 +155,6 @@ public class Competidor extends Auto {
 			this.setVelocidad(powerUp.getPowerUp());
 			powerUp.getRender().setVisible(false);
 			powerUp.timeout(this);
-			AudioSFX.getInstancia().play("powerUp");
 			break;
 
 		default:

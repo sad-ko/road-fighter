@@ -7,4 +7,13 @@
 	</parent>
 	<artifactId>Server</artifactId>
 	<name>Server</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>progava.taller</groupId>
+			<artifactId>Shared</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
 </project>

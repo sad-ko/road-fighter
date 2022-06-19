@@ -84,12 +84,11 @@ public abstract class Auto extends Cuerpo {
 
 	@Override
 	public void update(double delta) {
+		mover(delta);
+
 		if (choque) {
 			this.posicion.setX(posicion.getX() + (2 * this.orientation));
 		}
-
-		mover(delta);
-		Sprite.setRenderPosition(this.render, this.posicion);
 
 		double x = this.posicion.getX();
 		if (x < Config.mapLeft - this.ancho) {
@@ -97,6 +96,8 @@ public abstract class Auto extends Cuerpo {
 		} else if (x > Config.mapRight) {
 			this.posicion.setX(x - this.ancho / 2);
 		}
+
+		Sprite.setRenderPosition(this.render, this.posicion);
 	}
 
 	public boolean isChoque() {
