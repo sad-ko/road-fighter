@@ -1,23 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>Taller</groupId>
-	<artifactId>Projecto</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Road Fighter</name>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
-	</properties>
+	<parent>
+		<groupId>progava.taller</groupId>
+		<artifactId>RoadFighter</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>Client</artifactId>
+	<name>Client</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
-			<scope>test</scope>
+			<groupId>progava.taller</groupId>
+			<artifactId>Shared</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>

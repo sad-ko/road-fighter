@@ -85,8 +85,6 @@ public class Competidor extends Auto {
 				this.velocidad += this.aceleracion;
 			}
 		}
-
-		System.out.println(this.nombre + "\n" + this.posicion);
 	}
 
 	@Override
