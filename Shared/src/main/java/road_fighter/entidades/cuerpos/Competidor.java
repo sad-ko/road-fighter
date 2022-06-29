@@ -115,7 +115,8 @@ public class Competidor extends Auto {
 	@Override
 	public void enChoque(Cuerpo cuerpo) {
 		switch (cuerpo.getClase()) {
-		case AUTO_ESTATICO, JUGADOR:
+		case AUTO_ESTATICO:
+		case JUGADOR:
 			this.impacto((Auto) cuerpo);
 			break;
 

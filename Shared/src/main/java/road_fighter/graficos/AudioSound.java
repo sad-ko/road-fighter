@@ -74,7 +74,9 @@ public class AudioSound extends Audio {
 	}
 
 	public void stopSound() {
-		mediaPlayer.stop();
+		if (mediaPlayer != null) {
+			mediaPlayer.stop();
+		}
 	}
 
 	@Override

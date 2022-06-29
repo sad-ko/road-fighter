@@ -5,7 +5,7 @@ public abstract class Audio {
 	protected double volumen;
 
 	protected Audio() {
-		this.volumen = 0.5;
+		this.volumen = 0.0;
 	}
 
 	public void subirVolumenSound() {

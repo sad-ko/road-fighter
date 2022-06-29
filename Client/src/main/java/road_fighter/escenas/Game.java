@@ -1,4 +1,4 @@
-package road_fighter;
+package road_fighter.escenas;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,7 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
+import road_fighter.Config;
+import road_fighter.Main;
 import road_fighter.entidades.FPS;
 import road_fighter.entidades.VelocidadInfo;
 import road_fighter.entidades.cuerpos.Jugador;
@@ -31,9 +32,9 @@ public class Game extends SceneHandler {
 	private Dificultad dificultad;
 	private boolean screenShake = false;
 
-	public Game(Main main, int dificultad) {
+	public Game(Main main) {
 		super(main);
-		this.dificultad = Dificultad.values()[dificultad];
+		this.dificultad = Dificultad.values()[0];
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class Game extends SceneHandler {
 
 				case Q:
 				case ESCAPE:
-					main.startMenuIntro(me);
+					main.changeScene(me, Escenas.MENU_INTRO);
 					break;
 
 				default:
@@ -119,7 +120,7 @@ public class Game extends SceneHandler {
 	}
 
 	@Override
-	protected void load(boolean start) {
+	public void load(boolean start) {
 		Invocador.getInstancia().setRoot(root);
 
 		FPS fpsInfo = new FPS(fps, new Vector2D(Config.width * 0.78, Config.height * 0.9));

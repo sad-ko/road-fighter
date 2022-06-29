@@ -1,4 +1,4 @@
-package road_fighter;
+package road_fighter.escenas;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import road_fighter.Main;
 import road_fighter.logica.Invocador;
 
 public abstract class SceneHandler {
@@ -106,11 +107,15 @@ public abstract class SceneHandler {
 
 	protected abstract void defineEventHandlers();
 
-	protected abstract void load(boolean start);
+	public abstract void load(boolean start);
 
-	protected void unload() {
+	public void unload() {
 		Invocador.getInstancia().clear();
 		gameTimer.stop();
 		removeInputEvents();
+	}
+	
+	public void changeScene(Escenas nextScene) {
+		main.changeScene(this, nextScene);
 	}
 }

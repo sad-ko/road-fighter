@@ -1,39 +1,35 @@
-package road_fighter.entidades;
+package road_fighter.entidades.menus;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+
 import road_fighter.Config;
-import road_fighter.fisica.Vector2D;
 import road_fighter.graficos.AudioSFX;
 import road_fighter.graficos.AudioSound;
 import road_fighter.logica.Dificultad;
 
-public class TextoMenuSetting extends Objeto {
+public class SettingMenu extends Menu {
 
-	private static final double X = Config.width * 0.25;
-	private static final double Y = Config.height * 0.6;
-
-	private Font font;
 	private Text[] texts;
 	private int focus = 0;
 
-	protected VBox render;
+	protected VBox vbox;
+	protected Pane pane;
 
-	public TextoMenuSetting(int dificultad) {
-		super(Entidad.TEXT, new Vector2D(0, 0));
-		font = Font.loadFont(ClassLoader.getSystemResource("font/nintendo-nes-font.ttf").toString(),
-				Config.height / 32);
-		render = new VBox();
+	public SettingMenu() {
+		vbox = new VBox();
 		texts = new Text[3];
 
-		startGame(dificultad);
+		lobbyConnect();
 		audioText();
 		textSFX();
+
+		pane = new Pane(vbox, info("< - Down  > - Up\nz - Enter\nq - Back", 1));
 	}
 
 	@Override
@@ -41,6 +37,23 @@ public class TextoMenuSetting extends Objeto {
 		texts[1].setText("SOUND: " + getPorcentajeAudio());
 		texts[2].setText("SFX: " + getPorcentajeSFX());
 		texts[focus].setFill(Color.CORAL);
+	}
+
+	public void lobbyConnect() {
+		texts[0] = new Text("JOIN LOBBY");
+		texts[0].setTextAlignment(TextAlignment.CENTER);
+		texts[0].setFont(font);
+		texts[0].setFill(Color.WHITE);
+
+		texts[0].setX(X);
+		texts[0].setY(Y);
+
+		VBox renderTitle = new VBox(texts[0]);
+		renderTitle.setAlignment(Pos.TOP_CENTER);
+		renderTitle.setTranslateY(Y);
+		renderTitle.setPrefWidth(Config.width);
+
+		vbox.getChildren().add(renderTitle);
 	}
 
 	public void startGame(int dificultad) {
@@ -57,7 +70,7 @@ public class TextoMenuSetting extends Objeto {
 		renderTitle.setTranslateY(Y);
 		renderTitle.setPrefWidth(Config.width);
 
-		render.getChildren().add(renderTitle);
+		vbox.getChildren().add(renderTitle);
 	}
 
 	public void audioText() {
@@ -74,7 +87,7 @@ public class TextoMenuSetting extends Objeto {
 		renderTextAudio.setTranslateY(Y + 50);
 		renderTextAudio.setPrefWidth(Config.width);
 
-		render.getChildren().add(renderTextAudio);
+		vbox.getChildren().add(renderTextAudio);
 	}
 
 	public void textSFX() {
@@ -91,7 +104,7 @@ public class TextoMenuSetting extends Objeto {
 		renderTextSFX.setTranslateY(Y + 100);
 		renderTextSFX.setPrefWidth(Config.width);
 
-		render.getChildren().add(renderTextSFX);
+		vbox.getChildren().add(renderTextSFX);
 	}
 
 	private int getPorcentajeAudio() {
@@ -118,17 +131,11 @@ public class TextoMenuSetting extends Objeto {
 
 	@Override
 	public Node getRender() {
-		return render;
+		return pane;
 	}
 
 	public int getFocus() {
 		return focus;
-	}
-
-	@Override
-	public void remover() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

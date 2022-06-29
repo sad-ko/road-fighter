@@ -1,21 +1,24 @@
-package road_fighter;
+package road_fighter.escenas;
+
+import java.io.IOException;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import road_fighter.entidades.TextoStart;
-import road_fighter.graficos.AudioSound;
+import road_fighter.Client;
+import road_fighter.Config;
+import road_fighter.Main;
+import road_fighter.entidades.menus.SetUsernameMenu;
 import road_fighter.logica.Invocador;
 
-public class MenuIntro extends SceneHandler {
+public class SetUsername extends SceneHandler {
 
 	private Group root;
+	private SetUsernameMenu menu;
 
-	public MenuIntro(Main main) {
+	public SetUsername(Main main) {
 		super(main);
 	}
 
@@ -33,15 +36,24 @@ public class MenuIntro extends SceneHandler {
 			@Override
 			public void handle(KeyEvent e) {
 				switch (e.getCode()) {
-				case SPACE:
-				case ENTER:
-				case Z:
-					main.startMenuOptions(me);
+				case Q:
+				case X:
+				case ESCAPE:
+					main.changeScene(me, Escenas.MENU_OPTIONS);
 					break;
 
-				case Q:
-				case ESCAPE:
-					System.exit(0);
+				case ENTER:
+				case Z:
+					root.requestFocus();
+					if (main.client == null) {
+						try {
+							main.client = new Client("localhost", 20000, menu.getUsername(), me);
+							main.client.listen();
+						} catch (IOException io) {
+							io.printStackTrace();
+						}
+					}
+					main.changeScene(me, Escenas.LOBBY);
 					break;
 
 				default:
@@ -52,17 +64,10 @@ public class MenuIntro extends SceneHandler {
 	}
 
 	@Override
-	protected void load(boolean start) {
+	public void load(boolean start) {
 		Invocador.getInstancia().setRoot(root);
-
-		Image fondo = new Image("file:src/main/resources/img/start.png", Config.width, Config.height, false, false);
-		ImageView imageView = new ImageView(fondo);
-		root.getChildren().add(imageView);
-
-		TextoStart menu = new TextoStart();
-		root.getChildren().add(menu.getRender());
-
-		AudioSound.getInstancia().playMenuSound();
+		menu = new SetUsernameMenu();
+		Invocador.getInstancia().add(menu);
 
 		if (start) {
 			addTimeEventsAnimationTimer();

@@ -76,6 +76,7 @@ public abstract class Auto extends Cuerpo {
 		this.exploto = true;
 		this.velocidad = 0;
 
+		this.hitbox.desactivar(true);
 		explosionAnimation.setOnFinished(event -> this.remover());
 		explosionAnimation.play();
 	}

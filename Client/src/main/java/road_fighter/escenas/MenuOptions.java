@@ -1,4 +1,4 @@
-package road_fighter;
+package road_fighter.escenas;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -7,7 +7,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import road_fighter.entidades.TextoMenuSetting;
+import road_fighter.Config;
+import road_fighter.Main;
+import road_fighter.entidades.menus.SettingMenu;
 import road_fighter.graficos.AudioSFX;
 import road_fighter.graficos.AudioSound;
 import road_fighter.logica.Invocador;
@@ -15,8 +17,8 @@ import road_fighter.logica.Invocador;
 public class MenuOptions extends SceneHandler {
 
 	private Group root;
-	private TextoMenuSetting menu;
-	private int dificultad = 0;
+	private SettingMenu menu;
+	// private int dificultad = 0;
 
 	public MenuOptions(Main main) {
 		super(main);
@@ -47,15 +49,19 @@ public class MenuOptions extends SceneHandler {
 				case Z:
 				case ENTER:
 					if (menu.getFocus() == 0) {
-						main.startGame(me, dificultad);
+						if (main.client == null) {
+							main.changeScene(me, Escenas.SET_USERNAME);
+						} else {
+							main.changeScene(me, Escenas.LOBBY);
+						}
 					}
 					break;
 
 				case RIGHT:
 					switch (menu.getFocus()) {
 					case 0:
-						dificultad = (dificultad == 2) ? 0 : dificultad + 1;
-						menu.setDificultad(dificultad);
+						// dificultad = (dificultad == 2) ? 0 : dificultad + 1;
+						// menu.setDificultad(dificultad);
 						break;
 
 					case 1:
@@ -72,8 +78,8 @@ public class MenuOptions extends SceneHandler {
 				case LEFT:
 					switch (menu.getFocus()) {
 					case 0:
-						dificultad = (dificultad == 0) ? 2 : dificultad - 1;
-						menu.setDificultad(dificultad);
+						// dificultad = (dificultad == 0) ? 2 : dificultad - 1;
+						// menu.setDificultad(dificultad);
 						break;
 
 					case 1:
@@ -83,13 +89,13 @@ public class MenuOptions extends SceneHandler {
 					case 2:
 						AudioSFX.getInstancia().bajarVolumenSound();
 						AudioSFX.getInstancia().play("largada_start", true);
-						break;
 					}
 					break;
 
 				case Q:
+				case X:
 				case ESCAPE:
-					main.startMenuIntro(me);
+					main.changeScene(me, Escenas.MENU_INTRO);
 					break;
 
 				default:
@@ -100,14 +106,14 @@ public class MenuOptions extends SceneHandler {
 	}
 
 	@Override
-	protected void load(boolean start) {
+	public void load(boolean start) {
 		Invocador.getInstancia().setRoot(root);
 
-		Image fondo = new Image("file:src/main/resources/img/start.png", Config.width, Config.height, false, false);
+		Image fondo = new Image("file:src/main/resources/img/start.png", Config.width, Config.height / 2, false, false);
 		ImageView imageView = new ImageView(fondo);
 		root.getChildren().add(imageView);
 
-		menu = new TextoMenuSetting(this.dificultad);
+		menu = new SettingMenu();
 		Invocador.getInstancia().add(menu);
 
 		if (start) {
