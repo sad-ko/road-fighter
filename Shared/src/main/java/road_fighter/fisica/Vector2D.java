@@ -43,8 +43,15 @@ public final class Vector2D {
 		this.y = y;
 	}
 
+	public static Vector2D parseVector(String vector) {
+		String[] values = vector.split(";");
+		double _x = Double.parseDouble(values[0]);
+		double _y = Double.parseDouble(values[1]);
+		return new Vector2D(_x, _y);
+	}
+
 	@Override
 	public String toString() {
-		return String.format("(x=%9.1f; y=%9.1f)", x, y);
+		return String.format("%9.1f;%9.1f", x, y);
 	}
 }

@@ -27,30 +27,40 @@ public abstract class Auto extends Cuerpo {
 	protected Sprite sprite;
 	protected ImageView render;
 	protected double ancho;
+	protected boolean renderizable;
 
 	/**
 	 * @param clase    :{@code String} - Nombre de la clase no-abstracta que hereda
 	 *                 de {@code Auto}.
 	 * @param posicion :{@code Vector2D} - Posicion del auto en el plano (x,y).
 	 */
-	protected Auto(Entidad clase, Vector2D posicion, String imgDir, Vector2D imgSize) {
-		super(clase, posicion, new Vector2D(imgSize.getX() * SIZE * 0.8, -imgSize.getY() * SIZE));
+	protected Auto(Entidad clase, Vector2D posicion, String imgDir, Vector2D imgSize, boolean renderizable,
+			long cuerpo_id) {
+		super(clase, posicion, new Vector2D(imgSize.getX() * SIZE * 0.8, -imgSize.getY() * SIZE), cuerpo_id);
 
-		this.sprite = new Sprite(imgDir, imgSize, SIZE);
-		this.sprite.realocate(new Vector2D(0, -imgSize.getY()));
+		if (renderizable) {
+			this.sprite = new Sprite(imgDir, imgSize, SIZE);
+			this.sprite.realocate(new Vector2D(0, -imgSize.getY()));
 
-		this.render = sprite.getRender();
-		this.ancho = imgSize.getX();
+			this.render = sprite.getRender();
+			this.ancho = imgSize.getX();
 
-		Image explosion_1 = new Image("file:src/main/resources/img/explosion_1.png", 12 * SIZE, 13 * SIZE, false,
-				false);
-		Image explosion_2 = new Image("file:src/main/resources/img/explosion_2.png", 15 * SIZE, 16 * SIZE, false,
-				false);
-		Image explosion_3 = new Image("file:src/main/resources/img/explosion_3.png", 13 * SIZE, 16 * SIZE, false,
-				false);
+			Image explosion_1 = new Image("file:src/main/resources/img/explosion_1.png", 12 * SIZE, 13 * SIZE, false,
+					false);
+			Image explosion_2 = new Image("file:src/main/resources/img/explosion_2.png", 15 * SIZE, 16 * SIZE, false,
+					false);
+			Image explosion_3 = new Image("file:src/main/resources/img/explosion_3.png", 13 * SIZE, 16 * SIZE, false,
+					false);
 
-		explosionAnimation = new AnimatedSprite(new Image[] { explosion_1, explosion_2, explosion_3 }, render,
-				Duration.seconds(1.5));
+			explosionAnimation = new AnimatedSprite(new Image[] { explosion_1, explosion_2, explosion_3 }, render,
+					Duration.seconds(1.5));
+		}
+
+		this.renderizable = renderizable;
+	}
+
+	protected Auto(Entidad clase, Vector2D posicion, String imgDir, Vector2D imgSize, long cuerpo_id) {
+		this(clase, posicion, imgDir, imgSize, true, cuerpo_id);
 	}
 
 	/**
@@ -77,8 +87,12 @@ public abstract class Auto extends Cuerpo {
 		this.velocidad = 0;
 
 		this.hitbox.desactivar(true);
-		explosionAnimation.setOnFinished(event -> this.remover());
-		explosionAnimation.play();
+		if (renderizable) {
+			explosionAnimation.setOnFinished(event -> this.remover());
+			explosionAnimation.play();
+		} else {
+			this.remover();
+		}
 	}
 
 	protected abstract void mover(double delta);
@@ -98,7 +112,9 @@ public abstract class Auto extends Cuerpo {
 			this.posicion.setX(x - this.ancho / 2);
 		}
 
-		Sprite.setRenderPosition(this.render, this.posicion);
+		if (this.renderizable) {
+			Sprite.setRenderPosition(this.render, this.posicion);
+		}
 	}
 
 	public boolean isChoque() {

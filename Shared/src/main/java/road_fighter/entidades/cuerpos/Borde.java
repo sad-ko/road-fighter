@@ -14,12 +14,12 @@ public final class Borde extends Colisionables {
 	 * @param ancho :{@code float} - Limite del mapa en el eje X.
 	 * @param largo :{@code float} - Limite del mapa en el eje Y.
 	 */
-	public Borde(double posX) {
-		super(Entidad.BORDE, new Vector2D(posX, Config.height), new Vector2D(10, -Config.height));
+	public Borde(double posX, long cuerpo_id) {
+		super(Entidad.BORDE, new Vector2D(posX, Config.height), new Vector2D(10, -Config.height), cuerpo_id);
 	}
 
 	@Override
-	public void update(double deltaTime) {
+	public void update(double delta) {
 		// TODO Auto-generated method stub
 	}
 

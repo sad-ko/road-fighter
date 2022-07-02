@@ -6,13 +6,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
 import road_fighter.Config;
+import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.entidades.Etiqueta;
 import road_fighter.entidades.Resultados;
 import road_fighter.entidades.cuerpos.Competidor;
-import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.fisica.Vector2D;
 
 /**
@@ -65,16 +67,29 @@ public class Partida {
 	 * Comienza la partida, agregando a los {@code Jugador}es y generando la
 	 * {@code Meta} en el mapa.
 	 * 
-	 * @param cantJugadores :{@code int} - Cantidad de jugadores en la partida.
+	 * @param cantidad :{@code int} - Cantidad de jugadores en la partida.
 	 */
-	public Jugador comenzar(int cantJugadores) {
-		Jugador jugador = this.mapa.posicionarCompetidores(this, cantJugadores);
+	public void comenzar(int cantidad, List<String> jugadores) {
+		this.mapa.posicionarCompetidores(this, cantidad, jugadores);
 		this.mapa.crearMeta(this);
-		return jugador;
 	}
 
 	public void agregarCompetidor(Competidor jugador) {
 		this.posiciones.add(new Posicion(jugador));
+	}
+
+	public Jugador getJugador(int id) {
+		for (Posicion posicion : posiciones) {
+			if (posicion.getCompetidor().getId() == id) {
+				Competidor competidor = posicion.getCompetidor();
+				Jugador jugador = new Jugador(competidor.getPosicion(), competidor.getNombre(), id);
+
+				Invocador.getInstancia().remove(competidor);
+				Invocador.getInstancia().add(jugador);
+				return jugador;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -127,6 +142,14 @@ public class Partida {
 		return posiciones.get(index).getCompetidor();
 	}
 
+	public List<Competidor> getCompetidores() {
+		List<Competidor> competidores = new ArrayList<>();
+		for (Posicion posicion : posiciones) {
+			competidores.add(posicion.getCompetidor());
+		}
+		return competidores;
+	}
+
 	public Mapa getMapa() {
 		return mapa;
 	}
@@ -137,6 +160,22 @@ public class Partida {
 
 	public void setGanador(Competidor ganador) {
 		this.ganador = ganador;
+	}
+
+	private long frame = 0;
+
+	public void debug() {
+		frame++;
+
+		if (frame % 60 == 0) {
+			StringBuilder str = new StringBuilder();
+			str.append("Frame: " + frame + "\n");
+			for (Posicion posicion : posiciones) {
+				Competidor cmp = posicion.getCompetidor();
+				str.append(cmp.getPosicion() + " - " + cmp.getVelocidad() + " " + cmp.getCurrentPos() + "\n");
+			}
+			System.out.println(str);
+		}
 	}
 
 }

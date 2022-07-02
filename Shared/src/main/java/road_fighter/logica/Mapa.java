@@ -12,7 +12,6 @@ import road_fighter.entidades.EscenarioInicio;
 import road_fighter.entidades.cuerpos.AutoEstatico;
 import road_fighter.entidades.cuerpos.Borde;
 import road_fighter.entidades.cuerpos.Competidor;
-import road_fighter.entidades.cuerpos.Jugador;
 import road_fighter.entidades.cuerpos.Meta;
 import road_fighter.entidades.cuerpos.Obstaculo;
 import road_fighter.entidades.cuerpos.PowerUp;
@@ -28,7 +27,9 @@ public class Mapa {
 	private double limiteDerecho;
 	private double limiteIzquierdo;
 	private Invocador invocador;
+	private boolean renderizable;
 	private Random rand;
+	private long seed;
 	private List<Vector2D> spawnPoints;
 	private int obs = 0;
 
@@ -40,23 +41,33 @@ public class Mapa {
 	 * @param limiteDerecho   :{@code float} - Posicion del limite derecho del mapa
 	 *                        en el eje X.
 	 */
-	public Mapa(double longitud, double limiteIzquierdo, double limiteDerecho) {
+	public Mapa(double longitud, double limiteIzquierdo, double limiteDerecho, long seed, boolean renderizable) {
 		this.longitud = longitud;
 		this.limiteDerecho = limiteDerecho;
 		this.limiteIzquierdo = limiteIzquierdo;
+		
+		this.rand = new Random();
+		this.seed = seed;
+		rand.setSeed(seed);
 
-		Borde ld = new Borde(limiteDerecho);
-		Borde li = new Borde(limiteIzquierdo - 10);
+		Borde ld = new Borde(limiteDerecho, rand.nextLong());
+		Borde li = new Borde(limiteIzquierdo - 10, rand.nextLong());
 
 		this.invocador = Invocador.getInstancia();
 		this.invocador.add(ld);
 		this.invocador.add(li);
 
-		this.invocador.add(new EscenarioInicio());
-		this.invocador.add(new Escenario(longitud));
-		this.invocador.add(new EscenarioFin(longitud));
+		if (renderizable) {
+			this.invocador.add(new EscenarioInicio());
+			this.invocador.add(new Escenario(longitud));
+			this.invocador.add(new EscenarioFin(longitud));
+		}
 
-		this.rand = new Random();
+		this.renderizable = renderizable;
+	}
+
+	public Mapa(double longitud, double limiteIzquierdo, double limiteDerecho, long seed) {
+		this(longitud, limiteIzquierdo, limiteDerecho, seed, true);
 	}
 
 	/**
@@ -107,7 +118,7 @@ public class Mapa {
 					pos = generarCoordenadas(AutoEstatico.getAncho(), desde, hasta);
 				} while (this.spawnPoints.contains(pos));
 
-				AutoEstatico auto = new AutoEstatico(pos);
+				AutoEstatico auto = new AutoEstatico(pos, this.renderizable, rand.nextLong());
 				this.invocador.add(auto);
 				this.spawnPoints.add(pos);
 			}
@@ -119,7 +130,7 @@ public class Mapa {
 					pos = generarCoordenadas(PowerUp.getAncho(), desde, hasta);
 				} while (this.spawnPoints.contains(pos));
 
-				PowerUp power = new PowerUp(pos);
+				PowerUp power = new PowerUp(pos, this.renderizable, rand.nextLong());
 				this.invocador.add(power);
 				this.spawnPoints.add(pos);
 			}
@@ -131,7 +142,7 @@ public class Mapa {
 					pos = generarCoordenadasObstaculo(Obstaculo.getAncho(), desde, hasta);
 				} while (this.spawnPoints.contains(pos));
 
-				Obstaculo obstaculo = new Obstaculo(pos);
+				Obstaculo obstaculo = new Obstaculo(pos, this.renderizable, rand.nextLong());
 				this.invocador.add(obstaculo);
 				this.spawnPoints.add(pos);
 			}
@@ -200,7 +211,7 @@ public class Mapa {
 	}
 
 	public void crearMeta(Partida partidaActual) {
-		Meta meta = new Meta(this.longitud, this.limiteIzquierdo, this.limiteDerecho, partidaActual);
+		Meta meta = new Meta(this.longitud, this.limiteIzquierdo, this.limiteDerecho, partidaActual, this.renderizable, rand.nextLong());
 		this.invocador.add(meta);
 	}
 
@@ -215,28 +226,25 @@ public class Mapa {
 	 *                      jugadores.
 	 * @param cantJugadores :{@code int} - Cantidad de jugadores a generar.
 	 */
-	public Jugador posicionarCompetidores(Partida partidaActual, int cantJugadores) {
+	public void posicionarCompetidores(Partida partidaActual, int cantidad, List<String> jugadores) {
 		// Distancias equidistantes entre los autos y los bordes.
-		double pad = (this.limiteDerecho - this.limiteIzquierdo) / (cantJugadores + 1);
+		double pad = (this.limiteDerecho - this.limiteIzquierdo) / (cantidad + 1);
 		double x = pad;
 
-		Vector2D pos = new Vector2D(x + this.limiteIzquierdo, Config.height - Config.height / 4);
+		Vector2D pos = new Vector2D(x, Config.height - Config.height / 4);
 
-		Jugador jugador = new Jugador(pos, "Jugador Nro: 1");
-		this.invocador.add(jugador);
-		partidaActual.agregarCompetidor(jugador);
-
-		for (int i = 1; i < cantJugadores; i++) {
-			x = x + pad;
+		for (int i = 0; i < cantidad; i++) {
 			pos.setX(x + this.limiteIzquierdo);
 
-			Competidor comp = new Competidor(pos, "Competidor Nro: " + (i + 1));
+			Competidor comp = new Competidor(pos, jugadores.get(i), i, renderizable);
 			this.invocador.add(comp);
 			partidaActual.agregarCompetidor(comp);
-
-			// TODO: Usar un nombre especificado por cada jugador.
+			x = x + pad;
 		}
-
-		return jugador;
 	}
+
+	public long getSeed() {
+		return seed;
+	}
+
 }

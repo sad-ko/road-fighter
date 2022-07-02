@@ -17,7 +17,7 @@ import road_fighter.networking.Mensaje;
 
 public class CreateSalaMenu extends Menu {
 
-	private static final double PADDING = 100;
+	private static final double PADDING = Config.height * 0.1;
 
 	private TextField input;
 	private Text players;

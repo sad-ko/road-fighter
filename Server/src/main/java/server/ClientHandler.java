@@ -81,6 +81,17 @@ public class ClientHandler implements Runnable, Comunicador {
 			currentSala.sendToAll(currentSala.join());
 			break;
 
+		case COMENZAR_PARTIDA:
+			currentSala.startGame();
+			break;
+
+		case ACELERAR:
+		case DESACELERAR:
+		case DESPLAZAR_IZQUIERDA:
+		case DESPLAZAR_DERECHA:
+			currentSala.movePlayer(Integer.parseInt(comandos[1]), Comando.valueOf(comandos[0]));
+			break;
+
 		default:
 			break;
 		}
@@ -105,7 +116,10 @@ public class ClientHandler implements Runnable, Comunicador {
 	}
 
 	public void close() {
-		currentSala.remove(this);
+		if (currentSala != null) {
+			currentSala.remove(this);
+		}
+
 		try {
 			if (this.in != null) {
 				this.in.close();

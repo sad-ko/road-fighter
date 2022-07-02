@@ -1,5 +1,6 @@
 package road_fighter.entidades.cuerpos;
 
+import road_fighter.Config;
 import road_fighter.fisica.Vector2D;
 import road_fighter.graficos.AudioSFX;
 import road_fighter.graficos.AudioSound;
@@ -19,27 +20,9 @@ public final class Jugador extends Competidor {
 	 *                 (x,y).
 	 * @param nombre   :{@code String} - Nombre del jugador.
 	 */
-	public Jugador(Vector2D posicion, String nombre) {
-		super(posicion, nombre);
+	public Jugador(Vector2D posicion, String nombre, int id) {
+		super(posicion, nombre, id);
 		this.nombre = nombre;
-	}
-
-	/**
-	 * Permite girar al {@code Jugador} en el sentido indicado del eje X, el
-	 * movimiento es una sumatoria de velocidad.
-	 * 
-	 * @param derecha :boolean - Indica si el {@code Jugador} debe girar a la
-	 *                derecha o a la izquierda
-	 * @param delta   :float - Lapso de tiempo en segundos, desde el anterior frame
-	 *                a este
-	 */
-	public void desplazar() {
-		if (!right && !left) {
-			return;
-		}
-
-		double sentido = right ? aceleracion : -aceleracion;
-		this.posicion.setX(this.posicion.getX() + sentido);
 	}
 
 	/**
@@ -49,6 +32,7 @@ public final class Jugador extends Competidor {
 	 * @param delta :float - Lapso de tiempo en segundos, desde el anterior frame a
 	 *              este
 	 */
+	@Override
 	public void acelerar() {
 		if (!z) {
 			return;
@@ -71,11 +55,29 @@ public final class Jugador extends Competidor {
 			return;
 		}
 
-		if (this.velocidad > 0.0) {
-			this.velocidad -= (this.aceleracion * desaceleracion);
+		if (this.velocidad > desaceleracion) {
+			this.velocidad = this.velocidad - this.aceleracion * desaceleracion;
 		} else {
-			this.velocidad = 0.00;
+			this.velocidad = 0.0;
 		}
+	}
+
+	/**
+	 * Permite girar al {@code Jugador} en el sentido indicado del eje X, el
+	 * movimiento es una sumatoria de velocidad.
+	 * 
+	 * @param derecha :boolean - Indica si el {@code Jugador} debe girar a la
+	 *                derecha o a la izquierda
+	 * @param delta   :float - Lapso de tiempo en segundos, desde el anterior frame
+	 *                a este
+	 */
+	public void desplazar() {
+		if (!right && !left) {
+			return;
+		}
+
+		double sentido = right ? aceleracion : -aceleracion;
+		this.posicion.setX(this.posicion.getX() + sentido);
 	}
 
 	@Override
@@ -89,7 +91,7 @@ public final class Jugador extends Competidor {
 		if (z) {
 			acelerar();
 			AudioSFX.getInstancia().play("running");
-		} else {
+		} else if (Config.currentVelocity > 0.0) {
 			desacelerar(this.aceleracion);
 			AudioSFX.getInstancia().stop("running");
 		}

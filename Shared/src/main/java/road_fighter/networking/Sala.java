@@ -36,8 +36,12 @@ public class Sala {
 		return owner;
 	}
 
-	public String getDificultad() {
+	public String getDificultadString() {
 		return dificultad.toString();
+	}
+	
+	public Dificultad getDificultad() {
+		return dificultad;
 	}
 
 	public int getCantidadMaxima() {

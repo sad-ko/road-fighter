@@ -16,7 +16,6 @@ public class Meta extends Colisionables {
 	private final Partida partidaActual;
 	private Sprite sprite;
 	private static final int SIZE = (int) (Config.height * 0.05);
-	private static double yPos = -Config.mapaLength + Config.height;
 
 	/**
 	 * @param meta          :{@code float} - Posicion de la meta en el eje Y.
@@ -24,15 +23,21 @@ public class Meta extends Colisionables {
 	 * @param partidaActual :{@code Partida} - Partida actual donde Meta esta siendo
 	 *                      instanciada.
 	 */
-	public Meta(double meta, double li, double ld, Partida partidaActual) {
-		super(Entidad.META, new Vector2D(li, -meta + Config.height), new Vector2D(ld - li, -SIZE));
+	public Meta(double meta, double li, double ld, Partida partidaActual, boolean renderizable, long cuerpo_id) {
+		super(Entidad.META, new Vector2D(li, -meta + Config.height), new Vector2D(ld - li, -SIZE), cuerpo_id);
 		this.partidaActual = partidaActual;
 
-		this.sprite = new Sprite("img/meta.png", new Vector2D(ld - li, SIZE));
-		this.sprite.realocate(new Vector2D(0, -SIZE));
+		if (renderizable) {
+			this.sprite = new Sprite("img/meta.png", new Vector2D(ld - li, SIZE));
+			this.sprite.realocate(new Vector2D(0, -SIZE));
 
-		this.render = sprite.getRender();
-		this.render.setViewOrder(10);
+			this.render = sprite.getRender();
+			this.render.setViewOrder(10);
+		}
+	}
+
+	public Meta(double meta, double li, double ld, Partida partidaActual, long cuerpo_id) {
+		this(meta, li, ld, partidaActual, true, cuerpo_id);
 	}
 
 	public Partida getPartidaActual() {
@@ -43,13 +48,11 @@ public class Meta extends Colisionables {
 	public void update(double delta) {
 		if (posicion.getY() < Config.height && Config.currentVelocity > 0.0) {
 			this.posicion.setY(this.posicion.getY() + (Config.currentVelocity * delta / Config.acceleration));
-			Sprite.setRenderPosition((ImageView) this.render, this.posicion);
-			yPos = this.posicion.getY();
-		}
-	}
 
-	public static double yPos() {
-		return yPos;
+			if (sprite != null) {
+				Sprite.setRenderPosition((ImageView) this.render, this.posicion);
+			}
+		}
 	}
 
 }

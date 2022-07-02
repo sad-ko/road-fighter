@@ -14,19 +14,19 @@ public class AutoEstatico extends Auto {
 	/**
 	 * @param posicion :{@code Vector2D} - Posicion del auto en el plano (x,y).
 	 */
-	public AutoEstatico(Vector2D posicion) {
-		super(Entidad.AUTO_ESTATICO, posicion, "img/auto_estatico.png", new Vector2D(12, 16));
+	public AutoEstatico(Vector2D posicion, boolean renderizable, long cuerpo_id) {
+		super(Entidad.AUTO_ESTATICO, posicion, "img/auto_estatico.png", new Vector2D(12, 16), renderizable, cuerpo_id);
 		this.velocidad = 2.5;
+	}
+
+	public AutoEstatico(Vector2D posicion, long cuerpo_id) {
+		this(posicion, true, cuerpo_id);
 	}
 
 	@Override
 	protected void mover(double delta) {
 		double y = (Config.currentVelocity > 0.0) ? (Config.currentVelocity * delta / Config.acceleration) : 0.0;
 		this.posicion.setY((this.posicion.getY() - this.velocidad) + y);
-
-		/*if (this.posicion.getY() < Meta.yPos() + 16 * SIZE) {
-			this.remover();
-		}*/
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class AutoEstatico extends Auto {
 			this.explotar();
 			cuerpo.remover();
 			break;
-			
+
 		case META:
 			this.remover();
 			break;
