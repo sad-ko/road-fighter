@@ -49,6 +49,10 @@ public class SalaActual extends SceneHandler {
 				case DOWN:
 					menu.moveDown();
 					break;
+					
+				case Z:
+					menu.startGame();
+					break;
 
 				default:
 					break;
@@ -72,6 +76,11 @@ public class SalaActual extends SceneHandler {
 
 		case AL_LOBBY:
 			changeScene(Escenas.LOBBY);
+			main.client.comandoPendiente = Comando.HACER_NADA;
+			break;
+			
+		case COMENZAR_PARTIDA:
+			changeScene(Escenas.GAME);
 			main.client.comandoPendiente = Comando.HACER_NADA;
 			break;
 

@@ -1,7 +1,10 @@
 package road_fighter.logica;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import javafx.scene.Group;
 import road_fighter.Config;
 import road_fighter.entidades.Objeto;
@@ -23,10 +26,13 @@ public class Invocador {
 	private List<Objeto> toRemove;
 	private boolean inUpdate = false;
 
+	public Set<Integer> cuerposPendientes;
+
 	private Invocador() {
 		this.instancias = new ArrayList<>();
 		this.colisionables = new ArrayList<>();
 		this.toRemove = new ArrayList<>();
+		this.cuerposPendientes = new HashSet<>();
 		this.grid = new SpatialGrid(Config.width, Config.mapaLength + Config.height, Config.cellSize);
 	}
 
@@ -44,7 +50,7 @@ public class Invocador {
 	}
 
 	private void addToRoot(Objeto obj) {
-		if (obj.getRender() != null) {
+		if (this.root != null && obj.getRender() != null) {
 			this.root.getChildren().add(obj.getRender());
 		}
 	}
@@ -62,7 +68,9 @@ public class Invocador {
 	public void remove(Objeto obj) {
 		if (!this.inUpdate) {
 			instancias.remove(obj);
-			root.getChildren().remove(obj.getRender());
+			if (root != null) {
+				root.getChildren().remove(obj.getRender());
+			}
 
 			if (obj.getClass() == Cuerpo.class) {
 				colisionables.remove(obj);
@@ -121,7 +129,26 @@ public class Invocador {
 		grid.checkCollisions();
 	}
 
+	public int getIndex(Cuerpo cuerpo) {
+		for (int i = 0; i < colisionables.size(); i++) {
+			if (colisionables.get(i).equals(cuerpo)) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	public void colisiono(int index_1, int index_2) {
+		Cuerpo c1 = colisionables.get(index_1);
+		Cuerpo c2 = colisionables.get(index_2);
+
+		c1.enChoque(c2);
+		c2.enChoque(c1);
+	}
+
 	public int size() {
 		return this.instancias.size();
 	}
+
 }

@@ -24,7 +24,17 @@ public class Client implements Comunicador {
 	private List<Sala> salas;
 	private Sala currentSala;
 	private List<String> playersInSala;
+
+	private boolean z;
+	private boolean right;
+	private boolean left;
+
+	public int id;
+	public long seed;
+
 	public Comando comandoPendiente;
+	public String[] dataPendiente;
+	public int[] colisionesPendientes;
 
 	public Client(String ip, int port, String username, SceneHandler currentScene) throws IOException {
 		this.socket = new Socket(ip, port);
@@ -65,6 +75,15 @@ public class Client implements Comunicador {
 		Comando comando = Comando.valueOf(comandos[0]);
 
 		switch (comando) {
+		case COLISION:
+			colisionesPendientes = new int[comandos.length - 1];
+
+			for (int i = 0; i < colisionesPendientes.length; i++) {
+				colisionesPendientes[i] = Integer.parseInt(comandos[1+i]);
+			}
+
+			break;
+
 		case OBTENER_SALAS:
 			int cantSalas = Integer.parseInt(comandos[1]);
 			this.salas = new ArrayList<>(cantSalas);
@@ -88,6 +107,18 @@ public class Client implements Comunicador {
 				this.playersInSala.add(comandos[7 + i]);
 			}
 
+			break;
+
+		case COMENZAR_PARTIDA:
+			this.id = Integer.parseInt(comandos[1]);
+			this.seed = Long.parseLong(comandos[2]);
+			break;
+
+		case ACELERAR:
+		case DESACELERAR:
+		case DESPLAZAR_IZQUIERDA:
+		case DESPLAZAR_DERECHA:
+			this.dataPendiente = comandos;
 			break;
 
 		default:
@@ -126,6 +157,49 @@ public class Client implements Comunicador {
 		return false;
 	}
 
+	private void acelerar() {
+		if (!z) {
+			return;
+		}
+
+		Mensaje msg = new Mensaje(Comando.ACELERAR);
+		msg.agregar(this.id);
+		enviar(msg);
+	}
+
+	private void desacelerar() {
+		if (z) {
+			return;
+		}
+
+		Mensaje msg = new Mensaje(Comando.DESACELERAR);
+		msg.agregar(this.id);
+		enviar(msg);
+	}
+
+	private void desplazar() {
+		if (!right && !left) {
+			return;
+		}
+
+		Comando comando = (right) ? Comando.DESPLAZAR_DERECHA : Comando.DESPLAZAR_IZQUIERDA;
+		Mensaje msg = new Mensaje(comando);
+		msg.agregar(this.id);
+		enviar(msg);
+	}
+
+	public void mover() {
+		if (z) {
+			acelerar();
+		} else if (Config.currentVelocity > 0.0) {
+			desacelerar();
+		}
+
+		if (right || left) {
+			desplazar();
+		}
+	}
+
 	public void close() {
 		try {
 			if (in != null) {
@@ -160,6 +234,18 @@ public class Client implements Comunicador {
 		}
 
 		return this.salas.get(index);
+	}
+
+	public void setZ(boolean z) {
+		this.z = z;
+	}
+
+	public void setRight(boolean right) {
+		this.right = right;
+	}
+
+	public void setLeft(boolean left) {
+		this.left = left;
 	}
 
 }

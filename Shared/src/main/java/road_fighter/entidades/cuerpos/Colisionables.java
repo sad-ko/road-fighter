@@ -6,12 +6,13 @@ import road_fighter.logica.Invocador;
 
 public abstract class Colisionables extends Cuerpo {
 
-	protected Colisionables(Entidad clase, Vector2D posicion, Vector2D hitboxTamanio) {
-		super(clase, posicion, hitboxTamanio);
+	protected Colisionables(Entidad clase, Vector2D posicion, Vector2D hitboxTamanio, long cuerpo_id) {
+		super(clase, posicion, hitboxTamanio, cuerpo_id);
 	}
 
 	@Override
 	public void enChoque(Cuerpo cuerpo) {
+
 	}
 
 	@Override

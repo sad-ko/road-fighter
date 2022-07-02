@@ -23,13 +23,19 @@ public class PowerUp extends Colisionables {
 	/**
 	 * @param posicion :{@code Vector2D} - Posicion del objeto en el plano (x,y).
 	 */
-	public PowerUp(Vector2D posicion) {
-		super(Entidad.POWERUP, posicion, new Vector2D(SIZE, -SIZE));
+	public PowerUp(Vector2D posicion, boolean renderizable, long cuerpo_id) {
+		super(Entidad.POWERUP, posicion, new Vector2D(SIZE, -SIZE), cuerpo_id);
 
-		this.sprite = new Sprite("img/powerUp.png", new Vector2D(SIZE, SIZE));
-		this.sprite.realocate(new Vector2D(0, -SIZE));
+		if (renderizable) {
+			this.sprite = new Sprite("img/powerUp.png", new Vector2D(SIZE, SIZE));
+			this.sprite.realocate(new Vector2D(0, -SIZE));
 
-		this.render = sprite.getRender();
+			this.render = sprite.getRender();
+		}
+	}
+
+	public PowerUp(Vector2D posicion, long cuerpo_id) {
+		this(posicion, true, cuerpo_id);
 	}
 
 	/**
@@ -63,8 +69,11 @@ public class PowerUp extends Colisionables {
 	public void update(double delta) {
 		double y = (Config.currentVelocity > 0.0) ? (Config.currentVelocity * delta / Config.acceleration) : 0.0;
 		this.posicion.setY(this.posicion.getY() + y);
-		Sprite.setRenderPosition((ImageView) this.render, this.posicion);
-		
+
+		if (this.render != null) {
+			Sprite.setRenderPosition((ImageView) this.render, this.posicion);
+		}
+
 		if (toRemove) {
 			this.remover();
 		}

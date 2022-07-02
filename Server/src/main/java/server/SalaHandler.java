@@ -11,6 +11,7 @@ import road_fighter.networking.Sala;
 public class SalaHandler extends Sala {
 
 	private List<ClientHandler> players = new ArrayList<>();
+	private GameLoop partida;
 
 	public SalaHandler(String nombre, int cantidadMaxima, Dificultad dificultad, String owner) {
 		super(nombre, cantidadMaxima, dificultad, owner);
@@ -64,6 +65,15 @@ public class SalaHandler extends Sala {
 		for (ClientHandler player : players) {
 			player.enviar(msg);
 		}
+	}
+	
+	public void startGame() {
+		partida = new GameLoop(this.dificultad, this.cantidadActual, this.players, this);
+		partida.run();
+	}
+	
+	public void movePlayer(final int id, Comando comando) {
+		partida.movePlayer(id, comando);
 	}
 
 }

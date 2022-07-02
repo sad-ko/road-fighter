@@ -62,7 +62,7 @@ public class Salas {
 		for (SalaHandler sala : clients) {
 			salas.add(sala.getNombre());
 			salas.add(String.valueOf(sala.getCantidadMaxima()));
-			salas.add(sala.getDificultad());
+			salas.add(sala.getDificultadString());
 			salas.add(sala.getOwner());
 			salas.add(String.valueOf(sala.getCantidadActual()));
 		}

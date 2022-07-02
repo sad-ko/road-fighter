@@ -17,11 +17,13 @@ import javafx.scene.text.TextAlignment;
 
 import road_fighter.Client;
 import road_fighter.Config;
+import road_fighter.networking.Comando;
+import road_fighter.networking.Mensaje;
 import road_fighter.networking.Sala;
 
 public class SalaMenu extends Menu {
 
-	private static final double PADDING = 25;
+	private static final double PADDING = Config.height * 0.025;
 	private static final double HEIGHT = Y - FONT_SIZE;
 
 	private double vmax = 0;
@@ -32,7 +34,7 @@ public class SalaMenu extends Menu {
 	private Color color = Color.CORNFLOWERBLUE;
 	private Client client;
 
-	protected VBox salasBox;
+	protected VBox playersBox;
 	protected ScrollBar scroll;
 
 	public SalaMenu(Client client) {
@@ -41,12 +43,12 @@ public class SalaMenu extends Menu {
 		List<String> players = client.getPlayersInSala();
 		texts = new Text[players.size() + 1];
 
-		salasBox = new VBox(PADDING);
-		salasBox.setAlignment(Pos.TOP_CENTER);
-		salasBox.setPrefWidth(2 * X);
-		salasBox.setTranslateX(X / 4);
-		salasBox.setTranslateY(Y / 4);
-		salasBox.setFillWidth(true);
+		playersBox = new VBox(PADDING);
+		playersBox.setAlignment(Pos.TOP_CENTER);
+		playersBox.setPrefWidth(2 * X);
+		playersBox.setTranslateX(X / 4);
+		playersBox.setTranslateY(Y / 4);
+		playersBox.setFillWidth(true);
 
 		for (int i = 0; i < players.size(); i++) {
 			showPlayers(players.get(i), i);
@@ -59,15 +61,14 @@ public class SalaMenu extends Menu {
 		play.setLayoutY(Config.height - FONT_SIZE);
 		texts[players.size()] = play;
 		focus = players.size();
-
 		texts[focus].setFill(color);
 
 		scroll = new ScrollBar();
-		scroll.setLayoutX(X / 4 + salasBox.getPrefWidth());
+		scroll.setLayoutX(X / 4 + playersBox.getPrefWidth());
 		scroll.setLayoutY(Y / 4);
 		scroll.setOrientation(Orientation.VERTICAL);
 		scroll.setPrefHeight(HEIGHT);
-		scroll.setMax(vmax);
+		scroll.setMax(vmax / 2.0);
 
 		scroll.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
@@ -78,11 +79,11 @@ public class SalaMenu extends Menu {
 				} else if (value < scroll.getMin()) {
 					value = scroll.getMin();
 				}
-				salasBox.setLayoutY(-value);
+				playersBox.setLayoutY(-value);
 			}
 		});
 
-		Rectangle topBorder = new Rectangle(0, 0, Config.width, FONT_SIZE);
+		Rectangle topBorder = new Rectangle(0, 0, Config.width, FONT_SIZE * 2);
 
 		Text salaName = new Text(client.getCurrentSala().getNombre());
 		salaName.setFont(font);
@@ -91,7 +92,7 @@ public class SalaMenu extends Menu {
 		salaName.setLayoutY(FONT_SIZE);
 
 		salaInfo();
-		render = new Pane(salasBox, scroll, topBorder, salaName, salaInfo, play);
+		render = new Pane(playersBox, scroll, topBorder, salaName, salaInfo, play);
 	}
 
 	private void showPlayers(String sala, int index) {
@@ -102,7 +103,7 @@ public class SalaMenu extends Menu {
 		texts[index].setWrappingWidth(2 * X);
 
 		vmax += texts[index].getLayoutBounds().getHeight() + PADDING / 2;
-		salasBox.getChildren().add(texts[index]);
+		playersBox.getChildren().add(texts[index]);
 	}
 
 	private Text salaInfo() {
@@ -110,7 +111,7 @@ public class SalaMenu extends Menu {
 
 		StringBuilder info = new StringBuilder();
 		info.append("Jugadores: " + sala.getCantidadActual() + " / " + sala.getCantidadMaxima());
-		info.append("\nDificultad: " + sala.getDificultad());
+		info.append("\nDificultad: " + sala.getDificultadString());
 		info.append("\nPropietario: " + sala.getOwner());
 
 		salaInfo = new Text(info.toString());
@@ -118,8 +119,8 @@ public class SalaMenu extends Menu {
 
 		salaInfo.setFont(auxFont);
 		salaInfo.setFill(color);
-		salaInfo.setLayoutX(salasBox.getPrefWidth() + X - salaInfo.getLayoutBounds().getWidth() / 2.0);
-		salaInfo.setLayoutY(salasBox.getTranslateY());
+		salaInfo.setLayoutX(playersBox.getPrefWidth() + X - salaInfo.getLayoutBounds().getWidth() / 2.0);
+		salaInfo.setLayoutY(playersBox.getTranslateY());
 		return salaInfo;
 	}
 
@@ -136,8 +137,18 @@ public class SalaMenu extends Menu {
 		if (texts.length > 0) {
 			texts[focus].setFill(Color.WHITE);
 			focus = (focus == texts.length - 1) ? 0 : focus + 1;
-			scroll.setValue(texts[focus].getLayoutY() - 50);
+			if (focus < texts.length - 1 && playersBox.getChildren().get(focus).getLayoutY() > scroll.getTranslateY()
+					+ scroll.getPrefHeight()) {
+				scroll.setValue(texts[focus].getLayoutY() - 50);
+			}
 			texts[focus].setFill(color);
+		}
+	}
+
+	public void startGame() {
+		if (focus == texts.length - 1) {
+			Mensaje msg = new Mensaje(Comando.COMENZAR_PARTIDA);
+			client.enviar(msg);
 		}
 	}
 

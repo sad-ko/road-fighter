@@ -22,7 +22,7 @@ import road_fighter.networking.Sala;
 
 public class LobbyMenu extends Menu {
 
-	private static final double PADDING = 50;
+	private static final double PADDING = Config.height * 0.05;
 	private static final double HEIGHT = Y - FONT_SIZE;
 
 	private Client client;

@@ -114,7 +114,7 @@ public abstract class SceneHandler {
 		gameTimer.stop();
 		removeInputEvents();
 	}
-	
+
 	public void changeScene(Escenas nextScene) {
 		main.changeScene(this, nextScene);
 	}
